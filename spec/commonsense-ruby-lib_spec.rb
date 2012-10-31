@@ -7,6 +7,7 @@ describe "commonsense-ruby-lib" do
         it "should return current user information" do
           current_user = @client.current_user
           current_user.username.should eq('a')
+          current_user.to_h.should be_kind_of Hash
         end
       end
 

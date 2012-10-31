@@ -11,5 +11,13 @@ module CommonSense
     def initialize(hash={})
       from_hash(hash)
     end
+
+    def to_h
+      symbol = instance_variables.reject {|x| x == :@session}
+      hash = {}
+      symbol.each {|var| hash[var.to_s.delete("@")] = instance_variable_get(var)}
+      hash
+    end
+  
   end
 end

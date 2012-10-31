@@ -6,7 +6,7 @@ module CommonSense
       :country, :mobile, :uuid, :openid 
 
     def current_user
-      res = session.get('/users/current.json', {'Ahmy' => "ahmy"})
+      res = session.get('/users/current.json')
       from_hash(res["user"]) 
       self
     end
