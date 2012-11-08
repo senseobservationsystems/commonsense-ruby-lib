@@ -22,7 +22,7 @@ module CommonSense
 
     def setSessionID(session_id)
       @session = Session.new
-      @session.setSessionID(session_id)
+      @session.session_id = session_id
     end
 
     def current_user
