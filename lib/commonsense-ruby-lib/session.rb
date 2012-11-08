@@ -23,8 +23,8 @@ module CommonSense
     end
 
     def session_id=(session_id)
-      auth_proxy = CommonSense::Auth::HTTP.new
-      auth_proxy.session_id = session_id
+      @auth_proxy = CommonSense::Auth::HTTP.new(@base_uri)
+      @auth_proxy.session_id = session_id
     end
 
     def auth_proxy
