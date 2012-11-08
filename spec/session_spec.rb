@@ -28,7 +28,7 @@ describe "session" do
   end
 
   describe "oauth" do
-    describe "with corrent access token", :vcr do
+    describe "with correct access token", :vcr do
        it "should create new session with oauth" do
          session = @client.oauth(CONFIG['CS_CONSUMER_KEY'], CONFIG['CS_CONSUMER_SECRET'],
                                 CONFIG['CS_ACCESS_TOKEN'], CONFIG['CS_ACCESS_TOKEN_SECRET'])

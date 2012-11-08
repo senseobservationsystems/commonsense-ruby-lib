@@ -20,6 +20,11 @@ module CommonSense
       @session.oauth(consumer_key, consumer_secret, access_token, access_token_secret)
     end
 
+    def set_session_id(session_id)
+      @session = Session.new
+      @session.session_id = session_id
+    end
+
     def current_user
       user = User.new
       user.session = @session
