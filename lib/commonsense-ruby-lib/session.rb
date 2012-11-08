@@ -18,18 +18,13 @@ module CommonSense
                                                  @base_uri)
     end
 
-    def setSessionID(session_id)
-      @auth_proxy = CommonSense::Auth::HTTP.new(@base_uri)
-      @auth_proxy.session_id = session_id
-    end
-
     def session_id
       auth_proxy.session_id
     end
 
     def session_id=(session_id)
-      auth_proxy = CommonSense::Auth::HTTP.new
-      auth_proxy.session_id = session_id
+      @auth_proxy = CommonSense::Auth::HTTP.new(@base_uri)
+      @auth_proxy.session_id = session_id
     end
 
     def auth_proxy

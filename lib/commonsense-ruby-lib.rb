@@ -20,9 +20,9 @@ module CommonSense
       @session.oauth(consumer_key, consumer_secret, access_token, access_token_secret)
     end
 
-    def setSessionID(session_id)
+    def set_session_id(session_id)
       @session = Session.new
-      @session.setSessionID(session_id)
+      @session.session_id = session_id
     end
 
     def current_user
