@@ -5,6 +5,8 @@ module CommonSense
     # get groups that user belongs to
     def current_groups(options={})
       res = session.get("/groups.json", options)
+      return nil unless res
+
       group_list = res['groups']
       
 

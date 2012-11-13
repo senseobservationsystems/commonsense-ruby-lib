@@ -7,6 +7,8 @@ module CommonSense
 
     def current_user
       res = session.get('/users/current.json')
+      return nil unless res
+
       from_hash(res["user"]) 
       self
     end
