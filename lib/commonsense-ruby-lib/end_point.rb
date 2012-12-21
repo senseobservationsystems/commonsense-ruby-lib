@@ -3,8 +3,10 @@ module CommonSense
     attr_accessor :session
 
     def from_hash(hash)
-      hash.each do |k,v|
-        self.instance_variable_set("@#{k}", v) if self.respond_to?(k)
+      if hash
+        hash.each do |k,v|
+          self.instance_variable_set("@#{k}", v) if self.respond_to?(k)
+        end
       end
     end
 
