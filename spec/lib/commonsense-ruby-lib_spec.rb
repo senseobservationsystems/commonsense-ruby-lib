@@ -17,6 +17,12 @@ describe "commonsense-ruby-lib" do
           groups.should_not be_empty
         end
       end
+
+      describe "new_user" do
+        it "should create a new user" do
+
+        end
+      end
     end
 
     describe "with session_id" do
@@ -36,7 +42,7 @@ describe "commonsense-ruby-lib" do
                                 CONFIG['CS_ACCESS_TOKEN'], CONFIG['CS_ACCESS_TOKEN_SECRET'])
       end
 
-      it_behaves_like "Client"
+      #it_behaves_like "Client"
     end
   end
 end

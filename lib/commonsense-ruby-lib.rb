@@ -8,20 +8,27 @@ require "commonsense-ruby-lib/group"
 
 module CommonSense
   class Client
-    attr_accessor :session
+    attr_accessor :session, :base_uri
+
+    def initialize(opts={})
+      options = {
+        base_uri: 'https://api.sense-os.nl',
+      }.merge(opts)
+      @base_uri = options[:base_uri]
+    end
 
     def login(user, password)
-      @session = Session.new
+      @session = Session.new(base_uri: @base_uri)
       @session.login(user, password)
     end
 
     def oauth(consumer_key, consumer_secret, access_token, access_token_secret)
-      @session = Session.new
+      @session = Session.new(base_uri: @base_uri)
       @session.oauth(consumer_key, consumer_secret, access_token, access_token_secret)
     end
 
     def set_session_id(session_id)
-      @session = Session.new
+      @session = Session.new(base_uri: @base_uri)
       @session.session_id = session_id
     end
 
@@ -31,10 +38,20 @@ module CommonSense
       user.current_user
     end
 
+    def new_user(*args)
+     user = User.new(args)
+     user.session = Session.new(base_uri: @base_uri, authentication: false)
+     user
+    end
+
     def current_groups
       group = Group.new
       group.session = @session
       group.current_groups
+    end
+
+    def errors
+      return @session.errors if @session
     end
   end
 end

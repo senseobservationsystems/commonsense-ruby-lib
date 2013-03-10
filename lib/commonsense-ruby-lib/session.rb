@@ -1,8 +1,12 @@
 module CommonSense
   class Session
-    def initialize(commonsense_uri="http://api.sense-os.nl")
-      @base_uri = commonsense_uri
-      @auth_proxy = nil
+    def initialize(opts={})
+      options = {
+        base_uri: 'https://api.sense-os.nl',
+        authentication: true
+      }.merge(opts)
+      @base_uri = options[:base_uri]
+      @auth_proxy = options[:authentication] ? nil : CommonSense::Auth::HTTP.new(@base_uri)
     end
 
     # login to commonsense 
