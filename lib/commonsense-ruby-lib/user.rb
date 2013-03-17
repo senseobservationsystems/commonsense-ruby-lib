@@ -4,7 +4,10 @@ module CommonSense
   class User
     include CommonSense::EndPoint
 
-    attribute :id, :email, :username, :name, :surname, :address, :zipcode,
+    resources :users
+    resource :user
+
+    attribute :email, :username, :name, :surname, :address, :zipcode,
       :country, :mobile, :uuid, :openid, :password
 
 
@@ -28,27 +31,6 @@ module CommonSense
       current_user
     end
 
-    def save
-      if @id
-        self.update
-      else
-        self.create
-      end
-    end
-
-    def create
-      parameter = { user: self.to_h }
-      res = session.post('/users.json', parameter)
-      location_header = session.auth_proxy.response_headers["location"]
-      user_id = location_header.scan(/.*\/users\/(.*)/)[0] if location_header
-
-      self.id = user_id[0] if user_id
-    end
-
-    def update
-      parameter = { user: (self.to_h.delete_if {|k,v| v.nil?}) }
-      res = session.put("/users/#{self.id}.json", parameter)
-    end
 
     # get groups that this users belongs to
     def groups

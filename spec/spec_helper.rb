@@ -13,10 +13,14 @@ RSpec.configure do |config|
 
   # create a single user
   config.before(:all) do
+
       unless $user
+        $username = "user#{Time.now.to_f}@tester.com"
+        $password = "password"
+
         client = CommonSense::Client.new(base_uri: ENV['spec_base_uri'])
         $user = client.new_user
-        $user.username = "user#{Time.now.to_f}@tester.com"
+        $user.username = $username
         $user.email = $user.username
         $user.password = 'password'
         $user.name = 'Jan'
@@ -27,8 +31,6 @@ RSpec.configure do |config|
         $user.mobile = '123456789'
         $user.save
       end
-
-      $user
   end
 end
 

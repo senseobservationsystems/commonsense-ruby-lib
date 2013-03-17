@@ -1,10 +1,13 @@
 require "commonsense-ruby-lib/version"
+require "commonsense-ruby-lib/error"
 require "commonsense-ruby-lib/auth/http"
 require "commonsense-ruby-lib/auth/oauth"
 require "commonsense-ruby-lib/session"
 require "commonsense-ruby-lib/end_point"
 require "commonsense-ruby-lib/user"
 require "commonsense-ruby-lib/group"
+require "commonsense-ruby-lib/sensor"
+require "commonsense-ruby-lib/relations/sensor_relation"
 
 module CommonSense
   class Client
@@ -17,9 +20,13 @@ module CommonSense
       @base_uri = options[:base_uri]
     end
 
-    def login(user, password)
+    def login!(user, password)
       @session = Session.new(base_uri: @base_uri)
       @session.login(user, password)
+    end
+
+    def login(user, password)
+      login!(user, password) rescue nil
     end
 
     def oauth(consumer_key, consumer_secret, access_token, access_token_secret)
@@ -42,6 +49,10 @@ module CommonSense
      user = User.new(args)
      user.session = Session.new(base_uri: @base_uri, authentication: false)
      user
+    end
+
+    def sensors
+      CommonSense::SensorRelation.new(@session)
     end
 
     def current_groups

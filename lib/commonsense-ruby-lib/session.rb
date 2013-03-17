@@ -63,6 +63,10 @@ module CommonSense
     def response_body
       auth_proxy.response_body
     end
+
+    def response_headers
+      auth_proxy.response_headers
+    end
     
     def errors
       auth_proxy.errors
@@ -70,6 +74,24 @@ module CommonSense
 
     def base_uri=(uri = nil)
       auth_proxy.base_uri = uri
+    end
+
+    def dump_to_text(path)
+      File.open(path, 'w') do |f|
+        f.write("Response Code: #{response_code}\n")
+        f.write("Response Headers: #{response_headers}\n")
+        f.write("Errors: #{errors}\n")
+        f.write("\n")
+        f.write(response_body)
+      end
+    end
+
+    def open_in_browser(path=nil)
+      require 'launchy'
+
+      path ||= "/tmp/common-sense-ruby-#{Time.now.to_i}.html"
+      dump_to_text(path)
+      ::Launchy::Browser.run(path)
     end
   end
 end
