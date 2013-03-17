@@ -9,94 +9,85 @@ describe "Sensor Management" do
       @client.login($username, $password)
     end
 
+    after(:all) do
+      @client.sensors.each {|sensors| sensors.delete}
+    end
+
     let(:sensor_info) do
-      sensor_info = OpenStruct.new
-      sensor_info.name = "accelerometer"
-      sensor_info.display_name = "Accelerometer"
-      sensor_info.display_name = "BMA123"
-      sensor_info.pager_type = "email"
-      sensor_info.data_type = "json"
-      sensor_info.data_structure = {"x-axis" => Float, "y-axis" => Float, "z-axis" => Float}
-      sensor_info
+      {
+        name: "accelerometer",
+        display_name: "Accelerometer",
+        device_type: "BMA123",
+        pager_type: "email",
+        data_type: "json",
+        data_structure: {"x-axis" => "Float", "y-axis" => "Float", "z-axis" => "Float"}
+      }
+    end
+
+    def compare_to_sensor_info(sensor)
+      sensor.name.should eq(sensor_info[:name])
+      sensor.display_name.should eq(sensor_info[:display_name])
+      sensor.display_name.should eq(sensor_info[:display_name])
+      sensor.pager_type.should eq(sensor_info[:pager_type])
+      sensor.data_type.should eq(sensor_info[:data_type])
+      sensor.data_structure.should eq(sensor_info[:data_structure])
     end
 
     it "create a new sensor" do
       sensor = @client.sensors.build
-      sensor.name = sensor_info.name
-      sensor.display_name = sensor_info.display_name
-      sensor.device_type = sensor_info.display_name
-      sensor.pager_type = sensor_info.pager_type
-      sensor.data_type = sensor_info.data_type
-      sensor.data_structure = sensor_info.data_structure
-      binding.pry
+      sensor.name = sensor_info[:name]
+      sensor.display_name = sensor_info[:display_name]
+      sensor.device_type = sensor_info[:display_name]
+      sensor.pager_type = sensor_info[:pager_type]
+      sensor.data_type = sensor_info[:data_type]
+      sensor.data_structure = sensor_info[:data_structure]
       sensor.save!
     end
 
     it "get list of sensor from commonSense" do
-      @client.sensors.all
+      sensor = @client.sensors.build(sensor_info)
+      sensor.save!
 
-      @client.sensor.each do |sensor|
-        sensor.name.should eq(sensor_info.name)
-        sensor.display_name.should eq(sensor_info.display_name)
-        sensor.display_name.should eq(sensor_info.display_name)
-        sensor.pager_type.should eq(sensor_info.pager_type)
-        sensor.data_type.shoudl eq(sensor_info.data_type)
-        sensor.data_structure.should eq(sensor_info.data_structure)
+      @client.sensors.all.should_not be_empty
+
+      # there could be another Virtual sensor that is automatically created
+      @client.sensors.count.should be > 1
+
+      @client.sensors.each do |sensor|
+        compare_to_sensor_info(sensor)
+        break
       end
-
-      @client.sensors.count.should eq(1)
     end
 
     it "get first sensor data" do
+      sensor = @client.sensors.build(sensor_info)
+      sensor.save!
       sensor = @client.sensors.first
-      sensor.should_no be nil
+
+      sensor.should_not be nil
+      compare_to_sensor_info(sensor)
     end
 
     it "get sensor data by id" do
-      first = @client.sensors.first
-      sensor = @client.sensors.find(first.id)
-      sensor.should_not be_nil
-    end
+      sensor = @client.sensors.build(sensor_info)
+      sensor.save!
 
-    it "get last sensor data" do
-      sensor = @client.sensors.last
+      first = @client.sensors.first
+
+      sensor = @client.sensors.find(first.id)
       sensor.should_not be_nil
     end
 
 
     it "filter sensor data" do
-      sensors = @client.sensors.where(owned: true, pysical: true, details: true)
-      sensors.should_not be_empty
-    end
-
-    it "update sensor information" do
-      sensor = @client.sensors.first
-
-      sensor.name = "Name edit"
-      sensor.display_name = "Display Name Edit"
-      sensor.display_name = "Type Edit"
-      sensor.pager_type = "Pager Type Edit"
-      sensor.data_type = Integer
-      sensor.save
-
-      sensor.reload
-
-      sensor.name.should eq("Name edit")
-      sensor.display_name.should eq("Display Name Edit")
-      sensor.display_name.should eq("Type Edit")
-      sensor.pager_type.should eq("Pager Type Edit")
-      sensor.data_type.should eq(Integer)
-      sensor.data_structure.should eq("1")
-    end
-
-    it "delete sensor" do
-      sensor = @client.sensor.first
-      sensor.delete
-
-      @client.sensors.all.should be_empty
+      sensor = @client.sensors.build(sensor_info)
+      sensor.save!
+      sensors = @client.sensors.where(page: 0, per_page: 1, owned: true , details: true)
+      sensors.to_a.should_not be_empty
     end
 
     it "should handle pagination" do
+      pending
       2.times.do { create_sensor }
 
       i = 0;

@@ -119,7 +119,7 @@ module CommonSense
 
     def url_for(method, id=nil)
       url = self.class.class_variable_get("@@#{method}_url".to_sym)
-      url.sub!(":id", "#{@id}") if id
+      url = url.sub(":id", "#{@id}") if id
       url
     end
     

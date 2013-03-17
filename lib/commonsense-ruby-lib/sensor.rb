@@ -6,6 +6,17 @@ module CommonSense
     resources :sensors
     resource :sensor
 
+
+
+    def initialize(hash={})
+      from_hash(hash)
+      if self.data_type == "json"
+        if self.data_structure && self.data_structure.kind_of?(String)
+          self.data_structure = JSON.parse(self.data_structure)
+        end
+      end
+    end
+
     # overide Endpoint#to_parameters
     alias_method :original_to_parameters, :to_parameters
     def to_parameters
@@ -18,6 +29,5 @@ module CommonSense
 
       param
     end
-
   end
 end

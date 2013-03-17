@@ -15,9 +15,10 @@ module CommonSense
         reset
       end
 
-      def get(path, headers = {})
+      def get(path, query={}, headers = {})
         reset
-        options = prepare(nil, headers) 
+        headers = default_headers.merge(headers)
+        options = {query: query, headers: headers} 
         @response_body = self.class.get(path, options)
         parse_response
         @response_body
@@ -37,9 +38,11 @@ module CommonSense
         @response_body
       end
 
-      def delete(path, headers = {})
-        params = prepare(path, nil, headers)
-        @response_body = self.class.delete(path, prepare(nil, headers))
+      def delete(path, query={}, headers = {})
+        reset
+        headers = default_headers.merge(headers)
+        options = {query: query, headers: headers} 
+        @response_body = self.class.delete(path, options)
         parse_response
         @response_body
       end

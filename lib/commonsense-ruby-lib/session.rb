@@ -36,8 +36,8 @@ module CommonSense
       @auth_proxy
     end
 
-    def get(path, headers = {})
-      auth_proxy.get(path, headers)
+    def get(path, body = '', headers = {})
+      auth_proxy.get(path, body, headers)
     end
 
     def post(path, body = '', headers = {})
@@ -48,7 +48,7 @@ module CommonSense
       auth_proxy.put(path, body, headers)
     end
 
-    def delete(path, headers = {})
+    def delete(path, body='', headers = {})
       auth_proxy.delete(path, body, headers)
     end
 
@@ -92,6 +92,14 @@ module CommonSense
       path ||= "/tmp/common-sense-ruby-#{Time.now.to_i}.html"
       dump_to_text(path)
       ::Launchy::Browser.run(path)
+    end
+
+    def to_s
+      "\"#{self.session_id}\""
+    end
+
+    def inspect
+      auth_proxy.kind_of?(CommonSense::Auth::HTTP) ? to_s : "OAuth"
     end
   end
 end
