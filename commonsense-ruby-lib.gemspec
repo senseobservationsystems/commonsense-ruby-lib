@@ -17,6 +17,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency("rspec", "~> 2.13.0")
   #gem.add_development_dependency("vcr", "~> 2.3.0")
   gem.add_development_dependency("fakeweb", "~> 1.3.0")
-  gem.add_dependency('httparty', '~> 0.9.0')
+  gem.add_dependency('httparty', '~> 0.10.2')
   gem.add_dependency('oauth', '~> 0.4.7')
 end

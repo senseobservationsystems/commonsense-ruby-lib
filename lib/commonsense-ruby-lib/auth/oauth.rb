@@ -31,7 +31,6 @@ module CommonSense
       def post(path, body = '', headers = {})
         reset
         response = self.class.post(path, body, headers)
-        binding.pry
         @response_code = @response_body.response.code.to_i
         @response_body
       end

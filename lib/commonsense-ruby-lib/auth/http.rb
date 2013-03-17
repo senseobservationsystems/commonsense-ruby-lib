@@ -1,4 +1,5 @@
 require "httparty"
+require "json"
 
 module CommonSense
   module Auth
@@ -55,7 +56,8 @@ module CommonSense
       end
 
       def default_headers
-        self.class.default_options[:headers] || {}
+        header = self.class.default_options[:headers] || {}
+        header.merge({"Content-Type" => "application/json"})
       end
 
       def default_headers=(header_hash)
@@ -102,7 +104,7 @@ module CommonSense
 
       def prepare(body=nil, headers={})
         headers = default_headers.merge(headers)
-        {:query => body, :headers => headers}
+        {:body => body.to_json, :headers => headers}
       end
     end
   end
