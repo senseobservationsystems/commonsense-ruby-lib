@@ -46,9 +46,7 @@ module CommonSense
     end
 
     def update
-      binding.pry
-      parameter = { user: self.to_h }
-      parameter[:user].delete(:password) unless self.password
+      parameter = { user: (self.to_h.delete_if {|k,v| v.nil?}) }
       res = session.put("/users/#{self.id}.json", parameter)
     end
 

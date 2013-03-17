@@ -10,6 +10,30 @@ CONFIG = YAML.load(File.read(File.expand_path("support/spec_config.yml", File.di
 
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true
+
+  # create a single user
+  config.before(:all) do
+      unless $user
+        client = CommonSense::Client.new(base_uri: ENV['spec_base_uri'])
+        $user = client.new_user
+        $user.username = "user#{Time.now.to_f}@tester.com"
+        $user.email = $user.username
+        $user.password = 'password'
+        $user.name = 'Jan'
+        $user.surname = 'jagger'
+        $user.address = 'Lloydstraat 5'
+        $user.zipcode = '3024ea'
+        $user.country = 'NETHERLANDS'
+        $user.mobile = '123456789'
+        $user.save
+      end
+
+      $user
+  end
 end
 
-ENV['spec_base_uri'] ||= 'http://api.dev.sense-os.local'
+def create_client
+  CommonSense::Client.new(base_uri: ENV['spec_base_uri'])
+end
+
+ENV['spec_base_uri'] ||= 'http://localhost:8080'

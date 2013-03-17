@@ -5,21 +5,6 @@ describe "User management" do
   describe "Manage user" do
 
     let!(:user) do
-      unless $user
-        client = CommonSense::Client.new(base_uri: ENV['spec_base_uri'])
-        $user = client.new_user
-        $user.username = "user#{Time.now.to_f}@tester.com"
-        $user.email = $user.username
-        $user.password = 'password'
-        $user.name = 'Jan'
-        $user.surname = 'jagger'
-        $user.address = 'Lloydstraat 5'
-        $user.zipcode = '3024ea'
-        $user.country = 'NETHERLANDS'
-        $user.mobile = '123456789'
-        $user.save
-      end
-
       $user
     end
 
@@ -31,9 +16,9 @@ describe "User management" do
     it "get user data from commonSense" do
       attributes = user.to_h
 
-      client = CommonSense::Client.new(base_uri: ENV['spec_base_uri'])
+      client = create_client
       client.login(user.username, 'password')
-      
+
       current_user = client.current_user
 
       attributes.each do |key, value|
@@ -54,7 +39,7 @@ describe "User management" do
         mobile: '987654321'
       }
 
-      client = CommonSense::Client.new(base_uri: ENV['spec_base_uri'])
+      client = create_client
       client.login(user.username, 'password')
 
       current_user = client.current_user
