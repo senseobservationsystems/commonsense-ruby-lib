@@ -46,20 +46,21 @@ module CommonSense
 
     def count
       check_session!
-        sensors = get_sensor_self
+      sensors = get_single_sensor_self
       sensors["total"] if sensors
     end
 
     def first
-      sensors = get_sensor_self
+      sensors = get_single_sensor_self
 
-      sensors = sensors["sensors"]
-      if !sensors.empty?
-        sensor = CommonSense::Sensor.new(sensors[0])
-        sensor.session = self.session
+      parse_single_sensor(sensors)
+    end
 
-        return sensor
-      end
+    def last
+      total = count
+      sensors = get_single_sensor_self(page: count - 1)
+
+      parse_single_sensor(sensors)
     end
 
     def get_sensor!(params={})
@@ -78,21 +79,16 @@ module CommonSense
 
     def where(params={})
       # todo Fix optional parameter
+      params.delete(:page) if !params[:page].is_a?(Fixnum)
+      params.delete(:per_page) if !params[:page].is_a?(Fixnum)
       options = {page: 0, per_page: 1000}.merge(params)
       self.page = params[:page] if params[:page].kind_of?(Fixnum)
       self.per_page= params[:per_page] if params[:per_page].kind_of?(Fixnum)
-      self.shared = 1 if params[:shared]
-      self.owned = 1 if params[:owned]
-      self.physical = 1 if params[:physical]
+      self.shared = boolean_to_i(params[:shared])
+      self.owned = boolean_to_i(params[:owned])
+      self.physical = boolean_to_i(params[:physical])
       self.details = params[:details] if details_valid?(params[:details])
       self
-    end
-
-    def get_sensor_self(params={})
-      get_sensor({
-        page: 0, per_page: 1, shared: self.shared,
-        owned: self.owned, physical: self.physical, details: self.details
-      })
     end
 
     def find(id)
@@ -112,8 +108,35 @@ module CommonSense
 
     private
     def details_valid?(details)
+      return true if nil?
+
       details and details.kind_of?(String) and
-      ["no", "full"].include?(details.to_lower)
+      ["no", "full"].include?(details.downcase)
+    end
+
+    def boolean_to_i(param)
+      return nil if param.nil?
+      return 0 if [0, "0", false].include?(param)
+      return 1
+    end
+
+    def parse_single_sensor(sensors)
+      sensors = sensors["sensors"]
+      if !sensors.empty?
+        sensor = CommonSense::Sensor.new(sensors[0])
+        sensor.session = self.session
+
+        return sensor
+      end
+    end
+
+    def get_single_sensor_self(params={})
+      options = {
+        page: 0, per_page: 1, shared: self.shared,
+        owned: self.owned, physical: self.physical, details: self.details
+      }
+      options.merge!(params)
+      get_sensor(options)
     end
   end
 end
