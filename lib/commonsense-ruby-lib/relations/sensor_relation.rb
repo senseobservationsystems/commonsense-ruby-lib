@@ -31,7 +31,7 @@ module CommonSense
           page += 1
         end
 
-      end while !sensors.empty?
+      end while sensors.size == self.per_page
     end
 
     def build(attribtues={})

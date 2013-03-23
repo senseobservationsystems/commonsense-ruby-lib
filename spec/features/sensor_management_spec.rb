@@ -87,15 +87,19 @@ describe "Sensor Management" do
     end
 
     it "should handle pagination" do
-      pending
-      2.times.do { create_sensor }
+      2.times do
+        sensor = @client.sensors.build(sensor_info)
+        sensor.save!
+      end
+
+      count = @client.sensors.count
 
       i = 0;
       @client.sensors.where(per_page: 1).each do
         i += 1
       end
 
-      i.should eq(2)
+      i.should eq(count)
     end
   end
 end
