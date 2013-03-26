@@ -17,7 +17,8 @@ describe "User management" do
       attributes = user.to_h
 
       client = create_client
-      client.login(user.username, 'password')
+      session_id = client.login(user.username, 'password')
+      session_id.should_not be_nil
 
       current_user = client.current_user
 
@@ -29,6 +30,12 @@ describe "User management" do
 
     it "update user" do
       current_time = Time.now.to_f
+      client = create_client
+      username = "user-#{current_time}@tester.com"
+      current_user = client.new_user(username: username, email: username, password: 'password')
+      current_user.save!
+      current_user.id.should_not be_nil
+
       expected = { username: "user-edit-#{current_time}@tester.com",
         email: "user-edit-#{current_time}@tester.com",
         name: "Jan Edit",
@@ -40,15 +47,18 @@ describe "User management" do
       }
 
       client = create_client
-      client.login(user.username, 'password')
+      client.session.should be_nil
+      session_id = client.login(current_user.username, 'password')
+      session_id.should_not be_nil
+      client.session.should_not be_nil
 
       current_user = client.current_user
 
       expected.each do |key, value|
-        current_user.send("#{key}=".to_sym, value) 
+        current_user.send("#{key}=".to_sym, value)
       end
 
-      current_user.save
+      current_user.save!
       current_user.reload
 
       expected.each do |key,value|

@@ -61,6 +61,10 @@ module CommonSense
       def default_headers
         header = self.class.default_options[:headers] || {}
         header.merge({"Content-Type" => "application/json"})
+        if @session_id
+          header.merge!('X-SESSION_ID' => self.session_id)
+        end
+        header
       end
 
       def default_headers=(header_hash)
@@ -69,9 +73,6 @@ module CommonSense
 
       def session_id=(session_id)
         @session_id = session_id
-        headers = default_headers
-        headers.merge!('X-SESSION_ID' => self.session_id)
-        self.default_headers = headers
       end
 
 

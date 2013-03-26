@@ -2,13 +2,13 @@ require 'spec_helper'
 
 describe "session" do
   before(:each) do
-    @client = client = CommonSense::Client.new
+    @client = client = CommonSense::Client.new(base_uri: ENV['spec_base_uri'])
   end
 
   describe "login" do
     describe "with corrent username and password" do
-      it "should create new session", :vcr do
-        session_id = @client.login(CONFIG['CS_USER'], CONFIG['CS_PASSWORD'])
+      it "should create new session" do
+        session_id = @client.login($user.username, 'password')
         session_id.should_not be_nil
         @client.session.should_not be_nil
         @client.session.response_code.should eq(200)
@@ -18,7 +18,7 @@ describe "session" do
 
     describe "with incorrect username or password" do
       it "should create new session", :vcr do
-        session_id = @client.login(CONFIG['CS_USER'], "x#{CONFIG['CS_PASSWORD']}")
+        session_id = @client.login($user.username, "x#{$user.password}")
         session_id.should be_nil
         @client.session.should_not be_nil
         @client.session.response_code.should eq(403)
@@ -28,7 +28,7 @@ describe "session" do
   end
 
   describe "oauth" do
-    describe "with correct access token", :vcr do
+    describe "with correct access token" do
        it "should create new session with oauth" do
          pending
          session = @client.oauth(CONFIG['CS_CONSUMER_KEY'], CONFIG['CS_CONSUMER_SECRET'],

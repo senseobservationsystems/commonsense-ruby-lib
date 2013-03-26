@@ -13,7 +13,6 @@ RSpec.configure do |config|
 
   # create a single user
   config.before(:all) do
-
       unless $user
         $username = "user#{Time.now.to_f}@tester.com"
         $password = "password"
@@ -38,4 +37,4 @@ def create_client
   CommonSense::Client.new(base_uri: ENV['spec_base_uri'])
 end
 
-ENV['spec_base_uri'] ||= 'http://localhost:8080'
+ENV['spec_base_uri'] ||= 'http://api.dev.sense-os.local'

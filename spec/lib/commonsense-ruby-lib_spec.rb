@@ -3,23 +3,23 @@ require 'spec_helper'
 describe "commonsense-ruby-lib" do
   describe "client with authentication" do
     before(:each) do
-      @client = client = CommonSense::Client.new
-      @session_id = @client.login(CONFIG['CS_USER'], CONFIG['CS_PASSWORD'])
+      @client = client = create_client
+      @session_id = @client.login($user.username, 'password')
       @session_id.should_not be_nil
     end
 
-    describe "current_user", :vcr do
+    describe "current_user" do
       it "should return current user information" do
         current_user = @client.current_user
-        current_user.username.should eq('a')
+        current_user.username.should eq($user.username)
         current_user.to_h.should be_kind_of Hash
       end
     end
 
-    describe "groups", :vcr do
+    describe "groups" do
       it "should return groups that current user belongs to" do
         groups = @client.current_groups
-        groups.should_not be_empty
+        groups.should be_empty
       end
     end
 

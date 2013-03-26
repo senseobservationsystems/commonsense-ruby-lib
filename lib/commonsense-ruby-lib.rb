@@ -45,8 +45,8 @@ module CommonSense
       user.current_user
     end
 
-    def new_user(*args)
-     user = User.new(args)
+    def new_user(hash={})
+     user = User.new(hash)
      user.session = Session.new(base_uri: @base_uri, authentication: false)
      user
     end

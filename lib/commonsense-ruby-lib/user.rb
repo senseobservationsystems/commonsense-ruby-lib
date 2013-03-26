@@ -10,6 +10,12 @@ module CommonSense
     attribute :email, :username, :name, :surname, :address, :zipcode,
       :country, :mobile, :uuid, :openid, :password
 
+    def initialize(hash={})
+      if hash[:password]
+        hash[:password] = Digest::MD5.hexdigest(hash[:password])
+      end
+      super(hash)
+    end
 
     def password=(plain_text)
       @password = Digest::MD5.hexdigest(plain_text)
