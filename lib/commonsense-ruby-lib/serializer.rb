@@ -8,16 +8,13 @@ module CommonSense
       end
     end
 
-    def to_h
+    def to_h(include_nil = true)
       symbol = self.class.attribute_set
       hash = {}
       symbol.each {|var| hash[var] = instance_variable_get("@#{var}")}
-      hash
+
+      return include_nil ? hash : hash.reject { |k,v| v.nil? }
     end
 
-    def to_parameters
-      hash = self.to_h
-      hash.reject { |k,v| v.nil? }
-    end
   end
 end

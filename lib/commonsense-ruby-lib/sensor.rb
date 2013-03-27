@@ -18,16 +18,15 @@ module CommonSense
     end
 
     # overide Endpoint#to_parameters
-    alias_method :original_to_parameters, :to_parameters
     def to_parameters
-      param = original_to_parameters
+      param = self.to_h(false)
       if param[:data_type] == "json"
         if param[:data_structure] && !param[:data_structure].kind_of?(String)
           param[:data_structure] = param[:data_structure].to_json
         end
       end
 
-      param
+      {sensor: param}
     end
   end
 end

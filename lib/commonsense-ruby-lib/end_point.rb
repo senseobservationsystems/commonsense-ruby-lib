@@ -11,6 +11,10 @@ module CommonSense
       from_hash(hash)
     end
 
+    def to_parameters
+      resource.nil? ? self.to_h(false) : { self.resource => self.to_h(false) }
+    end
+
     def save!
       check_session!
 
@@ -26,9 +30,7 @@ module CommonSense
     end
 
     def create!
-      post_url = url_for(:post) 
-
-      parameter = { resource => self.to_parameters }
+      parameter = self.to_parameters
       res = session.post(post_url, parameter)
 
       if session.response_code != 201
@@ -53,7 +55,6 @@ module CommonSense
       check_session!
       raise CommonSense::ResourceIdError unless @id
 
-      get_url = url_for(:get, @id)
       res = session.get(get_url)
 
       from_hash(res[resource.to_s])
@@ -77,9 +78,7 @@ module CommonSense
       check_session!
       raise CommonSense::ResourceIdError unless @id
 
-      put_url = url_for(:put, self.id) 
-
-      parameter = { resource => self.to_parameters }
+      parameter = self.to_parameters
       res = session.put(put_url, parameter)
 
       self
@@ -93,7 +92,6 @@ module CommonSense
       check_session!
       raise CommonSense::ResourceIdError unless @id
 
-      delete_url = url_for(:delete, self.id) 
       res = session.delete(delete_url)
       self.id = nil
 
@@ -104,11 +102,33 @@ module CommonSense
       delete! rescue nil
     end
 
+    def url_for(method, id=nil)
+      raise CommonSense::ResourcesError if resources.nil?
+      url = self.class.class_variable_get("@@#{method}_url".to_sym)
+      url = url.sub(":id", "#{@id}") if id
+      url
+    end
+
+    def post_url
+      url_for(:post)
+    end
+
+    def get_url
+      url_for(:get, self.id)
+    end
+
+    def put_url
+      url_for(:put, self.id)
+    end
+
+    def delete_url
+      url_for(:delete, self.id)
+    end
+
     def self.included(base)
       base.extend(ClassMethod)
     end
-    
-    private
+
     def resource
       self.class.class_variable_get(:@@resource)
     end
@@ -117,17 +137,12 @@ module CommonSense
       self.class.class_variable_get(:@@resources)
     end
 
-    def url_for(method, id=nil)
-      url = self.class.class_variable_get("@@#{method}_url".to_sym)
-      url = url.sub(":id", "#{@id}") if id
-      url
-    end
-    
+    private
     def check_session!
       raise CommonSense::SessionEmptyError unless @session
     end
 
-    module ClassMethod 
+    module ClassMethod
       def attribute(*args)
         attr_accessor *args
 
@@ -152,22 +167,6 @@ module CommonSense
 
       def resource(resource)
         class_variable_set(:@@resource, resource)
-      end
-
-      def post_url(url)
-        class_variable_set(:@@post_url, url)
-      end
-
-      def get_url(url)
-        class_variable_set(:@@get_url, url)
-      end
-
-      def put_url(url)
-        class_variable_set(:@@put_url, url)
-      end
-
-      def delete_url(url)
-        class_variable_set(:@@delete_url, url)
       end
     end
   end

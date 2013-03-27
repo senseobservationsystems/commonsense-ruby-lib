@@ -11,6 +11,12 @@ module CommonSense
     end
   end
   
+  class ResourcesError < Error
+    def exception(message = "Resources is not set for class: #{self.class}")
+      super(message)
+    end
+  end
+
   class ResponseError < Error
     def exception(message = "Error Response from CommonSense")
       super(message)
@@ -19,6 +25,12 @@ module CommonSense
 
   class SessionEmptyError < Error
     def exception(message = "There is no Session found")
+      super(message)
+    end
+  end
+
+  class NotImplementedError < Error
+    def exception(message = "There is unimplemented method")
       super(message)
     end
   end
