@@ -12,7 +12,8 @@ module CommonSense
     end
 
     def to_parameters
-      resource.nil? ? self.to_h(false) : { self.resource => self.to_h(false) }
+      r = self.resource rescue nil
+      r.nil? ? self.to_h(false) : { self.resource => self.to_h(false) }
     end
 
     def save!
@@ -39,16 +40,19 @@ module CommonSense
       end
 
       location_header = session.response_headers["location"]
-      id = location_header.scan(/.*\/#{resources}\/(.*)/)[0] if location_header
+      id = scan_header_for_id(location_header) 
       self.id = id[0] if id
 
-      self
+      true
+    end
+
+    def scan_header_for_id(location_header)
+      location_header.scan(/.*\/#{resources}\/(.*)/)[0] if location_header
     end
 
     def create
-      create!
-    rescue
-      nil
+      result = create! rescue nil
+      not result.nil?
     end
 
     def retrieve!
@@ -56,10 +60,15 @@ module CommonSense
       raise CommonSense::ResourceIdError unless @id
 
       res = session.get(get_url)
+      if session.response_code != 200
+        errors = session.errors rescue nil
+        raise CommonSense::ResponseError, errors
+      end
+      
 
-      from_hash(res[resource.to_s])
-
-      self
+      binding.pry
+      from_hash(res[resource.to_s]) 
+      true
     end
 
     def reload!
@@ -67,7 +76,8 @@ module CommonSense
     end
 
     def retrieve
-      retrieve! rescue nil
+      result = retrieve! rescue nil
+      not result.nil?
     end
 
     def reload
@@ -81,11 +91,17 @@ module CommonSense
       parameter = self.to_parameters
       res = session.put(put_url, parameter)
 
-      self
+      if session.response_code != 200
+        errors = session.errors rescue nil
+        raise CommonSense::ResponseError, errors
+      end
+
+      true
     end
 
     def update
-      update! rescue nil
+      result = update! rescue nil
+      not result.nil?
     end
 
     def delete!
@@ -93,13 +109,20 @@ module CommonSense
       raise CommonSense::ResourceIdError unless @id
 
       res = session.delete(delete_url)
+
+      if session.response_code != 200
+        errors = session.errors rescue nil
+        raise CommonSense::ResponseError, errors
+      end
+
       self.id = nil
 
-      self
+      true
     end
 
     def delete
-      delete! rescue nil
+      result = delete! rescue nil
+      not result.nil?
     end
 
     def url_for(method, id=nil)
@@ -131,6 +154,8 @@ module CommonSense
 
     def resource
       self.class.class_variable_get(:@@resource)
+    rescue
+      raise CommonSense::ResourceError, "'resource' is not set up for class : #{self.class}" 
     end
 
     def resources

@@ -1,36 +1,42 @@
 module CommonSense
   class Error < ::RuntimeError
-    def exception(message = "")
-      RuntimeError.new(message)
+    def initialize(message = "")
+      super(message)
     end
   end
 
   class ResourceIdError < Error
-    def exception(message = "No id found for Resrouce: #{self.class}")
+    def initialize(message = "No id found for Resrouce: #{self.class}")
       super(message)
     end
   end
   
   class ResourcesError < Error
-    def exception(message = "Resources is not set for class: #{self.class}")
+    def initialize(message = "'resources' is not set for class: #{self.class}")
+      super(message)
+    end
+  end
+
+  class ResourceError < Error
+    def initialize(message = "'resource' is not set for class: #{self.class}")
       super(message)
     end
   end
 
   class ResponseError < Error
-    def exception(message = "Error Response from CommonSense")
+    def initialize(message = "Error Response from CommonSense")
       super(message)
     end
   end
 
   class SessionEmptyError < Error
-    def exception(message = "There is no Session found")
+    def initialize(message = "There is no Session found")
       super(message)
     end
   end
 
   class NotImplementedError < Error
-    def exception(message = "There is unimplemented method")
+    def initialize(message = "There is unimplemented method")
       super(message)
     end
   end

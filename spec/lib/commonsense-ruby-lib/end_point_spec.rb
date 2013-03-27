@@ -106,6 +106,7 @@ describe CommonSense::EndPoint do
       foo = FooEndPoint.new(id: 1)
       session = double("CommonSense::Session")
       session.should_receive(:get).with("/foos/1.json").and_return({"foo" => valid_foo})
+      session.stub(:response_code => 200)
       foo.session = session
 
       result = foo.retrieve!
@@ -130,6 +131,7 @@ describe CommonSense::EndPoint do
       foo = FooEndPoint.new(foo_data)
       session = double("CommonSense::Session")
       session.should_receive(:put).with("/foos/1.json", {foo: foo_data}).and_return({"foo" => valid_foo})
+      session.stub(:response_code => 200)
       foo.session = session
 
       foo.update!.should be_true
@@ -158,11 +160,12 @@ describe CommonSense::EndPoint do
       foo = FooEndPoint.new(id: 1)
       session = double("CommonSense::Session")
       session.should_receive(:delete).with("/foos/1.json")
+      session.stub(:response_code => 200)
       foo.session = session
 
       result = foo.delete!
       result.should be_true
-      result.id.should be_nil
+      foo.id.should be_nil
     end
   end
 
