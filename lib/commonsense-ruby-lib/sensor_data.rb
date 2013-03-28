@@ -14,12 +14,12 @@ module CommonSense
 
     # there is no currently end point for geting data by id 
     def retrieve!
-      nil
+      raise NotImplementedError, "There is no current end point to get sensor data by id"
     end
 
     # there is no currently end point for updating data
     def update!
-      nil
+      raise NotImplementedError, "There is no current end point to update sensor data by id"
     end
 
     def scan_header_for_id(location_header)

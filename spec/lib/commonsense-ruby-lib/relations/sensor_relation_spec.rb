@@ -3,6 +3,9 @@ require 'commonsense-ruby-lib/sensor'
 
 module CommonSense
 describe SensorRelation do
+  before(:each) do
+    pending "not implemented yet"
+  end
 
   describe "build" do
     it "should return a sensor object" do
@@ -20,6 +23,26 @@ describe SensorRelation do
     relation.stub("get_data").and_return(sensors)
     relation
   }
+
+  describe "get_data!" do
+    it "should fetch sensor data from commonSense" do
+      session = double('Session')
+      option = {page: 100, per_page: 99, shared: 1, owned:1, physical: 1, details: "full"}
+      session.should_receive(:get).with("/sensors.json", option)
+
+      relation = SensorRelation.new(session)
+      relation.get_data!(page: 100, per_page: 99, shared:true, owned:true, physical:true, details:"full")
+    end
+  end
+
+  describe "get_data" do
+    it "should not throw an exception" do
+      relation = SensorRelation.new
+      relation.stub(:get_data!).and_return { raise Error }
+
+      expect { relation.get_data}.to_not raise_error
+    end
+  end
 
   describe "each" do
     it "should get all sensor and yield each" do
@@ -53,26 +76,6 @@ describe SensorRelation do
       first = relation.last
       first.should be_kind_of(Sensor)
       first.name.should eq("sensor3")
-    end
-  end
-
-  describe "get_data!" do
-    it "should fetch sensor list from commonSense" do
-      session = double('Session')
-      option = {page: 100, per_page: 99, shared: 1, owned:1, physical: 1, details: "full"}
-      session.should_receive(:get).with("/sensors.json", option)
-
-      relation = SensorRelation.new(session)
-      relation.get_data!(page: 100, per_page: 99, shared:true, owned:true, physical:true, details:"full")
-    end
-  end
-
-  describe "get_data" do
-    it "should not throw an exception" do
-      relation = SensorRelation.new
-      relation.stub(:get_data!).and_return { raise Error }
-
-      expect { relation.get_data}.to_not raise_error
     end
   end
 

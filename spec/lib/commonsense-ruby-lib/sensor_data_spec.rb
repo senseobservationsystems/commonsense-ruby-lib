@@ -36,30 +36,31 @@ module CommonSense
     end
 
     describe "Get specific data point" do
-      it "should return nil" do
-        data = SensorData.new(sensor_id: 1, id:1)
-        data.retrieve!.should be_nil
+      it "shoudl request data point from commonSense" do
+        data = SensorData.new
+        expect { data.retrieve!.should }.to raise_error(NotImplementedError)
       end
     end
 
     describe "Update specific data point" do
-      it "should return nil" do
-        data = SensorData.new(sensor_id: 1, id:1)
-        data.update!.should be_nil
+      it "shoudl request data point from commonSense" do
+        data = SensorData.new
+        expect { data.retrieve!.should }.to raise_error(NotImplementedError)
       end
     end
 
     describe "Delete specific data point" do
-      it "should delete data point" do
+      it "should perform DELETE request to commonSense" do
         data = SensorData.new(sensor_id: 1, id: "abcdef")
+
         session = double("CommonSense::Session")
         session.should_receive(:delete).with("/sensors/1/data/abcdef.json")
-
         session.stub(:response_code => 200)
         data.session = session
 
         data.delete!.should be_true
       end
     end
+
   end
 end
