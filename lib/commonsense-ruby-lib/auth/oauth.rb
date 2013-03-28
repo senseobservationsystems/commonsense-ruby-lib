@@ -13,7 +13,7 @@ module CommonSense
         @access_token = access_token
         @access_token_secret = access_token_secret
         oauth_base = ::OAuth::Consumer.new(consumer_key, consumer_secret, :site => uri)
-        @oauth = ::OAuth::AccessToken.new(oauth_base, access_token, access_token_secret)  
+        @oauth = ::OAuth::AccessToken.new(oauth_base, access_token, access_token_secret)
         reset
       end
 
@@ -21,7 +21,7 @@ module CommonSense
         @oauth
       end
 
-      def get(path, headers = {})
+      def get(path, query={}, headers = {})
         reset
         response = oauth.get(path, headers)
         parse(response)
@@ -60,8 +60,8 @@ module CommonSense
         self.class.base_uri uri
       end
 
-      # login to commonsense 
-      # @return [String] session_id 
+      # login to commonsense
+      # @return [String] session_id
       def login(username, password)
         password = Digest::MD5.hexdigest password
         post('/login.json', :query => {:username => username, :password => password})
