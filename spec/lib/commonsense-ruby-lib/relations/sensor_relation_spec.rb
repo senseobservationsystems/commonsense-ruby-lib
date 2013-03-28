@@ -17,14 +17,14 @@ describe SensorRelation do
   let(:relation) {
     relation = SensorRelation.new
     relation.stub("check_session!").and_return(true)
-    relation.stub("get_sensor").and_return(sensors)
+    relation.stub("get_data").and_return(sensors)
     relation
   }
 
   describe "each" do
     it "should get all sensor and yield each" do
       relation = SensorRelation.new
-      relation.stub("get_sensor").and_return(sensors)
+      relation.stub("get_data").and_return(sensors)
 
       expect { |b| relation.each(&b) }.to yield_successive_args(Sensor, Sensor, Sensor)
     end
@@ -48,7 +48,7 @@ describe SensorRelation do
     it "should return the last record" do
       relation = SensorRelation.new
       relation.stub("count").and_return(3)
-      relation.should_receive("get_sensor").with(page:2, per_page:1, shared:nil, owned:nil, physical:nil, details:nil).and_return({"sensors" => [{"name" => "sensor3"}], "total" => 3})
+      relation.should_receive("get_data").with(page:2, per_page:1, shared:nil, owned:nil, physical:nil, details:nil).and_return({"sensors" => [{"name" => "sensor3"}], "total" => 3})
 
       first = relation.last
       first.should be_kind_of(Sensor)
@@ -56,23 +56,23 @@ describe SensorRelation do
     end
   end
 
-  describe "get_sensor!" do
+  describe "get_data!" do
     it "should fetch sensor list from commonSense" do
       session = double('Session')
       option = {page: 100, per_page: 99, shared: 1, owned:1, physical: 1, details: "full"}
       session.should_receive(:get).with("/sensors.json", option)
 
       relation = SensorRelation.new(session)
-      relation.get_sensor!(page: 100, per_page: 99, shared:true, owned:true, physical:true, details:"full")
+      relation.get_data!(page: 100, per_page: 99, shared:true, owned:true, physical:true, details:"full")
     end
   end
 
-  describe "get_sensor" do
+  describe "get_data" do
     it "should not throw an exception" do
       relation = SensorRelation.new
-      relation.stub(:get_sensor!).and_return { raise Error }
+      relation.stub(:get_data!).and_return { raise Error }
 
-      expect { relation.get_sensor}.to_not raise_error
+      expect { relation.get_data}.to_not raise_error
     end
   end
 

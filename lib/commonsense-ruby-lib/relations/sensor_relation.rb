@@ -13,7 +13,7 @@ module CommonSense
     def each(&block)
       page = self.page || 0;
       begin
-        sensors = get_sensor({
+        sensors = get_data({
           page: page, per_page: self.per_page, shared: self.shared,
           owned: self.owned, physical: self.physical, details: self.details
         })
@@ -61,7 +61,7 @@ module CommonSense
       parse_single_sensor(sensors)
     end
 
-    def get_sensor!(params={})
+    def get_data!(params={})
       check_session!
 
       options = {page: 0, per_page: 1000}
@@ -96,8 +96,8 @@ module CommonSense
       sensor.retrieve
     end
 
-    def get_sensor(params={})
-      get_sensor!(params) rescue nil
+    def get_data(params={})
+      get_data!(params) rescue nil
     end
 
     def all
@@ -134,7 +134,7 @@ module CommonSense
         owned: self.owned, physical: self.physical, details: self.details
       }
       options.merge!(params)
-      get_sensor(options)
+      get_data(options)
     end
   end
 end
