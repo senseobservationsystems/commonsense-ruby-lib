@@ -8,7 +8,9 @@ require "commonsense-ruby-lib/user"
 require "commonsense-ruby-lib/group"
 require "commonsense-ruby-lib/sensor"
 require "commonsense-ruby-lib/sensor_data"
+require "commonsense-ruby-lib/relation"
 require "commonsense-ruby-lib/relations/sensor_relation"
+require "commonsense-ruby-lib/relations/sensor_data_relation"
 
 module CommonSense
   class Client

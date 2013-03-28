@@ -12,6 +12,16 @@ module CommonSense
       {data: [param]}
     end
 
+    # there is no currently end point for geting data by id 
+    def retrieve!
+      nil
+    end
+
+    # there is no currently end point for updating data
+    def update!
+      nil
+    end
+
     def scan_header_for_id(location_header)
       location_header.scan(/.*\/sensors\/(.*)\/(.*)/)[1] if location_header
     end

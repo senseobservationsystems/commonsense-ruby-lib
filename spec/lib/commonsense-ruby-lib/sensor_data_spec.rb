@@ -36,39 +36,30 @@ module CommonSense
     end
 
     describe "Get specific data point" do
-      it "shoudl request data point from commonSense" do
-        data = SensorData.new
-        data.sensor_id = 1
-        data.id = "735f38333334645f31333533363536373737313233"
-
-        session = double("CommonSense::Session")
-        retval = {
-          "data" => [{
-            "date" => "1353656777.123",
-            "value" => "10",
-            "id" => "735f38333334645f31333533363536373737313233"
-          }]
-        }
-        session.should_receive(:get).with("/sensors/1/data/#{data.id}.json").and_return(retval)
-        session.stub(:response_code => 200)
-        data.session = session
-
-        data.retrieve!.should be_true
-
+      it "should return nil" do
+        data = SensorData.new(sensor_id: 1, id:1)
+        data.retrieve!.should be_nil
       end
     end
 
     describe "Update specific data point" do
-
+      it "should return nil" do
+        data = SensorData.new(sensor_id: 1, id:1)
+        data.update!.should be_nil
+      end
     end
 
     describe "Delete specific data point" do
+      it "should delete data point" do
+        data = SensorData.new(sensor_id: 1, id: "abcdef")
+        session = double("CommonSense::Session")
+        session.should_receive(:delete).with("/sensors/1/data/abcdef.json")
 
+        session.stub(:response_code => 200)
+        data.session = session
+
+        data.delete!.should be_true
+      end
     end
-
-    describe "Get list data point per sensor" do
-
-    end
-
   end
 end

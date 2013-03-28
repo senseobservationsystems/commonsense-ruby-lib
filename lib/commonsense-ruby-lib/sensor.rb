@@ -6,8 +6,6 @@ module CommonSense
     resources :sensors
     resource :sensor
 
-
-
     def initialize(hash={})
       from_hash(hash)
       if self.data_type == "json"

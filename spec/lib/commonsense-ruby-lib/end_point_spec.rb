@@ -18,6 +18,14 @@ describe CommonSense::EndPoint do
     }
   end
 
+  let(:valid_response) do
+    {
+      "id" => 1,
+      "attribute1" => "attribute1",
+      "attribute2" => "attribute2"
+    }
+  end
+
   describe "save!" do
     describe "without a session" do
       it "should raise CommonSense::SessionException" do
@@ -63,7 +71,7 @@ describe CommonSense::EndPoint do
       foo_data.delete(:id)
       foo = FooEndPoint.new(foo_data)
       session = double("CommonSense::Session")
-      session.should_receive(:post).with("/foos.json", {foo: foo_data}).and_return({"foo" => valid_foo})
+      session.should_receive(:post).with("/foos.json", {foo: foo_data}).and_return({"foo" => valid_response})
       session.stub(:response_headers => {"location" => "http://foo.bar/foos/1"})
       session.stub(:response_code => 201)
       foo.stub(:session).and_return(session);
@@ -105,7 +113,7 @@ describe CommonSense::EndPoint do
     it "should GET Resource from CommonSense" do
       foo = FooEndPoint.new(id: 1)
       session = double("CommonSense::Session")
-      session.should_receive(:get).with("/foos/1.json").and_return({"foo" => valid_foo})
+      session.should_receive(:get).with("/foos/1.json").and_return({"foo" => valid_response})
       session.stub(:response_code => 200)
       foo.session = session
 
@@ -130,7 +138,7 @@ describe CommonSense::EndPoint do
       foo_data = valid_foo
       foo = FooEndPoint.new(foo_data)
       session = double("CommonSense::Session")
-      session.should_receive(:put).with("/foos/1.json", {foo: foo_data}).and_return({"foo" => valid_foo})
+      session.should_receive(:put).with("/foos/1.json", {foo: foo_data}).and_return({"foo" => valid_response})
       session.stub(:response_code => 200)
       foo.session = session
 

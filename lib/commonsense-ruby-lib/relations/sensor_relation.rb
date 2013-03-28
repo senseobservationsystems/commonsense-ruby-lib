@@ -1,5 +1,3 @@
-require 'commonsense-ruby-lib/relation'
-
 module CommonSense
   class SensorRelation
     attr_reader :session

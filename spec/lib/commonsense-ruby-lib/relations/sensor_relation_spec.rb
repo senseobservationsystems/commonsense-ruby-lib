@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'commonsense-ruby-lib/sensor'
 
 module CommonSense
-describe CommonSense::SensorRelation do
+describe SensorRelation do
 
   describe "build" do
     it "should return a sensor object" do

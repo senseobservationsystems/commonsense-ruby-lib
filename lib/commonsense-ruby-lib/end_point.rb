@@ -64,10 +64,8 @@ module CommonSense
         errors = session.errors rescue nil
         raise CommonSense::ResponseError, errors
       end
-      
 
-      binding.pry
-      from_hash(res[resource.to_s]) 
+      from_hash(res[resource.to_s])
       true
     end
 
