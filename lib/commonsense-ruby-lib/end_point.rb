@@ -1,6 +1,4 @@
 require 'commonsense-ruby-lib/serializer'
-require 'pry'
-
 module CommonSense
   module EndPoint
     include CommonSense::Serializer
