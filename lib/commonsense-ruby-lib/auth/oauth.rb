@@ -4,7 +4,7 @@ module CommonSense
   module Auth
     class OAuth
 
-      attr_accessor :response_body, :response_code, :errors, :consumer_key,
+      attr_accessor :response_body, :response_code, :response_headers, :errors, :consumer_key,
         :consumer_secret, :access_token, :access_token_secret
 
       def initialize(consumer_key, consumer_secret, access_token, access_token_secret, uri=nil)
@@ -23,56 +23,54 @@ module CommonSense
 
       def get(path, query={}, headers = {})
         reset
+        headers = default_headers.merge(headers)
         response = oauth.get(path, headers)
-        parse(response)
+        parse_response(response)
         @response_body
       end
 
       def post(path, body = '', headers = {})
         reset
-        response = self.class.post(path, body, headers)
-        @response_code = @response_body.response.code.to_i
+        headers = default_headers.merge(headers)
+        response = oauth.post(path, body.to_json, headers)
+        parse_response(response)
+
         @response_body
       end
 
       def put(path, body = '', headers = {})
         reset
-        @response_body = self.class.put(*args, &block)
-        @response_code = @response_body.response.code.to_i
+        headers = default_headers.merge(headers)
+        response = oauth.put(path, body.to_json, headers)
+        parse_response(response)
+
         @response_body
       end
 
-      def delete(path, headers = {})
+      def delete(path, query={}, headers = {})
         reset
-        @response_body = self.class.delete(*args, &block)
-        @response_code = @response_body.response.code.to_i
+        headers = default_headers.merge(headers)
+        response = oauth.delete(path, headers)
+        parse_response(response)
+
         @response_body
       end
 
       def head(path, headers = {})
         reset
-        @response_body = self.class.head(*args, &block)
-        @response_code = @response_body.response.code.to_i
+        headers = default_headers.merge(headers)
+        response = oauth.head(path, headers)
+        parse_response(response)
+
         @response_body
+      end
+
+      def default_headers
+        {"Content-Type" => "application/json"}
       end
 
       def base_uri=(uri = nil)
         self.class.base_uri uri
-      end
-
-      # login to commonsense
-      # @return [String] session_id
-      def login(username, password)
-        password = Digest::MD5.hexdigest password
-        post('/login.json', :query => {:username => username, :password => password})
-
-        if @response_code == 200
-          self.session_id = response_body['session_id']
-        else
-          errors = [response_body['error']]
-        end
-
-        session_id
       end
 
       private
@@ -83,9 +81,19 @@ module CommonSense
       end
 
       # convert the body to hash if response is "application/json"
-      def parse(response)
-        @response_body = response.content_type == "application/json" ? JSON(response.body) : response.body
+      def parse_response(response)
+        @response_body = response.content_type == "application/json" ? (JSON(response.body) rescue nil) : response.body
         @response_code = response.code.to_i
+
+        @response_headers = response.to_hash
+        @response_headers.each do |k,v|
+          @response_headers[k] = v[0] rescue nil
+        end
+
+
+        if @response_code >= 400
+          @errors = [response_body['error']]
+        end
       end
     end
   end

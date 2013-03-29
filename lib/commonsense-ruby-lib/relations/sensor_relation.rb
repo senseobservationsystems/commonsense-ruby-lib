@@ -93,7 +93,7 @@ module CommonSense
       check_session!
       sensor = CommonSense::Sensor.new(id: id)
       sensor.session = self.session
-      sensor.retrieve
+      sensor.retrieve ? sensor : nil
     end
 
     def get_data(params={})

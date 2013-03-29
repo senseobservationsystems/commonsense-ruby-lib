@@ -26,5 +26,9 @@ module CommonSense
 
       {sensor: param}
     end
+
+    def data
+      SensorDataRelation.new(self.id, self.session)
+    end
   end
 end

@@ -26,6 +26,7 @@ module CommonSense
 
       def post(path, body = '', headers = {})
         reset
+        headers = default_headers.merge(headers)
         @response_body = self.class.post(path, prepare(body, headers))
         parse_response
         @response_body
@@ -33,6 +34,7 @@ module CommonSense
 
       def put(path, body = '', headers = {})
         reset
+        headers = default_headers.merge(headers)
         @response_body = self.class.put(path, prepare(body, headers))
         parse_response
         @response_body

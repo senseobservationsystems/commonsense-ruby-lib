@@ -8,11 +8,15 @@ module CommonSense
     def to_parameters
       param = self.to_h(false)
       param.delete(:sensor_id)
-      param[:value] = param[:value].to_json
+      value = param[:value]
+      if value
+        param[:value] = value.to_json unless value.kind_of?(String) || value.kind_of?(Numeric)
+      end
+
       {data: [param]}
     end
 
-    # there is no currently end point for geting data by id 
+    # there is no currently end point for geting data by id
     def retrieve!
       raise NotImplementedError, "There is no current end point to get sensor data by id"
     end
