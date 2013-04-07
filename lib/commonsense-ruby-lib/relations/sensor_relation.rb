@@ -1,13 +1,22 @@
 module CommonSense
   class SensorRelation
-    attr_reader :session
-    attr_accessor :page, :per_page, :shared, :owned, :physical, :details
-    include Enumerable
+    include Relation
+
+    parameter :page, Integer, default: 0, required: true
+    parameter :per_page, Integer, default: 1000, required: true, maximum: 1000
+    parameter :shared, Boolean
+    parameter :owned, Boolean
+    parameter :physical, Boolean
+    parameter :details, String, valid_values: ["no", "full"]
 
     def initialize(session=nil)
       @session = session
       page = 0
       per_page = 1000
+    end
+
+    def get_url
+      "/sensors.json"
     end
 
     def each(&block)
@@ -38,57 +47,6 @@ module CommonSense
       sensor
     end
 
-    def check_session!
-      raise CommonSense::SessionEmptyError unless @session
-    end
-
-    def count
-      check_session!
-      sensors = get_single_sensor_self
-      sensors["total"] if sensors
-    end
-
-    def first
-      sensors = get_single_sensor_self
-
-      parse_single_sensor(sensors)
-    end
-
-    def last
-      total = count
-      sensors = get_single_sensor_self(page: count - 1)
-
-      parse_single_sensor(sensors)
-    end
-
-    def get_data!(params={})
-      check_session!
-
-      options = {page: 0, per_page: 1000}
-      options[:page] = params[:page] if params[:page].kind_of?(Fixnum)
-      options[:per_page] = params[:per_page] if params[:per_page].kind_of?(Fixnum)
-      options[:shared] = 1 if params[:shared]
-      options[:owned] = 1 if params[:owned]
-      options[:physical] = 1 if params[:physical]
-      options[:details] = params[:details] if details_valid?(params[:details])
-
-      session.get("/sensors.json", options)
-    end
-
-    def where(params={})
-      # todo Fix optional parameter
-      params.delete(:page) if !params[:page].is_a?(Fixnum)
-      params.delete(:per_page) if !params[:page].is_a?(Fixnum)
-      options = {page: 0, per_page: 1000}.merge(params)
-      self.page = params[:page] if params[:page].kind_of?(Fixnum)
-      self.per_page= params[:per_page] if params[:per_page].kind_of?(Fixnum)
-      self.shared = boolean_to_i(params[:shared])
-      self.owned = boolean_to_i(params[:owned])
-      self.physical = boolean_to_i(params[:physical])
-      self.details = params[:details] if details_valid?(params[:details])
-      self
-    end
-
     def find(id)
       check_session!
       sensor = CommonSense::Sensor.new(id: id)
@@ -96,29 +54,8 @@ module CommonSense
       sensor.retrieve ? sensor : nil
     end
 
-    def get_data(params={})
-      get_data!(params) rescue nil
-    end
-
-    def all
-      self.to_a
-    end
-
     private
-    def details_valid?(details)
-      return true if nil?
-
-      details and details.kind_of?(String) and
-      ["no", "full"].include?(details.downcase)
-    end
-
-    def boolean_to_i(param)
-      return nil if param.nil?
-      return 0 if [0, "0", false].include?(param)
-      return 1
-    end
-
-    def parse_single_sensor(sensors)
+    def parse_single_resource(sensors)
       sensors = sensors["sensors"]
       if !sensors.empty?
         sensor = CommonSense::Sensor.new(sensors[0])
@@ -128,7 +65,7 @@ module CommonSense
       end
     end
 
-    def get_single_sensor_self(params={})
+    def get_single_resource(params={})
       options = {
         page: 0, per_page: 1, shared: self.shared,
         owned: self.owned, physical: self.physical, details: self.details

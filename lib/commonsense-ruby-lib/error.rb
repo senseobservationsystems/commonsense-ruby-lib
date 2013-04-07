@@ -35,6 +35,12 @@ module CommonSense
     end
   end
 
+  class RelationError < Error
+    def initialize(message = "Error when setting up relation")
+      super(message)
+    end
+  end
+
   class NotImplementedError < Error
     def initialize(message = "There is unimplemented method")
       super(message)

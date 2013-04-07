@@ -3,10 +3,6 @@ require 'commonsense-ruby-lib/sensor'
 
 module CommonSense
 describe SensorRelation do
-  before(:each) do
-    pending "not implemented yet"
-  end
-
   describe "build" do
     it "should return a sensor object" do
       CommonSense::SensorRelation.new.build.should be_a_kind_of(CommonSense::Sensor)
@@ -100,11 +96,55 @@ describe SensorRelation do
 
       relation.where(page:nil, per_page:nil, shared: nil, owned:nil, physical: nil, details: nil)
       relation.page.should eq(0)
-      relation.per_page.should eq(10)
+      relation.per_page.should eq(1000)
       relation.shared.should be_nil
       relation.owned.should be_nil
       relation.physical.should be_nil
+      relation.details.should be_nil
+
+      relation.page = 100
+      relation.where(page: 'a')
+      relation.page.should eq(0)
+
+      relation.per_page = 999
+      relation.where(per_page: 'a')
+      relation.per_page.should eq(1000)
+
+      relation.shared = false
+      relation.where(shared: "true")
+      relation.shared.should be_true
+
+      relation.shared = false
+      relation.where(shared: 1)
+      relation.shared.should be_true
+
+      relation.shared = true
+      relation.where(shared: 0)
+      relation.shared.should eq(0)
+
+      relation.shared = true
+      relation.where(shared: false)
+      relation.shared.should eq(0)
+
+      relation.shared = true
+      relation.where(shared: "false")
+      relation.shared.should eq(0)
+
+      relation.details = nil
+      relation.where(details: "no")
       relation.details.should eq("no")
+
+      relation.details = nil
+      relation.where(details: "full")
+      relation.details.should eq("full")
+
+      relation.details = nil
+      relation.where(details: 1)
+      relation.details.should eq(nil)
+
+      relation.details = nil
+      relation.where(details: false)
+      relation.details.should eq(nil)
     end
   end
 end
