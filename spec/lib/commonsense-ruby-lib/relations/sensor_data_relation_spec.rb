@@ -72,7 +72,5 @@ module CommonSense
 
       end
     end
-
-
   end
 end
