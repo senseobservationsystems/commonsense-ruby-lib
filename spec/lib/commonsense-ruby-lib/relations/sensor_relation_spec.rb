@@ -103,12 +103,10 @@ describe SensorRelation do
       relation.details.should be_nil
 
       relation.page = 100
-      relation.where(page: 'a')
-      relation.page.should eq(0)
+      expect { relation.where(page: 'a') }.to raise_error ArgumentError
 
       relation.per_page = 999
-      relation.where(per_page: 'a')
-      relation.per_page.should eq(1000)
+      expect { relation.where(per_page: 'a') }.to raise_error ArgumentError
 
       relation.shared = false
       relation.where(shared: "true")

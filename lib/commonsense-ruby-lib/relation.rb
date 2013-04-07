@@ -24,9 +24,9 @@ module CommonSense
         param_option = self.class.parameters[k]
 
         value = v
-        value = process_param_integer(v, param_option) if param_option[:type] == Integer
-        value = process_param_boolean(v, param_option) if param_option[:type] == Boolean
-        value = process_param_string(v, param_option) if param_option[:type] == String
+        value = process_param_integer(k, v, param_option) if param_option[:type] == Integer
+        value = process_param_boolean(k, v, param_option) if param_option[:type] == Boolean
+        value = process_param_string(k, v, param_option) if param_option[:type] == String
 
         options[k] = value
       end
@@ -75,9 +75,9 @@ module CommonSense
       params.each do |k,v|
         param_option = self.class.parameters[k]
 
-        value = process_param_integer(v, param_option) if param_option[:type] == Integer
-        value = process_param_boolean(v, param_option) if param_option[:type] == Boolean
-        value = process_param_string(v, param_option) if param_option[:type] == String
+        value = process_param_integer(k, v, param_option) if param_option[:type] == Integer
+        value = process_param_boolean(k, v, param_option) if param_option[:type] == Boolean
+        value = process_param_string(k, v, param_option) if param_option[:type] == String
 
         self.send("#{k}=", value)
       end
@@ -124,20 +124,22 @@ module CommonSense
       value.nil? ? param_option[:default] : value
     end
 
-    def process_param_integer(value, param_option)
+    def process_param_integer(name, value, param_option)
       if value.kind_of?(Integer)
         retval = value
         retval = process_valid_values(value, param_option) if param_option[:valid_values]
-      else
-        retval = nil
       end
 
       retval = process_default_value(retval, param_option)
 
+      if !value.nil?  && !value.kind_of?(Integer)
+        raise ArgumentError, "Received non Integer value for parameter '#{name}'"
+      end
+
       retval
     end
 
-    def process_param_boolean(value, param_option)
+    def process_param_boolean(name, value, param_option)
       retval = nil
 
       if value.nil?
@@ -151,7 +153,7 @@ module CommonSense
       retval
     end
 
-    def process_param_string(value, param_option)
+    def process_param_string(name, value, param_option)
       retval = value
       retval = process_valid_values(value, param_option) if param_option[:valid_values]
       retval = process_default_value(retval, param_option)
