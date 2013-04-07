@@ -5,9 +5,9 @@ module CommonSense
     attr_accessor :sensor_id
     parameter :page, Integer, default: 0
     parameter :per_page, Integer, default: 1000, maximum: 1000
-    parameter :start_date, Float
-    parameter :end_date, Float
-    parameter :date, Float
+    parameter :start_date, Time
+    parameter :end_date, Time
+    parameter :date, Time
     parameter :last, Boolean
     parameter :sort, String, valid_values: ["ASC", "DESC"]
     parameter :interval, Integer, valid_values: [604800, 86400, 3600, 1800, 600, 300, 60]

@@ -116,21 +116,28 @@ module CommonSense
       raise CommonSense::NotImplementedError, "get_single_resource is not implemented for class : #{self.class}"
     end
 
-    def process_valid_values(value, param_option)
-      value if param_option[:valid_values].include?(value)
+    def process_valid_values(name, value, param_option)
+      return value unless param_option[:valid_values]
+
+      if param_option[:valid_values].include?(value)
+        value
+      elsif !value.nil?
+        raise ArgumentError, "Invalid value for parameter '#{name}'"
+      end
+
     end
 
-    def process_default_value(value, param_option)
+    def process_default_value(name, value, param_option)
       value.nil? ? param_option[:default] : value
     end
 
     def process_param_integer(name, value, param_option)
       if value.kind_of?(Integer)
         retval = value
-        retval = process_valid_values(value, param_option) if param_option[:valid_values]
+        retval = process_valid_values(name, value, param_option) if param_option[:valid_values]
       end
 
-      retval = process_default_value(retval, param_option)
+      retval = process_default_value(name, retval, param_option)
 
       if !value.nil?  && !value.kind_of?(Integer)
         raise ArgumentError, "Received non Integer value for parameter '#{name}'"
@@ -155,8 +162,8 @@ module CommonSense
 
     def process_param_string(name, value, param_option)
       retval = value
-      retval = process_valid_values(value, param_option) if param_option[:valid_values]
-      retval = process_default_value(retval, param_option)
+      retval = process_valid_values(name, value, param_option) if param_option[:valid_values]
+      retval = process_default_value(name, retval, param_option)
 
       retval
     end

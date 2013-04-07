@@ -137,12 +137,11 @@ describe SensorRelation do
       relation.details.should eq("full")
 
       relation.details = nil
-      relation.where(details: 1)
-      relation.details.should eq(nil)
+      expect { relation.where(details: 1) }.to raise_error ArgumentError
+
 
       relation.details = nil
-      relation.where(details: false)
-      relation.details.should eq(nil)
+      expect { relation.where(details: false) }.to raise_error ArgumentError
     end
   end
 end

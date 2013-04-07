@@ -82,7 +82,7 @@ describe "Sensor Management" do
     it "filter sensor data" do
       sensor = @client.sensors.build(sensor_info)
       sensor.save!
-      sensors = @client.sensors.where(page: 0, per_page: 1, owned: true , details: true)
+      sensors = @client.sensors.where(page: 0, per_page: 1, owned: true , details: "full")
       sensors.to_a.should_not be_empty
     end
 
