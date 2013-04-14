@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'commonsense-ruby-lib/sensor'
+require 'commonsense-ruby-lib/end_point/sensor'
 
 module CommonSense
 describe SensorRelation do
