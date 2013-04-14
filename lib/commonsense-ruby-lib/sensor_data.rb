@@ -2,6 +2,7 @@ module CommonSense
   class SensorData
     include CommonSense::EndPoint
 
+    attr_accessor :month, :week, :year
     attribute :date, :value, :sensor_id
     resource :data
 

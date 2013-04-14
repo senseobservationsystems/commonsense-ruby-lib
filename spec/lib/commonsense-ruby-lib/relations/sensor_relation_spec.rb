@@ -16,7 +16,7 @@ describe SensorRelation do
   let(:relation) {
     relation = SensorRelation.new
     relation.stub("check_session!").and_return(true)
-    relation.stub("get_data").and_return(sensors)
+    relation.stub("get_data!").and_return(sensors)
     relation
   }
 

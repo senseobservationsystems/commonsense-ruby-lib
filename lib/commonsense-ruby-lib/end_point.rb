@@ -14,6 +14,10 @@ module CommonSense
       r.nil? ? self.to_h(false) : { self.resource => self.to_h(false) }
     end
 
+    def parameter(name)
+      self.instance_variable_get(name)
+    end
+
     def save!
       check_session!
 

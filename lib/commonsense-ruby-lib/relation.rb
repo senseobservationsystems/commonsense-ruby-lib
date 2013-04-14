@@ -17,6 +17,10 @@ module CommonSense
       session.get(get_url, options)
     end
 
+    def parameter(name)
+      self.instance_variable_get("@#{name}")
+    end
+
     def get_options(params)
       options = {}
 
@@ -27,6 +31,10 @@ module CommonSense
         value = process_param_integer(k, v, param_option) if param_option[:type] == Integer
         value = process_param_boolean(k, v, param_option) if param_option[:type] == Boolean
         value = process_param_string(k, v, param_option) if param_option[:type] == String
+
+        if value.kind_of?(Time)
+          value = value.to_f
+        end
 
         options[k] = value
       end
@@ -49,15 +57,14 @@ module CommonSense
     end
 
     def first
+      binding.pry
       resource = get_single_resource
-
       parse_single_resource(resource)
     end
 
     def last
       total = count
       resource = get_single_resource(page: count - 1)
-
       parse_single_resource(resource)
     end
 
@@ -69,7 +76,19 @@ module CommonSense
       end
     end
 
+    def process_alias!(params)
+      return if self.class.parameters_alias.nil?
+
+      aliases = params.select { |param| self.class.parameters_alias.include?(param) }
+      aliases.each do |alias_to, value|
+        alias_for = self.class.parameters_alias[alias_to]
+        params[alias_for] = value
+        params.delete(alias_to)
+      end
+    end
+
     def where(params={})
+      process_alias!(params)
       params.keep_if {|k| self.class.parameters[k]}
 
       params.each do |k,v|
@@ -78,6 +97,7 @@ module CommonSense
         value = process_param_integer(k, v, param_option) if param_option[:type] == Integer
         value = process_param_boolean(k, v, param_option) if param_option[:type] == Boolean
         value = process_param_string(k, v, param_option) if param_option[:type] == String
+        value = process_param_time(k, v, param_option) if param_option[:type] == Time
 
         self.send("#{k}=", value)
       end
@@ -97,6 +117,20 @@ module CommonSense
 
         self.parameters[name] = param
       end
+
+      def parameter_alias(name, name_alias)
+        attr_accessor name
+        self.parameters_alias ||= {}
+        self.parameters_alias[name] = name_alias
+      end
+
+      def parameters_alias=(parameters_alias)
+        @parameters_alias = parameters_alias
+      end
+
+      def parameters_alias
+        @parameters_alias
+      end      
 
       def parameters=(parameters)
         @parameters = parameters
@@ -164,6 +198,18 @@ module CommonSense
       retval = value
       retval = process_valid_values(name, value, param_option) if param_option[:valid_values]
       retval = process_default_value(name, retval, param_option)
+
+      retval
+    end
+
+    def process_param_time(name, value, param_option)
+      retval = value
+      retval = process_valid_values(name, value, param_option) if param_option[:valid_values]
+      retval = process_default_value(name, retval, param_option)
+
+      if !value.nil?  && value.kind_of?(Numeric)
+        retval = Time.at(retval)
+      end
 
       retval
     end
