@@ -14,6 +14,12 @@ module CommonSense
       r.nil? ? self.to_h(false) : { self.resource => self.to_h(false) }
     end
 
+
+    def inspect
+      inspection = self.to_h.collect {|k,v| "#{k}: #{v.inspect}"}.compact.join(", ")
+      "#<#{self.class} #{inspection}"
+    end
+
     def parameter(name)
       self.instance_variable_get(name)
     end
