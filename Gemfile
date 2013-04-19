@@ -5,4 +5,5 @@ gemspec
 gem "pry"
 gem "pry-nav"
 gem "pry-doc"
+gem "redcarpet"
 #gem "pry-stack_explorer"

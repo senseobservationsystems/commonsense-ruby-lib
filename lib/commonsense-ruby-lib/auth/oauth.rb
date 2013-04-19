@@ -65,15 +65,16 @@ module CommonSense
         @response_body
       end
 
-      def default_headers
-        {"Content-Type" => "application/json"}
-      end
-
       def base_uri=(uri = nil)
         self.class.base_uri uri
       end
 
+
       private
+      def default_headers
+        {"Content-Type" => "application/json"}
+      end
+
       def reset
         @errors = nil
         @response_code = nil

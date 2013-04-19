@@ -44,7 +44,7 @@ module CommonSense
 
       if session.response_code != 201
         errors = session.errors rescue nil
-        raise CommonSense::ResponseError, errors
+        raise Error::ResponseError, errors
       end
 
       location_header = session.response_headers["location"]
@@ -54,10 +54,6 @@ module CommonSense
       true
     end
 
-    def scan_header_for_id(location_header)
-      location_header.scan(/.*\/#{resources}\/(.*)/)[0] if location_header
-    end
-
     def create
       result = create! rescue nil
       not result.nil?
@@ -65,12 +61,12 @@ module CommonSense
 
     def retrieve!
       check_session!
-      raise CommonSense::ResourceIdError unless @id
+      raise Error::ResourceIdError unless @id
 
       res = session.get(get_url)
       if session.response_code != 200
         errors = session.errors rescue nil
-        raise CommonSense::ResponseError, errors
+        raise Error::ResponseError, errors
       end
 
       from_hash(res[resource.to_s])
@@ -92,14 +88,14 @@ module CommonSense
 
     def update!
       check_session!
-      raise CommonSense::ResourceIdError unless @id
+      raise Error::ResourceIdError unless @id
 
       parameter = self.to_parameters
       res = session.put(put_url, parameter)
 
       if session.response_code != 200
         errors = session.errors rescue nil
-        raise CommonSense::ResponseError, errors
+        raise Error::ResponseError, errors
       end
 
       true
@@ -112,13 +108,13 @@ module CommonSense
 
     def delete!
       check_session!
-      raise CommonSense::ResourceIdError unless @id
+      raise Error::ResourceIdError unless @id
 
       res = session.delete(delete_url)
 
       if session.response_code != 200
         errors = session.errors rescue nil
-        raise CommonSense::ResponseError, errors
+        raise Error::ResponseError, errors
       end
 
       self.id = nil
@@ -132,10 +128,15 @@ module CommonSense
     end
 
     def url_for(method, id=nil)
-      raise CommonSense::ResourcesError if resources.nil?
+      raise Error::ResourcesError if resources.nil?
       url = self.class.class_variable_get("@@#{method}_url".to_sym)
       url = url.sub(":id", "#{@id}") if id
       url
+    end
+
+    protected
+    def scan_header_for_id(location_header)
+      location_header.scan(/.*\/#{resources}\/(.*)/)[0] if location_header
     end
 
     def post_url
@@ -161,7 +162,7 @@ module CommonSense
     def resource
       self.class.class_variable_get(:@@resource)
     rescue
-      raise CommonSense::ResourceError, "'resource' is not set up for class : #{self.class}" 
+      raise Error::ResourceError, "'resource' is not set up for class : #{self.class}" 
     end
 
     def resources
@@ -170,7 +171,7 @@ module CommonSense
 
     private
     def check_session!
-      raise CommonSense::SessionEmptyError unless @session
+      raise Error::SessionEmptyError unless @session
     end
 
     module ClassMethod

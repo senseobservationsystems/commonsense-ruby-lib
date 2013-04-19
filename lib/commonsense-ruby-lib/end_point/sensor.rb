@@ -28,7 +28,7 @@ module CommonSense
     end
 
     def data
-      SensorDataRelation.new(self.id, self.session)
+      Relation::SensorDataRelation.new(self.id, self.session)
     end
   end
 end

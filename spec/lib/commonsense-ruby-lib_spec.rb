@@ -31,7 +31,7 @@ describe "commonsense-ruby-lib" do
 
     describe "sensors" do
       it "should return Sensors relation" do
-        @client.sensors.should be_a_kind_of(CommonSense::SensorRelation)
+        @client.sensors.should be_a_kind_of(CommonSense::Relation::SensorRelation)
       end
     end
   end
