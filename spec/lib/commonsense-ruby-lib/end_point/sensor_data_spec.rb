@@ -13,7 +13,7 @@ module CommonSense
       end
 
       describe "Initiating new data point" do
-        it "shoudl assign the data point property on initialize" do
+        it "should assign the data point property on initialize" do
           data = SensorData.new(sensor_id: 1, date: now, value: value)
 
           data.sensor_id.should eq(1)
@@ -37,14 +37,14 @@ module CommonSense
       end
 
       describe "Get specific data point" do
-        it "shoudl request data point from commonSense" do
+        it "should request data point from commonSense" do
           data = SensorData.new
           expect { data.retrieve!.should }.to raise_error(NotImplementedError)
         end
       end
 
       describe "Update specific data point" do
-        it "shoudl request data point from commonSense" do
+        it "should request data point from commonSense" do
           data = SensorData.new
           expect { data.retrieve!.should }.to raise_error(NotImplementedError)
         end
