@@ -17,7 +17,7 @@ module CommonSense
 
     def inspect
       inspection = self.to_h.collect {|k,v| "#{k}: #{v.inspect}"}.compact.join(", ")
-      "#<#{self.class} #{inspection}"
+      "#<#{self.class} #{inspection}>"
     end
 
     # get value of property name

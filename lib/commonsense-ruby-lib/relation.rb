@@ -66,6 +66,10 @@ module CommonSense
       parse_single_resource(resource)
     end
 
+    def inspect
+      inspection = self.class.parameters.collect {|k,v| "#{k}: #{parameter(k).inspect}"}.compact.join(", ")
+      "#<#{self.class} #{inspection}>"
+    end
 
     def where(params={})
       process_alias!(params)
