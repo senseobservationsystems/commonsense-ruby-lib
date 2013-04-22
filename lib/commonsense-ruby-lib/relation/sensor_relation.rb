@@ -69,6 +69,7 @@ module CommonSense
       parameter :owned, Boolean
       parameter :physical, Boolean
       parameter :details, String, valid_values: ["no", "full"]
+      parameter :group_id, String
 
       def initialize(session=nil)
         @session = session
@@ -114,9 +115,9 @@ module CommonSense
       def each(&block)
         page = self.page || 0;
         begin
-          sensors = get_data({
+          sensors = get_data!({
             page: page, per_page: self.per_page, shared: self.shared,
-            owned: self.owned, physical: self.physical, details: self.details
+            owned: self.owned, physical: self.physical, details: self.details, group_id: self.group_id
           })
 
           sensors = sensors["sensors"]
