@@ -11,7 +11,7 @@ module CommonSense
         from_hash(hash)
         if self.data_type == "json"
           if self.data_structure && self.data_structure.kind_of?(String)
-            self.data_structure = JSON.parse(self.data_structure)
+            self.data_structure = JSON.parse(self.data_structure) rescue nil
           end
         end
       end

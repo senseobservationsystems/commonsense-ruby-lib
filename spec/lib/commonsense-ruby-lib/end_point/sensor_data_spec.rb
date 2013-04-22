@@ -39,14 +39,14 @@ module CommonSense
       describe "Get specific data point" do
         it "should request data point from commonSense" do
           data = SensorData.new
-          expect { data.retrieve!.should }.to raise_error(NotImplementedError)
+          expect { data.retrieve!.should }.to raise_error(Error::NotImplementedError)
         end
       end
 
       describe "Update specific data point" do
         it "should request data point from commonSense" do
           data = SensorData.new
-          expect { data.retrieve!.should }.to raise_error(NotImplementedError)
+          expect { data.retrieve!.should }.to raise_error(Error::NotImplementedError)
         end
       end
 

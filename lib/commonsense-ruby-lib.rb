@@ -107,7 +107,7 @@ module CommonSense
      user
     end
 
-    # @see Relation::SensorRelation
+    # @see CommonSense::Relation::SensorRelation
     def sensors
       Relation::SensorRelation.new(@session)
     end

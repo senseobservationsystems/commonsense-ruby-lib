@@ -3,11 +3,11 @@ module CommonSense
     module Boolean; end
 
     def check_session!
-      raise CommonSense::SessionEmptyError unless @session
+      raise Error::SessionEmptyError unless @session
     end
 
     def get_url
-      raise CommonSense::NotImplementedError, "the class #{self.class} does not respond to 'get_url' "
+      raise Error::NotImplementedError, "the class #{self.class} does not respond to 'get_url' "
     end
 
     def get_data!(params={})
@@ -131,11 +131,11 @@ module CommonSense
     end
 
     def parse_single_resource(resource)
-      raise CommonSense::NotImplementedError, "parse_single_resource is not implemented for class : #{self.class}"
+      raise Error::NotImplementedError, "parse_single_resource is not implemented for class : #{self.class}"
     end
 
     def get_single_resource(params={})
-      raise CommonSense::NotImplementedError, "get_single_resource is not implemented for class : #{self.class}"
+      raise Error::NotImplementedError, "get_single_resource is not implemented for class : #{self.class}"
     end
 
     def process_alias!(params)
