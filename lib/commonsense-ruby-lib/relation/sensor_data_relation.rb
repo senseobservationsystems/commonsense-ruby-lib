@@ -86,12 +86,14 @@ module CommonSense
       end
 
       def from(start_date)
-        self.start_date = start_date
+        param_option = self.class.parameters[:start_date]
+        self.start_date = process_param_time(:start_date, start_date, param_option)
         self
       end
 
       def to(end_date)
-        self.end_date = end_date
+        param_option = self.class.parameters[:end_date]
+        self.end_date = process_param_time(:end_date, end_date, param_option)
         self
       end
 

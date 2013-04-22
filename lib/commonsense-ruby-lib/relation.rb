@@ -1,4 +1,3 @@
-require 'pry'
 module CommonSense
   module Relation
     module Boolean; end
@@ -57,7 +56,6 @@ module CommonSense
     end
 
     def first
-      binding.pry
       resource = get_single_resource
       parse_single_resource(resource)
     end
@@ -68,24 +66,6 @@ module CommonSense
       parse_single_resource(resource)
     end
 
-    def self.included(base)
-      base.send(:include, Enumerable)
-      base.extend(ClassMethod)
-      base.class_eval do
-        attr_accessor :session
-      end
-    end
-
-    def process_alias!(params)
-      return if self.class.parameters_alias.nil?
-
-      aliases = params.select { |param| self.class.parameters_alias.include?(param) }
-      aliases.each do |alias_to, value|
-        alias_for = self.class.parameters_alias[alias_to]
-        params[alias_for] = value
-        params.delete(alias_to)
-      end
-    end
 
     def where(params={})
       process_alias!(params)
@@ -142,6 +122,14 @@ module CommonSense
     end
 
     protected
+    def self.included(base)
+      base.send(:include, Enumerable)
+      base.extend(ClassMethod)
+      base.class_eval do
+        attr_accessor :session
+      end
+    end
+
     def parse_single_resource(resource)
       raise CommonSense::NotImplementedError, "parse_single_resource is not implemented for class : #{self.class}"
     end
@@ -149,6 +137,18 @@ module CommonSense
     def get_single_resource(params={})
       raise CommonSense::NotImplementedError, "get_single_resource is not implemented for class : #{self.class}"
     end
+
+    def process_alias!(params)
+      return if self.class.parameters_alias.nil?
+
+      aliases = params.select { |param| self.class.parameters_alias.include?(param) }
+      aliases.each do |alias_to, value|
+        alias_for = self.class.parameters_alias[alias_to]
+        params[alias_for] = value
+        params.delete(alias_to)
+      end
+    end
+
 
     def process_valid_values(name, value, param_option)
       return value unless param_option[:valid_values]
@@ -202,14 +202,26 @@ module CommonSense
       retval
     end
 
+    # This method prosess assignment for properties with datatype Time.
+    # There are 3 type that is valid for this properties:
+    #
+    # * **Time**
+    # * **Numeric**. It will convert this to ruby {Time}
+    # * **Obejct that respond to #to_time** and return ruby {Time}
+    #
     def process_param_time(name, value, param_option)
       retval = value
-      retval = process_valid_values(name, value, param_option) if param_option[:valid_values]
-      retval = process_default_value(name, retval, param_option)
 
-      if !value.nil?  && value.kind_of?(Numeric)
-        retval = Time.at(retval)
+      if !value.nil? && !value.kind_of?(Time)
+        if value.kind_of?(Numeric)
+          retval = Time.at(retval)
+        else
+          retval = value.to_time
+        end
       end
+
+      retval = process_default_value(name, retval, param_option)
+      retval = process_valid_values(name, value, param_option) if param_option[:valid_values]
 
       retval
     end

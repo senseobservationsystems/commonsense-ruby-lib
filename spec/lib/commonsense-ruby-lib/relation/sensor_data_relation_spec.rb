@@ -4,54 +4,52 @@ module CommonSense
   module Relation
     describe SensorDataRelation do
 
-      let(:relation) {
+      let(:relation) do
         relation = SensorDataRelation.new
         relation.stub("check_session!").and_return(true)
         relation.stub("get_data").and_return(sensors)
         relation
-      }
+      end
 
-      let(:data) {
+      let(:data) do
         {
-        "data" => [
+          "data" => [{
+            "id" => "5150e509b4b735f6290238d3",
+            "sensor_id" => "1",
+            "value" => "{\"x-axis\":0.259,\"y-axis\":-0.15,\"z-axis\":-9.807}",
+            "date" => 1364256004.651,
+            "month" => 3,
+            "week" => 13,
+            "year" => 2013
+          },
           {
-        "id" => "5150e509b4b735f6290238d3",
-        "sensor_id" => "1",
-        "value" => "{\"x-axis\":0.259,\"y-axis\":-0.15,\"z-axis\":-9.807}",
-        "date" => 1364256004.651,
-        "month" => 3,
-        "week" => 13,
-        "year" => 2013
-      },
-        {
-        "id" => "5150e760b4b735fa29027b27",
-        "sensor_id" => "1",
-        "value" => "{\"x-axis\":0.191,\"y-axis\":0.069,\"z-axis\":-9.875}",
-        "date" => 1364256603.675,
-        "month" => 3,
-        "week" => 13,
-        "year" => 2013
-      },
-        {
-        "id" => "5150e9b7b4b735d04e010ed9",
-        "sensor_id" => "1",
-        "value" => "{\"x-axis\":0.191,\"y-axis\":-0.028,\"z-axis\":-9.766}",
-        "date" => 1364257203.315,
-        "month" => 3,
-        "week" => 13,
-        "year" => 2013
-      }
-      ]
-      }
-      }
+            "id" => "5150e760b4b735fa29027b27",
+            "sensor_id" => "1",
+            "value" => "{\"x-axis\":0.191,\"y-axis\":0.069,\"z-axis\":-9.875}",
+            "date" => 1364256603.675,
+            "month" => 3,
+            "week" => 13,
+            "year" => 2013
+          },
+          {
+            "id" => "5150e9b7b4b735d04e010ed9",
+            "sensor_id" => "1",
+            "value" => "{\"x-axis\":0.191,\"y-axis\":-0.028,\"z-axis\":-9.766}",
+            "date" => 1364257203.315,
+            "month" => 3,
+            "week" => 13,
+            "year" => 2013
+          }]
+        }
+      end
 
-      let(:relation) {
+      let(:relation) do
         sensor_id = "1"
         relation = SensorDataRelation.new(sensor_id)
         relation.stub("check_session!").and_return(true)
         relation.stub("get_data!").and_return(data)
         relation
-      }
+      end
 
       describe "build" do
         it "should return a sensorData object" do
@@ -81,6 +79,7 @@ module CommonSense
           relation.stub(:get_data!).and_return { raise Error }
 
           expect { relation.get_data }.to_not raise_error
+          relation.get_data.should be_nil
         end
       end
 
@@ -102,18 +101,17 @@ module CommonSense
           option = { page: 0, per_page: 1, sort: 'ASC'}
           sensor_id = "1"
           response = {
-            "data" => [
-              {
-            "id" => "5150e509b4b735f6290238d3",
-            "sensor_id" => sensor_id,
-            "value" => "{\"x-axis\":0.259,\"y-axis\":-0.15,\"z-axis\":-9.807}",
-            "date" => 1364256004.651,
-            "month" => 3,
-            "week" => 13,
-            "year" => 2013
+            "data" => [{
+              "id" => "5150e509b4b735f6290238d3",
+              "sensor_id" => sensor_id,
+              "value" => "{\"x-axis\":0.259,\"y-axis\":-0.15,\"z-axis\":-9.807}",
+              "date" => 1364256004.651,
+              "month" => 3,
+              "week" => 13,
+              "year" => 2013
+            }]
           }
-          ]
-          }
+
           session.should_receive(:get).with("/sensors/#{sensor_id}/data.json", option).and_return(response)
           relation = SensorDataRelation.new(sensor_id, session)
 
@@ -134,17 +132,15 @@ module CommonSense
           option = { page: 0, per_page: 1, sort: 'DESC'}
           sensor_id = "1"
           response = {
-            "data" => [
-              {
-            "id" => "5150e9b7b4b735d04e010ed9",
-            "sensor_id" => sensor_id,
-            "value" => "{\"x-axis\":0.191,\"y-axis\":-0.028,\"z-axis\":-9.766}",
-            "date" => 1364257203.315,
-            "month" => 3,
-            "week" => 13,
-            "year" => 2013
-          }
-          ]
+            "data" => [{
+              "id" => "5150e9b7b4b735d04e010ed9",
+              "sensor_id" => sensor_id,
+              "value" => "{\"x-axis\":0.191,\"y-axis\":-0.028,\"z-axis\":-9.766}",
+              "date" => 1364257203.315,
+              "month" => 3,
+              "week" => 13,
+              "year" => 2013
+            }]
           }
           session.should_receive(:get).with("/sensors/#{sensor_id}/data.json", option).and_return(response)
           relation = SensorDataRelation.new(sensor_id, session)
@@ -174,7 +170,7 @@ module CommonSense
           end
         end
 
-        describe "page" do
+        describe "per_page" do
           it "should update per_page" do
             @relation.where(per_page: 99)
             @relation.per_page.should eq(99)
@@ -184,23 +180,72 @@ module CommonSense
         describe "start_date" do
           describe "number given" do
             it "should update the start_date" do
-              @relation.where(start_date: 1)
-              @relation.start_date.to_f.should eq(1.0)
+              @relation.where(start_date: 2)
+              @relation.start_date.to_f.should eq(2.0)
+              @relation.start_date.should be_kind_of(Time)
+            end
+          end
+
+          describe "Time given" do
+            it "should update the start_date" do
+              @relation.where(start_date: Time.at(19))
+              @relation.start_date.to_f.should eq(19)
+            end
+          end
+
+          describe "Object that respond to 'to_time` given" do
+            it "should update the start_date" do
+              double = double()
+              double.should_receive(:to_time).and_return (Time.at(2))
+              @relation.where(start_date: double)
+              @relation.start_date.to_f.should eq(2.0)
+              @relation.start_date.should be_kind_of(Time)
+            end
+          end
+
+          describe "Object that not respond to 'to_time' given" do
+            it "should raise error" do
+              expect { @relation.where(end_date: 'foo') }.to raise_error(NoMethodError)
             end
           end
         end
 
-        describe "start_date" do
+
+        describe "end_date" do
           describe "number given" do
             it "should update the end_date" do
-              @relation.where(end_date: 1)
-              @relation.end_date.to_f.should eq(1.0)
+              @relation.where(end_date: 2)
+              @relation.end_date.to_f.should eq(2.0)
+              @relation.end_date.should be_kind_of(Time)
+            end
+          end
+
+          describe "Time given" do
+            it "should update the end_date" do
+              @relation.where(end_date: Time.at(19))
+              @relation.end_date.to_f.should eq(19)
+            end
+          end
+
+          describe "Object that respond to 'to_time` given" do
+            it "should update the end_date" do
+              double = double()
+              double.should_receive(:to_time).and_return (Time.at(2))
+              @relation.where(end_date: double)
+              @relation.end_date.to_f.should eq(2.0)
+              @relation.end_date.should be_kind_of(Time)
+            end
+          end
+
+          describe "Object that not respond to 'to_time' given" do
+            it "should raise error" do
+              expect { @relation.where(end_date: 'foo') }.to raise_error(NoMethodError)
             end
           end
         end
 
         describe "last" do
-          describe "with true value" do
+          describe "with boolean value" do
             it "should update the last parameter" do
               [true, false].each do |value|
                 @relation.where(last: value)
@@ -254,35 +299,135 @@ module CommonSense
         end
 
         describe "from" do
-          it "should update start_date parameter" do
-            @relation.start_date.should be_nil
-            @relation.where(from: 1)
-            @relation.start_date.to_i.should eq(1)
+          describe "number given" do
+            it "should update the end_date" do
+              @relation.where(from: 2)
+              @relation.start_date.to_f.should eq(2.0)
+              @relation.start_date.should be_kind_of(Time)
+            end
+          end
+
+          describe "Time given" do
+            it "should update the end_date" do
+              @relation.where(from: Time.at(19))
+              @relation.start_date.to_f.should eq(19)
+            end
+          end
+
+          describe "Object that respond to 'to_time` given" do
+            it "should update the end_date" do
+              double = double()
+              double.should_receive(:to_time).and_return (Time.at(2))
+              @relation.where(from: double)
+              @relation.start_date.to_f.should eq(2.0)
+              @relation.start_date.should be_kind_of(Time)
+            end
+          end
+
+          describe "Object that not respond to 'to_time' given" do
+            it "should raise error" do
+              expect { @relation.where(from: 'foo') }.to raise_error(NoMethodError)
+            end
           end
         end
 
         describe "to" do
-          it "should update end_date parameter" do
-            @relation.end_date.should be_nil
-            @relation.where(to: 1)
-            @relation.end_date.to_i.should eq(1)
+          describe "number given" do
+            it "should update the end_date" do
+              @relation.where(to: 2)
+              @relation.end_date.to_f.should eq(2.0)
+              @relation.end_date.should be_kind_of(Time)
+            end
+          end
+
+          describe "Time given" do
+            it "should update the end_date" do
+              @relation.where(to: Time.at(19))
+              @relation.end_date.to_f.should eq(19)
+            end
+          end
+
+          describe "Object that respond to 'to_time` given" do
+            it "should update the end_date" do
+              double = double()
+              double.should_receive(:to_time).and_return (Time.at(2))
+              @relation.where(to: double)
+              @relation.end_date.to_f.should eq(2.0)
+              @relation.end_date.should be_kind_of(Time)
+            end
+          end
+
+          describe "Object that not respond to 'to_time' given" do
+            it "should raise error" do
+              expect { @relation.where(to: 'foo') }.to raise_error(NoMethodError)
+            end
           end
         end
       end
 
       describe "from" do
-        it "should update the start_date parameter" do
-          result = relation.from(1)
-          result.should be_a_kind_of(SensorDataRelation)
-          result.start_date.to_i.should eq(1)
+        describe "number given" do
+          it "should update the end_date" do
+            relation.from(2)
+            relation.start_date.to_f.should eq(2.0)
+            relation.start_date.should be_kind_of(Time)
+          end
+        end
+
+        describe "Time given" do
+          it "should update the end_date" do
+            relation.from(Time.at(19))
+            relation.start_date.to_f.should eq(19)
+          end
+        end
+
+        describe "Object that respond to 'to_time` given" do
+          it "should update the end_date" do
+            double = double()
+            double.should_receive(:to_time).and_return (Time.at(2))
+            relation.from(double)
+            relation.start_date.to_f.should eq(2.0)
+            relation.start_date.should be_kind_of(Time)
+          end
+        end
+
+        describe "Object that not respond to 'to_time' given" do
+          it "should raise error" do
+            expect { relation.from('foo') }.to raise_error(NoMethodError)
+          end
         end
       end
 
-      describe "from" do
-        it "should update the end_date parameter" do
-          result = relation.to(1)
-          result.should be_a_kind_of(SensorDataRelation)
-          result.end_date.to_i.should eq(1)
+      describe "to" do
+        describe "number given" do
+          it "should update the end_date" do
+            relation.to(2)
+            relation.end_date.to_f.should eq(2.0)
+            relation.end_date.should be_kind_of(Time)
+          end
+        end
+
+        describe "Time given" do
+          it "should update the end_date" do
+            relation.to(Time.at(19))
+            relation.end_date.to_f.should eq(19)
+          end
+        end
+
+        describe "Object that respond to 'to_time` given" do
+          it "should update the end_date" do
+            double = double()
+            double.should_receive(:to_time).and_return (Time.at(2))
+            relation.to(double)
+            relation.end_date.to_f.should eq(2.0)
+            relation.end_date.should be_kind_of(Time)
+          end
+        end
+
+        describe "Object that not respond to 'to_time' given" do
+          it "should raise error" do
+            expect { relation.to('foo') }.to raise_error(NoMethodError)
+          end
         end
       end
 
