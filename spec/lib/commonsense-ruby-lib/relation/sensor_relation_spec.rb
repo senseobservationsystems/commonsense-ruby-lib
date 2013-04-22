@@ -6,7 +6,7 @@ module CommonSense
     describe SensorRelation do
       describe "build" do
         it "should return a sensor object" do
-          SensorRelation.new.build.should be_a_kind_of(CommonSense::Sensor)
+          SensorRelation.new.build.should be_a_kind_of(EndPoint::Sensor)
         end
       end
 
@@ -46,7 +46,7 @@ module CommonSense
           relation = SensorRelation.new
           relation.stub("get_data").and_return(sensors)
 
-          expect { |b| relation.each(&b) }.to yield_successive_args(Sensor, Sensor, Sensor)
+          expect { |b| relation.each(&b) }.to yield_successive_args(EndPoint::Sensor, EndPoint::Sensor, EndPoint::Sensor)
         end
       end
 
@@ -59,7 +59,7 @@ module CommonSense
       describe "first" do
         it "should return the first record" do
           first = relation.first
-          first.should be_kind_of(Sensor)
+          first.should be_kind_of(EndPoint::Sensor)
           first.name.should eq("sensor1")
         end
       end
@@ -71,7 +71,7 @@ module CommonSense
           relation.should_receive("get_data").with(page:2, per_page:1, shared:nil, owned:nil, physical:nil, details:nil).and_return({"sensors" => [{"name" => "sensor3"}], "total" => 3})
 
           first = relation.last
-          first.should be_kind_of(Sensor)
+          first.should be_kind_of(EndPoint::Sensor)
           first.name.should eq("sensor3")
         end
       end

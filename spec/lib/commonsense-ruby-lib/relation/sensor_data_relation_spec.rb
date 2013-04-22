@@ -56,7 +56,7 @@ module CommonSense
       describe "build" do
         it "should return a sensorData object" do
           sensor_id = 1
-          SensorDataRelation.new(sensor_id).build.should be_a_kind_of(SensorData)
+          SensorDataRelation.new(sensor_id).build.should be_a_kind_of(EndPoint::SensorData)
         end
       end
 
@@ -86,7 +86,7 @@ module CommonSense
 
       describe "each" do
         it "should get all sensor data based on the criteria and yield" do
-          expect { |b| relation.each(&b) }.to yield_successive_args(SensorData, SensorData, SensorData)
+          expect { |b| relation.each(&b) }.to yield_successive_args(EndPoint::SensorData, EndPoint::SensorData, EndPoint::SensorData)
         end
       end
 
@@ -291,7 +291,7 @@ module CommonSense
           data = relation.to_a
           data.should be_a_kind_of(Array)
           data.size.should eq(3)
-          data[0].should be_a_kind_of(SensorData)
+          data[0].should be_a_kind_of(EndPoint::SensorData)
         end
       end
     end

@@ -31,7 +31,7 @@ module CommonSense
           sensors = sensors["sensors"]
           if !sensors.empty?
             sensors.each do |sensor|
-              sensor = CommonSense::Sensor.new(sensor)
+              sensor = EndPoint::Sensor.new(sensor)
               sensor.session = session
               yield sensor
             end
@@ -43,14 +43,14 @@ module CommonSense
       end
 
       def build(attribtues={})
-        sensor = CommonSense::Sensor.new(attribtues)
+        sensor = EndPoint::Sensor.new(attribtues)
         sensor.session = self.session
         sensor
       end
 
       def find(id)
         check_session!
-        sensor = CommonSense::Sensor.new(id: id)
+        sensor = EndPoint::Sensor.new(id: id)
         sensor.session = self.session
         sensor.retrieve ? sensor : nil
       end
@@ -59,7 +59,7 @@ module CommonSense
       def parse_single_resource(sensors)
         sensors = sensors["sensors"]
         if !sensors.empty?
-          sensor = CommonSense::Sensor.new(sensors[0])
+          sensor = EndPoint::Sensor.new(sensors[0])
           sensor.session = self.session
 
           return sensor

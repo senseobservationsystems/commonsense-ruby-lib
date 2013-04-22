@@ -29,7 +29,7 @@ module CommonSense
       end
 
       def build(attributes={})
-        data = CommonSense::SensorData.new
+        data = EndPoint::SensorData.new
         data.sensor_id = self.sensor_id
         data.session = self.session
         data
@@ -57,7 +57,7 @@ module CommonSense
       def each(&block)
         self.each_batch do |data|
           data.each do |data_point|
-            sensor_data = CommonSense::SensorData.new(data_point)
+            sensor_data = EndPoint::SensorData.new(data_point)
             sensor_data.sensor_id = self.sensor_id
             sensor_data.session = session
             yield sensor_data
@@ -102,7 +102,7 @@ module CommonSense
 
         sensor_data = nil
         if !data.empty?
-          sensor_data = CommonSense::SensorData.new(data_point)
+          sensor_data = EndPoint::SensorData.new(data_point)
           sensor_data.sensor_id = self.sensor_id
           sensor_data.session = session
         end

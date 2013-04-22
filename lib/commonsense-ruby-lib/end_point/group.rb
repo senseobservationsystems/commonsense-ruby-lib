@@ -1,25 +1,28 @@
 module CommonSense
-  class Group
-    include CommonSense::EndPoint
-    attr_accessor :id, :name, :description, :public
-    # get groups that user belongs to
-    def current_groups(options={})
-      res = session.get("/groups.json", options)
-      return nil unless res
+  module EndPoint
+    class Group
+      include EndPoint
 
-      group_list = res['groups']
-      
+      attr_accessor :id, :name, :description, :public
+      # get groups that user belongs to
+      def current_groups(options={})
+        res = session.get("/groups.json", options)
+        return nil unless res
 
-      groups =[]
-      if group_list
-        group_list.each do |group|
-          g = Group.new(group)
-          g.session = session
-          groups << g
+        group_list = res['groups']
+
+
+        groups =[]
+        if group_list
+          group_list.each do |group|
+            g = Group.new(group)
+            g.session = session
+            groups << g
+          end
         end
-      end
 
-      groups
+        groups
+      end
     end
   end
 end

@@ -89,7 +89,7 @@ module CommonSense
 
     # Retrun logged in user
     def current_user
-      user = User.new
+      user = EndPoint::User.new
       user.session = @session
       user.current_user
     end
@@ -102,7 +102,7 @@ module CommonSense
     #     ...
     #     client.save!
     def new_user(hash={})
-     user = User.new(hash)
+     user = EndPoint::User.new(hash)
      user.session = Session.new(base_uri: @base_uri, authentication: false)
      user
     end
@@ -113,7 +113,7 @@ module CommonSense
     end
 
     def current_groups
-      group = Group.new
+      group = EndPoint::Group.new
       group.session = @session
       group.current_groups
     end
