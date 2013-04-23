@@ -45,6 +45,9 @@ client.sensors.where(owned: true)
 client.sensors.where(physical: true)
 client.sensors.where(page: 0, per_page: 1000, physical: true, owned: true, details: "full")
 
+# process each sensor
+client.sensors.where(owned: true).each {|sensor| puts sensor.name}
+
 # Chain parameters
 client.sensors.where(page:0, per_page: 10).where(physical: true)
 
