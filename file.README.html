@@ -112,6 +112,9 @@
 <span class='id identifier rubyid_client'>client</span><span class='period'>.</span><span class='id identifier rubyid_sensors'>sensors</span><span class='period'>.</span><span class='id identifier rubyid_where'>where</span><span class='lparen'>(</span><span class='label'>physical:</span> <span class='kw'>true</span><span class='rparen'>)</span>
 <span class='id identifier rubyid_client'>client</span><span class='period'>.</span><span class='id identifier rubyid_sensors'>sensors</span><span class='period'>.</span><span class='id identifier rubyid_where'>where</span><span class='lparen'>(</span><span class='label'>page:</span> <span class='int'>0</span><span class='comma'>,</span> <span class='label'>per_page:</span> <span class='int'>1000</span><span class='comma'>,</span> <span class='label'>physical:</span> <span class='kw'>true</span><span class='comma'>,</span> <span class='label'>owned:</span> <span class='kw'>true</span><span class='comma'>,</span> <span class='label'>details:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>full</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 
+<span class='comment'># process each sensor
+</span><span class='id identifier rubyid_client'>client</span><span class='period'>.</span><span class='id identifier rubyid_sensors'>sensors</span><span class='period'>.</span><span class='id identifier rubyid_where'>where</span><span class='lparen'>(</span><span class='label'>owned:</span> <span class='kw'>true</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_sensor'>sensor</span><span class='op'>|</span> <span class='id identifier rubyid_puts'>puts</span> <span class='id identifier rubyid_sensor'>sensor</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='rbrace'>}</span>
+
 <span class='comment'># Chain parameters
 </span><span class='id identifier rubyid_client'>client</span><span class='period'>.</span><span class='id identifier rubyid_sensors'>sensors</span><span class='period'>.</span><span class='id identifier rubyid_where'>where</span><span class='lparen'>(</span><span class='label'>page:</span><span class='int'>0</span><span class='comma'>,</span> <span class='label'>per_page:</span> <span class='int'>10</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_where'>where</span><span class='lparen'>(</span><span class='label'>physical:</span> <span class='kw'>true</span><span class='rparen'>)</span>
 
@@ -197,7 +200,7 @@ $ rspec
 </div></div>
 
     <div id="footer">
-  Generated on Tue Apr 23 13:27:17 2013 by
+  Generated on Tue Apr 23 13:47:40 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.6.1 (ruby-1.9.3).
 </div>
