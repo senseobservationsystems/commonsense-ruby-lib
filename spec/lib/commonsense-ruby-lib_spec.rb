@@ -40,6 +40,7 @@ describe "commonsense-ruby-lib" do
   end
 
   describe "with OAuth" do
+    pending
     before(:each) do
       @client = client = CommonSense::Client.new
       @client.oauth(CONFIG['CS_CONSUMER_KEY'], CONFIG['CS_CONSUMER_SECRET'],
