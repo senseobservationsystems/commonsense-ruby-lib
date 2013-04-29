@@ -74,7 +74,6 @@ module CommonSense
         retval
       end
 
-
       def first
         data = get_data!(page:0, per_page: 1, sort: "ASC")
         parse_single_resource(data)

@@ -37,14 +37,14 @@ module CommonSense
           relation = SensorRelation.new
           relation.stub(:get_data!).and_return { raise Error }
 
-          expect { relation.get_data}.to_not raise_error
+          expect { relation.get_data }.to_not raise_error
         end
       end
 
       describe "each" do
         it "should get all sensor and yield each" do
           relation = SensorRelation.new
-          relation.stub("get_data").and_return(sensors)
+          relation.stub("get_data!").and_return(sensors)
 
           expect { |b| relation.each(&b) }.to yield_successive_args(EndPoint::Sensor, EndPoint::Sensor, EndPoint::Sensor)
         end
@@ -151,7 +151,7 @@ module CommonSense
           relation = SensorRelation.new
           relation.session = double('Session')
           relation.stub("count").and_return(3)
-          relation.should_receive("get_data").with(page:0, per_page:nil, shared:nil, owned:nil, physical:nil, details:nil).and_return({"sensors" => [{"name" => "sensor11"}, {"name" => "sensor12"}, {"name" => "sensor2"}], "total" => 3})
+          relation.should_receive("get_data!").with(page:0, per_page:nil, shared:nil, owned:nil, physical:nil, details:nil, group_id: nil).and_return({"sensors" => [{"name" => "sensor11"}, {"name" => "sensor12"}, {"name" => "sensor2"}], "total" => 3})
 
           sensors = relation.find_by_name(/sensor1/)
           sensors.should be_kind_of(Array)
