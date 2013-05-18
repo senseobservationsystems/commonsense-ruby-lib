@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "session" do
   before(:each) do
-    @client = client = CommonSense::Client.new(base_uri: ENV['spec_base_uri'])
+    @client = client = CS::Client.new(base_uri: ENV['spec_base_uri'])
   end
 
   describe "login" do

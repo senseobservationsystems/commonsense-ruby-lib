@@ -1,4 +1,4 @@
-module CommonSense
+module CS
   module Relation
 
     # Class that used to query List of sensor data from CS.
@@ -18,7 +18,7 @@ module CommonSense
     #
     # === Create Sensors Relation
     #
-    #    client = CommonSense::Client.new
+    #    client = CS::Client.new
     #    client.login('user', 'password')
     #    session = client.session
     #
@@ -26,7 +26,7 @@ module CommonSense
     #    sensors = client.sensors
     #
     #    # is the same as
-    #    sensors = CommonSense::Relation::Sensors.new
+    #    sensors = CS::Relation::Sensors.new
     #    sensors.session = session
     #
     # === Get all sensor

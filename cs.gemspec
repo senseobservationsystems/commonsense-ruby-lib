@@ -13,10 +13,10 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "cs"
   gem.require_paths = ["lib"]
-  gem.version       = CommonSense::VERSION
-  gem.add_development_dependency("rspec", "~> 2.13.0")
-  gem.add_development_dependency("launchy", "~> 2.3.0")
-  gem.add_development_dependency("fakeweb", "~> 1.3.0")
-  gem.add_dependency('httparty', '~> 0.11.0')
-  gem.add_dependency('oauth', '~> 0.4.7')
+  gem.version       = CS::VERSION
+  gem.add_development_dependency("rspec", "~> 2.13")
+  gem.add_development_dependency("launchy", "~> 2.3")
+  gem.add_development_dependency("fakeweb", "~> 1.3")
+  gem.add_dependency('httparty', '~> 0.11')
+  gem.add_dependency('oauth', '~> 0.4')
 end

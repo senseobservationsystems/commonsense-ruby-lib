@@ -1,7 +1,7 @@
 require 'commonsense-ruby-lib/serializer'
-module CommonSense
+module CS
   module EndPoint
-    include CommonSense::Serializer
+    include CS::Serializer
 
     attr_accessor :session
 

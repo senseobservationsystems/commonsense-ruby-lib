@@ -1,4 +1,4 @@
-module CommonSense
+module CS
   class Session
     def initialize(opts={})
       options = {
@@ -6,18 +6,18 @@ module CommonSense
         authentication: true
       }.merge(opts)
       @base_uri = options[:base_uri]
-      @auth_proxy = options[:authentication] ? nil : CommonSense::Auth::HTTP.new(@base_uri)
+      @auth_proxy = options[:authentication] ? nil : CS::Auth::HTTP.new(@base_uri)
     end
 
     # login to commonsense 
     # @return [String] session_id 
     def login(username, password)
-      @auth_proxy = CommonSense::Auth::HTTP.new(@base_uri)
+      @auth_proxy = CS::Auth::HTTP.new(@base_uri)
       @auth_proxy.login(username, password)
     end
 
     def oauth(consumer_key, consumer_secret, access_token, access_token_secret)
-      @auth_proxy = CommonSense::Auth::OAuth.new(consumer_key, consumer_secret, 
+      @auth_proxy = CS::Auth::OAuth.new(consumer_key, consumer_secret, 
                                                  access_token, access_token_secret,
                                                  @base_uri)
     end
@@ -27,7 +27,7 @@ module CommonSense
     end
 
     def session_id=(session_id)
-      @auth_proxy = CommonSense::Auth::HTTP.new(@base_uri)
+      @auth_proxy = CS::Auth::HTTP.new(@base_uri)
       @auth_proxy.session_id = session_id
     end
 
@@ -99,7 +99,7 @@ module CommonSense
     end
 
     def inspect
-      auth_proxy.kind_of?(CommonSense::Auth::HTTP) ? to_s : "OAuth"
+      auth_proxy.kind_of?(CS::Auth::HTTP) ? to_s : "OAuth"
     end
   end
 end

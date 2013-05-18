@@ -1,6 +1,6 @@
 require 'digest/md5'
 
-module CommonSense
+module CS
   module EndPoint
     class User
       include EndPoint

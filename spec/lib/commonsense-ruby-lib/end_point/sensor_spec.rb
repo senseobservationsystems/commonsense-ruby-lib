@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module CommonSense
+module CS
   module EndPoint
     describe SensorData do
 
@@ -34,7 +34,7 @@ module CommonSense
         it "should POST to /sensors.json" do
           sensor = Sensor.new(sensor_info)
 
-          session = double("CommonSense::Session")
+          session = double("CS::Session")
           expected = {sensor: sensor_info }
           expected[:sensor][:data_structure] = (sensor_info[:data_structure].to_json)
           session.should_receive(:post).with("/sensors.json", expected)
@@ -52,7 +52,7 @@ module CommonSense
           sensor_id = 1
           sensor.id = sensor_id
 
-          session = double("CommonSense::Session")
+          session = double("CS::Session")
           session.should_receive(:get).with("/sensors/#{sensor_id}.json")
           session.stub(:response_code => 200)
           sensor.session = session
@@ -67,7 +67,7 @@ module CommonSense
           sensor_id = 1
           sensor.id = sensor_id
 
-          session = double("CommonSense::Session")
+          session = double("CS::Session")
           expected = {sensor: sensor_info }
           expected[:sensor][:data_structure] = (sensor_info[:data_structure].to_json)
           expected[:sensor][:id] = 1
@@ -85,7 +85,7 @@ module CommonSense
           sensor_id = 1
           sensor.id = sensor_id
 
-          session = double("CommonSense::Session")
+          session = double("CS::Session")
           session.should_receive(:delete).with("/sensors/#{sensor_id}.json")
           session.stub(:response_code => 200)
           sensor.session = session

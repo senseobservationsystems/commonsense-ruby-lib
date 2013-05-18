@@ -1,4 +1,4 @@
-module CommonSense
+module CS
   module Serializer
     def from_hash(hash)
       if hash

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module CommonSense
+module CS
   module Relation
     describe SensorDataRelation do
 

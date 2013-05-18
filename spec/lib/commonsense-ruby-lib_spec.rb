@@ -31,7 +31,7 @@ describe "commonsense-ruby-lib" do
 
     describe "sensors" do
       it "should return Sensors relation" do
-        @client.sensors.should be_a_kind_of(CommonSense::Relation::SensorRelation)
+        @client.sensors.should be_a_kind_of(CS::Relation::SensorRelation)
       end
     end
   end
@@ -42,7 +42,7 @@ describe "commonsense-ruby-lib" do
   describe "with OAuth" do
     pending
     before(:each) do
-      @client = client = CommonSense::Client.new
+      @client = client = CS::Client.new
       @client.oauth(CONFIG['CS_CONSUMER_KEY'], CONFIG['CS_CONSUMER_SECRET'],
                     CONFIG['CS_ACCESS_TOKEN'], CONFIG['CS_ACCESS_TOKEN_SECRET'])
     end

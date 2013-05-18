@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'commonsense-ruby-lib/end_point/sensor'
 
-module CommonSense
+module CS
   module Relation
     describe SensorRelation do
       describe "build" do

@@ -1,4 +1,4 @@
-module CommonSense
+module CS
   module EndPoint
     class Group
       include EndPoint

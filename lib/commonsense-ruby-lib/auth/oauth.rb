@@ -1,6 +1,6 @@
 require "oauth"
 
-module CommonSense
+module CS
   module Auth
     class OAuth
 

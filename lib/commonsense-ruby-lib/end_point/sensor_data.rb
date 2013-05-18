@@ -1,9 +1,9 @@
-module CommonSense
+module CS
   module EndPoint
     # This object represent a sensor data point
     # usage example:
     #
-    #    client = CommonSense::Client.new
+    #    client = CS::Client.new
     #    client.login('username', 'password')
     #
     #    # Find the first position sensor
@@ -19,7 +19,7 @@ module CommonSense
     #    sensor.data.build(date: Time.now, value: {"lux => 1}).save!
     #
     class SensorData
-      include CommonSense::EndPoint
+      include CS::EndPoint
 
       attr_accessor :month, :week, :year
       attribute :date, :value, :sensor_id

@@ -1,4 +1,4 @@
-module CommonSense
+module CS
   module Relation
     module Boolean; end
 

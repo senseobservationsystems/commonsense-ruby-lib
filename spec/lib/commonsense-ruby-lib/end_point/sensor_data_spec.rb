@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module CommonSense
+module CS
   module EndPoint
     describe SensorData do
 
@@ -26,7 +26,7 @@ module CommonSense
         it "should create a new data point" do
           data = SensorData.new(sensor_id: 1, date: now, value: value)
 
-          session = double("CommonSense::Session")
+          session = double("CS::Session")
           session.should_receive(:post).with("/sensors/1/data.json", {data: [{date: now, value: value.to_json}]})
           session.stub(:response_headers => {"location" => "http://foo.bar/sensors/1/data/1"})
           session.stub(:response_code => 201)
@@ -54,7 +54,7 @@ module CommonSense
         it "should perform DELETE request to commonSense" do
           data = SensorData.new(sensor_id: 1, id: "abcdef")
 
-          session = double("CommonSense::Session")
+          session = double("CS::Session")
           session.should_receive(:delete).with("/sensors/1/data/abcdef.json")
           session.stub(:response_code => 200)
           data.session = session

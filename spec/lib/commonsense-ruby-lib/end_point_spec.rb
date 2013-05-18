@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module CommonSense
+module CS
   describe EndPoint do
     before(:each) do
       class FooEndPoint
@@ -40,7 +40,7 @@ module CommonSense
       describe "without id" do
         it "should call create" do
           foo = FooEndPoint.new
-          foo.session = double("CommonSense::Session")
+          foo.session = double("CS::Session")
           foo.should_receive(:create!)
           foo.save!
         end
@@ -49,7 +49,7 @@ module CommonSense
       describe "with id" do
         it "should call update" do
           foo = FooEndPoint.new
-          foo.session = double("CommonSense::Session")
+          foo.session = double("CS::Session")
           foo.id = 1
           foo.should_receive(:update!)
           foo.save!
@@ -60,7 +60,7 @@ module CommonSense
     describe "save" do
       it "should not raise error" do
         foo = FooEndPoint.new
-        foo.session = double("CommonSense::Session")
+        foo.session = double("CS::Session")
         foo.should_receive(:create!).and_return { raise Error }
         foo.save.should be_false
       end
@@ -71,7 +71,7 @@ module CommonSense
         foo_data = valid_foo
         foo_data.delete(:id)
         foo = FooEndPoint.new(foo_data)
-        session = double("CommonSense::Session")
+        session = double("CS::Session")
         session.should_receive(:post).with("/foos.json", {foo: foo_data}).and_return({"foo" => valid_foo})
         session.stub(:response_headers => {"location" => "http://foo.bar/foos/1"})
         session.stub(:response_code => 201)
@@ -84,7 +84,7 @@ module CommonSense
       it "should raise exception where recive error (not 201) from commonSense" do
         expect {
           foo = FooEndPoint.new
-          session = double("CommonSense::Session")
+          session = double("CS::Session")
           session.stub(:post)
           session.stub(response_code: 409)
           session.stub(:errors)
@@ -106,14 +106,14 @@ module CommonSense
       it "should raise exception with no id" do
         expect {
           foo = FooEndPoint.new
-          foo.session = double("CommonSense::Session")
+          foo.session = double("CS::Session")
           foo.retrieve!
         }.to raise_error(Error::ResourceIdError)
       end
 
       it "should GET Resource from CommonSense" do
         foo = FooEndPoint.new(id: 1)
-        session = double("CommonSense::Session")
+        session = double("CS::Session")
         session.should_receive(:get).with("/foos/1.json").and_return({"foo" => valid_foo})
         session.stub(:response_code => 200)
         foo.session = session
@@ -138,7 +138,7 @@ module CommonSense
       it "should PUT Resource to CommonSense" do
         foo_data = valid_foo
         foo = FooEndPoint.new(foo_data)
-        session = double("CommonSense::Session")
+        session = double("CS::Session")
         session.should_receive(:put).with("/foos/1.json", {foo: foo_data}).and_return({"foo" => valid_foo})
         session.stub(:response_code => 200)
         foo.session = session
@@ -159,7 +159,7 @@ module CommonSense
       it "should raise exception with no id" do
         expect {
           foo = FooEndPoint.new
-          foo.session = double("CommonSense::Session")
+          foo.session = double("CS::Session")
           foo.delete!
         }.to raise_error(Error::ResourceIdError)
 
@@ -167,7 +167,7 @@ module CommonSense
 
       it "should DELETE Resource from CommonSense" do
         foo = FooEndPoint.new(id: 1)
-        session = double("CommonSense::Session")
+        session = double("CS::Session")
         session.should_receive(:delete).with("/foos/1.json")
         session.stub(:response_code => 200)
         foo.session = session
@@ -181,7 +181,7 @@ module CommonSense
     describe "delete" do
       it "should not raise error" do
         foo = FooEndPoint.new
-        foo.session = double("CommonSense::Session")
+        foo.session = double("CS::Session")
         foo.stub(:delete!).and_return { raise Error }
         foo.delete.should be_false
       end

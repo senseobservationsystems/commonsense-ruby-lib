@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'commonsense-ruby-lib/error'
 
-module CommonSense
+module CS
   module EndPoint
     describe User do
       def valid_user
@@ -15,7 +15,7 @@ module CommonSense
       describe "current_user" do
         it "should return current logged in user" do
           user = User.new
-          session = double("CommonSense::Session")
+          session = double("CS::Session")
           session.stub(:get).with("/users/current.json").and_return({"user" => valid_user}) 
 
           user.stub(:session).and_return(session);

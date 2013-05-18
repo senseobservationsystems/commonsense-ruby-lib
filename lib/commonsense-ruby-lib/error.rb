@@ -1,4 +1,4 @@
-module CommonSense
+module CS
   module Error
     class Error < ::RuntimeError
       def initialize(message = "")

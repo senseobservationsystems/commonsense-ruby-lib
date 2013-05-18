@@ -19,7 +19,7 @@ Or install it yourself as:
 
 ### Authentication
 ```ruby
-client = CommonSense::Client.new
+client = CS::Client.new
 client.login('username','password')
 
 # get current user
@@ -32,7 +32,7 @@ current_user = client.current_user
 sensors = client.sensors
 
 # is the same as
-sensors = CommonSense::Relation::Sensors.new
+sensors = CS::Relation::Sensors.new
 sensors.session = session
 
 # Get all sensor

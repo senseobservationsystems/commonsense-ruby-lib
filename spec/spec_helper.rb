@@ -17,7 +17,7 @@ RSpec.configure do |config|
         $username = "user#{Time.now.to_f}@tester.com"
         $password = "password"
 
-        client = CommonSense::Client.new(base_uri: ENV['spec_base_uri'])
+        client = CS::Client.new(base_uri: ENV['spec_base_uri'])
         $user = client.new_user
         $user.username = $username
         $user.email = $user.username
@@ -34,7 +34,7 @@ RSpec.configure do |config|
 end
 
 def create_client
-  CommonSense::Client.new(base_uri: ENV['spec_base_uri'])
+  CS::Client.new(base_uri: ENV['spec_base_uri'])
 end
 
 ENV['spec_base_uri'] ||= 'http://api.dev.sense-os.local'

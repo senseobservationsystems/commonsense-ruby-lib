@@ -12,7 +12,7 @@ require "commonsense-ruby-lib/relation"
 require "commonsense-ruby-lib/relation/sensor_relation"
 require "commonsense-ruby-lib/relation/sensor_data_relation"
 
-module CommonSense
+module CS
 
   # Main entry class of the library.
   #
@@ -20,23 +20,23 @@ module CommonSense
   # will raise an exception when there is an error and the normal (without !)
   # will return nil when it fails.
   #
-  # The response can be viewed by looking at the {CommonSense::Session}
+  # The response can be viewed by looking at the {CS::Session}
   #
   #     client.session # will return the session object
   #
   # == Authentication with User And Password
   #
-  #     client = CommonSense::Client.new
+  #     client = CS::Client.new
   #     client.login('username', 'password')
   #
   # == Authentication using OAuth
   #
-  #     client = CommonSense::Client.new
+  #     client = CS::Client.new
   #     client.oauth('CONSUMER_KEY', 'CONSUMER_SECRET', 'ACCESS_TOKEN', 'ACCESS_TOKEN_SECRET')
   #
   # == Using different API server
   #
-  #     client = CommonSense::Client.new(base_uri: 'https://api.dev.sense-os.nl')
+  #     client = CS::Client.new(base_uri: 'https://api.dev.sense-os.nl')
   #     # or
   #     client.base_uri = 'https://api.dev.sense-os.nl'
   #
@@ -53,7 +53,7 @@ module CommonSense
     # Create a new session to CommonSense using username and plain text password
     # with `login!` it will throw exception if there is an error
     #
-    #    client = CommonSense::Client.new
+    #    client = CS::Client.new
     #    client.login!('username', 'password')
     def login!(user, password)
       @session = Session.new(base_uri: @base_uri)
@@ -63,7 +63,7 @@ module CommonSense
     # Create a new session to CommonSense using username and plain text password
     # with `login` it will return nil if it not successful
     #
-    #    client = CommonSense::Client.new
+    #    client = CS::Client.new
     #    client.login('username', 'password')
     def login(user, password)
       login!(user, password) rescue nil
@@ -71,7 +71,7 @@ module CommonSense
 
     # Create a new session to CommonSense using OAuth credentials
     #
-    #    client = CommonSense::Client.new
+    #    client = CS::Client.new
     #    client.login('username', 'password')
     def oauth(consumer_key, consumer_secret, access_token, access_token_secret)
       @session = Session.new(base_uri: @base_uri)
@@ -80,7 +80,7 @@ module CommonSense
 
     # Create new session by manually specifiying `session_id` parameter
     #
-    #     client = CommonSense::Client.new
+    #     client = CS::Client.new
     #     client.session_id('12345')
     def set_session_id(session_id)
       @session = Session.new(base_uri: @base_uri)
@@ -96,7 +96,7 @@ module CommonSense
 
     # Create a new user
     #
-    #     client = CommonSense::Client.new
+    #     client = CS::Client.new
     #     client.new_user(username: 'Ahmy')
     #     client.email = 'ahmy@gmail.com'
     #     ...
@@ -107,7 +107,7 @@ module CommonSense
      user
     end
 
-    # @see CommonSense::Relation::SensorRelation
+    # @see CS::Relation::SensorRelation
     def sensors
       Relation::SensorRelation.new(@session)
     end

@@ -1,7 +1,7 @@
 require "httparty"
 require "json"
 
-module CommonSense
+module CS
   module Auth
     class HTTP
       include HTTParty
