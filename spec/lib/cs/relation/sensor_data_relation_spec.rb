@@ -83,6 +83,25 @@ module CS
         end
       end
 
+      describe "each_batch" do
+        it "should yield data to with multiple pages" do
+          sensor_id = 1
+          session = double("Session")
+          relation = SensorDataRelation.new(sensor_id, session)
+          relation.should_receive(:get_data!).once.ordered.with({page: 0, per_page: 1000})
+            .and_return (data)
+          relation.should_receive(:get_data!).once.ordered.with({page: 1, per_page: 1000})
+            .and_return (data)
+          relation.should_receive(:get_data!).once.ordered.with({page: 2, per_page: 1000})
+            .and_return ({ data: [] })
+
+          relation.page = 0
+          relation.per_page = 3
+          relation.each_batch {}
+        end
+
+      end
+
       describe "each" do
         it "should get all sensor data based on the criteria and yield" do
           expect { |b| relation.each(&b) }.to yield_successive_args(EndPoint::SensorData, EndPoint::SensorData, EndPoint::SensorData)
@@ -153,290 +172,6 @@ module CS
           last.month.should eq(3)
           last.week.should eq(13)
           last.year.should eq(2013)
-        end
-      end
-
-      describe "where" do
-        before(:each) do
-          sensor_id = 1
-          @relation = SensorDataRelation.new(sensor_id)
-          @relation.stub("check_session!").and_return(true)
-        end
-
-        describe "page" do
-          it "should update page" do
-            @relation.where(page: 2)
-            @relation.page.should eq(2)
-          end
-        end
-
-        describe "per_page" do
-          it "should update per_page" do
-            @relation.where(per_page: 99)
-            @relation.per_page.should eq(99)
-          end
-        end
-
-        describe "start_date" do
-          describe "number given" do
-            it "should update the start_date" do
-              @relation.where(start_date: 2)
-              @relation.start_date.to_f.should eq(2.0)
-              @relation.start_date.should be_kind_of(Time)
-            end
-          end
-
-          describe "Time given" do
-            it "should update the start_date" do
-              @relation.where(start_date: Time.at(19))
-              @relation.start_date.to_f.should eq(19)
-            end
-          end
-
-          describe "Object that respond to 'to_time` given" do
-            it "should update the start_date" do
-              double = double()
-              double.should_receive(:to_time).and_return (Time.at(2))
-              @relation.where(start_date: double)
-              @relation.start_date.to_f.should eq(2.0)
-              @relation.start_date.should be_kind_of(Time)
-            end
-          end
-
-          describe "Object that not respond to 'to_time' given" do
-            it "should raise error" do
-              expect { @relation.where(end_date: 'foo') }.to raise_error(NoMethodError)
-            end
-          end
-        end
-
-
-        describe "end_date" do
-          describe "number given" do
-            it "should update the end_date" do
-              @relation.where(end_date: 2)
-              @relation.end_date.to_f.should eq(2.0)
-              @relation.end_date.should be_kind_of(Time)
-            end
-          end
-
-          describe "Time given" do
-            it "should update the end_date" do
-              @relation.where(end_date: Time.at(19))
-              @relation.end_date.to_f.should eq(19)
-            end
-          end
-
-          describe "Object that respond to 'to_time` given" do
-            it "should update the end_date" do
-              double = double()
-              double.should_receive(:to_time).and_return (Time.at(2))
-              @relation.where(end_date: double)
-              @relation.end_date.to_f.should eq(2.0)
-              @relation.end_date.should be_kind_of(Time)
-            end
-          end
-
-          describe "Object that not respond to 'to_time' given" do
-            it "should raise error" do
-              expect { @relation.where(end_date: 'foo') }.to raise_error(NoMethodError)
-            end
-          end
-        end
-
-        describe "last" do
-          describe "with boolean value" do
-            it "should update the last parameter" do
-              [true, false].each do |value|
-                @relation.where(last: value)
-                @relation.parameter(:last).should be_true
-              end
-            end
-          end
-
-          describe "with invalid parameter" do
-            it "should assign true" do
-              @relation.where(last: 'a')
-              @relation.parameter(:last).should be_true
-            end
-          end
-        end
-
-        describe "sort" do
-          describe "valid parameter given" do
-            it "should update the sort parameter" do
-              @relation.where(sort: 'ASC')
-              @relation.parameter(:sort).should eq('ASC')
-
-              @relation.where(sort: 'DESC')
-              @relation.parameter(:sort).should eq('DESC')
-            end
-          end
-
-          describe "invalid parameter given" do
-            it "should set parameter to nil" do
-              expect { @relation.where(sort: 'foo') }.to raise_error(ArgumentError)
-            end
-          end
-        end
-
-        describe "interval" do
-          describe "valid parameter given" do
-            it "should update the sort parameter" do
-              [604800, 86400, 3600, 1800, 600, 300, 60].each do |interval|
-                @relation.where(interval: interval)
-                @relation.interval.should eq(interval)
-              end
-            end
-          end
-
-          describe "invalid parameter given" do
-            it "should set the parameter to nil" do
-              expect { @relation.where(interval: 10) }.to raise_error(ArgumentError)
-              expect { @relation.where(interval: 'a') }.to raise_error(ArgumentError)
-            end
-          end
-        end
-
-        describe "from" do
-          describe "number given" do
-            it "should update the end_date" do
-              @relation.where(from: 2)
-              @relation.start_date.to_f.should eq(2.0)
-              @relation.start_date.should be_kind_of(Time)
-            end
-          end
-
-          describe "Time given" do
-            it "should update the end_date" do
-              @relation.where(from: Time.at(19))
-              @relation.start_date.to_f.should eq(19)
-            end
-          end
-
-          describe "Object that respond to 'to_time` given" do
-            it "should update the end_date" do
-              double = double()
-              double.should_receive(:to_time).and_return (Time.at(2))
-              @relation.where(from: double)
-              @relation.start_date.to_f.should eq(2.0)
-              @relation.start_date.should be_kind_of(Time)
-            end
-          end
-
-          describe "Object that not respond to 'to_time' given" do
-            it "should raise error" do
-              expect { @relation.where(from: 'foo') }.to raise_error(NoMethodError)
-            end
-          end
-        end
-
-        describe "to" do
-          describe "number given" do
-            it "should update the end_date" do
-              @relation.where(to: 2)
-              @relation.end_date.to_f.should eq(2.0)
-              @relation.end_date.should be_kind_of(Time)
-            end
-          end
-
-          describe "Time given" do
-            it "should update the end_date" do
-              @relation.where(to: Time.at(19))
-              @relation.end_date.to_f.should eq(19)
-            end
-          end
-
-          describe "Object that respond to 'to_time` given" do
-            it "should update the end_date" do
-              double = double()
-              double.should_receive(:to_time).and_return (Time.at(2))
-              @relation.where(to: double)
-              @relation.end_date.to_f.should eq(2.0)
-              @relation.end_date.should be_kind_of(Time)
-            end
-          end
-
-          describe "Object that not respond to 'to_time' given" do
-            it "should raise error" do
-              expect { @relation.where(to: 'foo') }.to raise_error(NoMethodError)
-            end
-          end
-        end
-      end
-
-      describe "from" do
-        describe "number given" do
-          it "should update the end_date" do
-            relation.from(2)
-            relation.start_date.to_f.should eq(2.0)
-            relation.start_date.should be_kind_of(Time)
-          end
-        end
-
-        describe "Time given" do
-          it "should update the end_date" do
-            relation.from(Time.at(19))
-            relation.start_date.to_f.should eq(19)
-          end
-        end
-
-        describe "Object that respond to 'to_time` given" do
-          it "should update the end_date" do
-            double = double()
-            double.should_receive(:to_time).and_return (Time.at(2))
-            relation.from(double)
-            relation.start_date.to_f.should eq(2.0)
-            relation.start_date.should be_kind_of(Time)
-          end
-        end
-
-        describe "Object that not respond to 'to_time' given" do
-          it "should raise error" do
-            expect { relation.from('foo') }.to raise_error(NoMethodError)
-          end
-        end
-      end
-
-      describe "to" do
-        describe "number given" do
-          it "should update the end_date" do
-            relation.to(2)
-            relation.end_date.to_f.should eq(2.0)
-            relation.end_date.should be_kind_of(Time)
-          end
-        end
-
-        describe "Time given" do
-          it "should update the end_date" do
-            relation.to(Time.at(19))
-            relation.end_date.to_f.should eq(19)
-          end
-        end
-
-        describe "Object that respond to 'to_time` given" do
-          it "should update the end_date" do
-            double = double()
-            double.should_receive(:to_time).and_return (Time.at(2))
-            relation.to(double)
-            relation.end_date.to_f.should eq(2.0)
-            relation.end_date.should be_kind_of(Time)
-          end
-        end
-
-        describe "Object that not respond to 'to_time' given" do
-          it "should raise error" do
-            expect { relation.to('foo') }.to raise_error(NoMethodError)
-          end
-        end
-      end
-
-      describe "all" do
-        it "return array of all matching sensor data" do
-          data = relation.to_a
-          data.should be_a_kind_of(Array)
-          data.size.should eq(3)
-          data[0].should be_a_kind_of(EndPoint::SensorData)
         end
       end
     end

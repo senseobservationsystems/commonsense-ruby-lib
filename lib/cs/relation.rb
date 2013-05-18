@@ -20,22 +20,21 @@ module CS
       self.instance_variable_get("@#{name}")
     end
 
-    def get_options(params)
+    def get_options(input)
       options = {}
 
-      params.each do |k,v|
-        param_option = self.class.parameters[k]
+      self.class.parameters.each do |parameter, param_option|
+        value = input[parameter] if input.has_key?(parameter)
 
-        value = v
-        value = process_param_integer(k, v, param_option) if param_option[:type] == Integer
-        value = process_param_boolean(k, v, param_option) if param_option[:type] == Boolean
-        value = process_param_string(k, v, param_option) if param_option[:type] == String
+        value = process_param_integer(parameter, value, param_option) if param_option[:type] == Integer
+        value = process_param_boolean(parameter, value, param_option) if param_option[:type] == Boolean
+        value = process_param_string(parameter, value, param_option) if param_option[:type] == String
 
         if value.kind_of?(Time)
           value = value.to_f
         end
 
-        options[k] = value
+        options[parameter] = value if value
       end
 
       options
@@ -95,9 +94,17 @@ module CS
         self.parameters ||= {}
 
         param = {type: type}
-        unless args.empty?
-          param.merge!(args[0])
-        end
+        param.merge!(args[0]) unless args.empty?
+
+        self.class_eval %{
+          def #{name}
+            if @#{name}.nil? && (default = self.class.parameters[:#{name}][:default])
+              @#{name} = default
+            end
+
+            @#{name}
+          end
+        }
 
         self.parameters[name] = param
       end
@@ -114,7 +121,7 @@ module CS
 
       def parameters_alias
         @parameters_alias
-      end      
+      end
 
       def parameters=(parameters)
         @parameters = parameters
@@ -173,6 +180,8 @@ module CS
       if value.kind_of?(Integer)
         retval = value
         retval = process_valid_values(name, value, param_option) if param_option[:valid_values]
+        maximum = param_option[:maximum]
+        retval = maximum if maximum && retval > maximum
       end
 
       retval = process_default_value(name, retval, param_option)

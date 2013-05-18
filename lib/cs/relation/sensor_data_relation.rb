@@ -2,6 +2,7 @@ module CS
   module Relation
     class SensorDataRelation
       include Relation
+      include Enumerable
 
       parameter :page, Integer, default: 0
       parameter :per_page, Integer, default: 1000, maximum: 1000
@@ -14,8 +15,6 @@ module CS
       parameter :sensor_id, String
       parameter_alias :from, :start_date
       parameter_alias :to, :end_date
-
-      include Enumerable
 
       def initialize(sensor_id, session=nil)
         self.sensor_id = sensor_id
@@ -39,19 +38,26 @@ module CS
         check_session!
         options = get_options(params)
 
-        page = self.page || 0;
+        self.page ||= 0;
+
+        more = true
         begin
-          options[:page] = page
+          options[:page] = self.page
           data = get_data(options)
 
           data = data["data"]
-          if !data.empty?
+          if data.nil? || data.empty?
+            more = false
+          else
             yield data
 
-            page += 1
+            if data.size == self.per_page
+              self.page += 1
+            else
+              more = false
+            end
           end
-
-        end while data.size == self.per_page
+        end while more
       end
 
       def each(&block)

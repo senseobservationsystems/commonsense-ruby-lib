@@ -9,15 +9,15 @@ module CS
       @auth_proxy = options[:authentication] ? nil : CS::Auth::HTTP.new(@base_uri)
     end
 
-    # login to commonsense 
-    # @return [String] session_id 
+    # login to commonsense
+    # @return [String] session_id
     def login(username, password)
       @auth_proxy = CS::Auth::HTTP.new(@base_uri)
       @auth_proxy.login(username, password)
     end
 
     def oauth(consumer_key, consumer_secret, access_token, access_token_secret)
-      @auth_proxy = CS::Auth::OAuth.new(consumer_key, consumer_secret, 
+      @auth_proxy = CS::Auth::OAuth.new(consumer_key, consumer_secret,
                                                  access_token, access_token_secret,
                                                  @base_uri)
     end
@@ -36,27 +36,40 @@ module CS
       @auth_proxy
     end
 
+    def retry_on_509(&block)
+      while true
+        response = yield
+        if response_code == 509
+          waitfor = Random.new.rand(30..45)
+          stderr.puts "limit reached. waiting for #{waitfor} before retrying"
+          sleep(waitfor)
+        else
+          return response
+        end
+      end
+    end
+
     def get(path, body = '', headers = {})
-      auth_proxy.get(path, body, headers)
+      retry_on_509 { auth_proxy.get(path, body, headers) }
     end
 
     def post(path, body = '', headers = {})
-      auth_proxy.post(path, body, headers = {})
+      retry_on_509 { auth_proxy.post(path, body, headers = {}) }
     end
 
     def put(path, body = '', headers = {})
-      auth_proxy.put(path, body, headers)
+      retry_on_509 { auth_proxy.put(path, body, headers) }
     end
 
     def delete(path, body='', headers = {})
-      auth_proxy.delete(path, body, headers)
+      retry_on_509 { auth_proxy.delete(path, body, headers) }
     end
 
     def head(path, headers = {})
-      auth_proxy.head(path, headers)
+      retry_on_509 { auth_proxy.head(path, headers) }
     end
 
-    def response_code 
+    def response_code
       auth_proxy.response_code
     end
 
@@ -67,7 +80,7 @@ module CS
     def response_headers
       auth_proxy.response_headers
     end
-    
+
     def errors
       auth_proxy.errors
     end
