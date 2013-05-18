@@ -5,7 +5,7 @@ Client library to communicate with CommonSense written in ruby
 
 Add this line to your application's Gemfile:
 
-    gem 'commonsense-ruby-lib'
+    gem 'cs'
 
 And then execute:
 
@@ -13,7 +13,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install commonsense-ruby-lib
+    $ gem install cs
 
 ## Usage
 

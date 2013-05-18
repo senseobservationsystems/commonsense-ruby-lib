@@ -1,4 +1,4 @@
-require 'commonsense-ruby-lib/serializer'
+require 'cs/serializer'
 module CS
   module EndPoint
     include CS::Serializer

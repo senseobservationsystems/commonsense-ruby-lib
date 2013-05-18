@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'commonsense-ruby-lib/end_point/sensor'
+require 'cs/end_point/sensor'
 
 module CS
   module Relation

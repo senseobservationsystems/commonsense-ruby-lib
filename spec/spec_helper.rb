@@ -1,6 +1,6 @@
 require 'bundler/setup'
 require 'rspec'
-require 'commonsense-ruby-lib'
+require 'cs'
 #require 'vcr'
 require 'pry'
 

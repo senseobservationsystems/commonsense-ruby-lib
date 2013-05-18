@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "commonsense-ruby-lib" do
+describe "cs" do
   describe "client with authentication" do
     before(:each) do
       @client = client = create_client

@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'commonsense-ruby-lib/error'
+require 'cs/error'
 
 module CS
   module EndPoint
