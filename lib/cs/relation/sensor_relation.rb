@@ -114,7 +114,7 @@ module CS
 
       def each(&block)
         counter = 0
-        page = self.page || 0;
+        self.page || 0;
         begin
           sensors = get_data!(get_options({}))
 
@@ -128,7 +128,7 @@ module CS
               return if @limit && @limit == counter
             end
 
-            page += 1
+            self.page += 1
           end
 
         end while sensors.size == self.per_page

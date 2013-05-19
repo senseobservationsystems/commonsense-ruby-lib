@@ -43,7 +43,7 @@ module CS
         response = yield
         if response_code == 509
           waitfor = Random.new.rand(30..45)
-          stderr.puts "limit reached. waiting for #{waitfor} before retrying"
+          logger.info "limit reached. waiting for #{waitfor} before retrying" if logger
           sleep(waitfor)
         else
           return response

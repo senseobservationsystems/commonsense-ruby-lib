@@ -63,12 +63,12 @@ module CS
           sensor_id = 1
           session = double("Session")
           option = { page: 100, per_page: 99, start_date: 1365278885,
-            end_date: 1365278886, last: 1, sort: 'ASC', interval: 300 }
+            end_date: 1365278886, last: 1, sort: 'ASC', interval: 300, sensor_id: sensor_id}
           session.should_receive(:get).with("/sensors/#{sensor_id}/data.json", option)
 
           relation = SensorDataRelation.new(sensor_id, session)
           relation.get_data!(page:100, per_page: 99, start_date: 1365278885,
-                             end_date: 1365278886, last: true, sort: 'ASC', interval: 300)
+                            end_date: 1365278886, last: true, sort: 'ASC', interval: 300)
         end
       end
 
@@ -88,11 +88,11 @@ module CS
           sensor_id = 1
           session = double("Session")
           relation = SensorDataRelation.new(sensor_id, session)
-          relation.should_receive(:get_data!).once.ordered.with({page: 0, per_page: 1000})
+          relation.should_receive(:get_data!).once.ordered.with({page: 0, per_page: 3, sensor_id: sensor_id})
             .and_return (data)
-          relation.should_receive(:get_data!).once.ordered.with({page: 1, per_page: 1000})
+          relation.should_receive(:get_data!).once.ordered.with({page: 1, per_page: 3, sensor_id: sensor_id})
             .and_return (data)
-          relation.should_receive(:get_data!).once.ordered.with({page: 2, per_page: 1000})
+          relation.should_receive(:get_data!).once.ordered.with({page: 2, per_page: 3, sensor_id: sensor_id})
             .and_return ({ data: [] })
 
           relation.page = 0
@@ -123,8 +123,8 @@ module CS
       describe "first" do
         it "should return the first record" do
           session = double("Session")
-          option = { page: 0, per_page: 1, sort: 'ASC'}
           sensor_id = "1"
+          option = { page: 0, per_page: 1, sort: 'ASC', sensor_id: sensor_id}
           response = {
             "data" => [{
               "id" => "5150e509b4b735f6290238d3",
@@ -154,8 +154,8 @@ module CS
       describe "last" do
         it "should return the last record" do
           session = double("Session")
-          option = { page: 0, per_page: 1, sort: 'DESC'}
           sensor_id = "1"
+          option = { page: 0, per_page: 1, sort: 'DESC', sensor_id: sensor_id}
           response = {
             "data" => [{
               "id" => "5150e9b7b4b735d04e010ed9",

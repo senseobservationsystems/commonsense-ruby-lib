@@ -141,6 +141,11 @@ module CS
         options[:page].should eq(0)
         options[:per_page].should eq(1000)
       end
+
+      it "should return aliases" do
+        option = relation.where(start_date: 1).get_options
+        option[:start_date].should eq(1)
+      end
     end
   end
 end

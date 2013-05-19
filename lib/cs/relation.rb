@@ -29,6 +29,7 @@ module CS
       options = {}
 
       self.class.parameters.each do |parameter, param_option|
+        value = self.parameter(parameter)
         value = input[parameter] if input.has_key?(parameter)
 
         value = process_param_integer(parameter, value, param_option) if param_option[:type] == Integer
