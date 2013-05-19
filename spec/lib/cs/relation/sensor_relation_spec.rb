@@ -48,6 +48,12 @@ module CS
 
           expect { |b| relation.each(&b) }.to yield_successive_args(EndPoint::Sensor, EndPoint::Sensor, EndPoint::Sensor)
         end
+
+        context "limit specified" do
+          it "should yield sensor at most specified by limit" do
+            relation.limit(1).to_a.count.should eq(1)
+          end
+        end
       end
 
       describe "count" do
@@ -81,7 +87,7 @@ module CS
           relation = SensorRelation.new
           relation.session = double('Session')
           relation.stub("count").and_return(3)
-          relation.should_receive("get_data!").with(page:0, per_page:1000, shared:nil, owned:nil, physical:nil, details:nil, group_id: nil).and_return({"sensors" => [{"name" => "sensor11"}, {"name" => "sensor12"}, {"name" => "sensor2"}], "total" => 3})
+          relation.should_receive("get_data!").with(page:0, per_page:1000).and_return({"sensors" => [{"name" => "sensor11"}, {"name" => "sensor12"}, {"name" => "sensor2"}], "total" => 3})
 
           sensors = relation.find_by_name(/sensor1/)
           sensors.should be_kind_of(Array)

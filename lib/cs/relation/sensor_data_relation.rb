@@ -61,12 +61,16 @@ module CS
       end
 
       def each(&block)
+        counter = 0
         self.each_batch do |data|
           data.each do |data_point|
             sensor_data = EndPoint::SensorData.new(data_point)
             sensor_data.sensor_id = self.sensor_id
             sensor_data.session = session
             yield sensor_data
+            counter += 1
+
+            return if @limit && @limit == counter
           end
         end
       end

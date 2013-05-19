@@ -113,12 +113,10 @@ module CS
       end
 
       def each(&block)
+        counter = 0
         page = self.page || 0;
         begin
-          sensors = get_data!({
-            page: page, per_page: self.per_page, shared: self.shared,
-            owned: self.owned, physical: self.physical, details: self.details, group_id: self.group_id
-          })
+          sensors = get_data!(get_options({}))
 
           sensors = sensors["sensors"]
           if !sensors.empty?
@@ -126,6 +124,8 @@ module CS
               sensor = EndPoint::Sensor.new(sensor)
               sensor.session = session
               yield sensor
+              counter += 1
+              return if @limit && @limit == counter
             end
 
             page += 1

@@ -16,11 +16,16 @@ module CS
       session.get(get_url, options)
     end
 
+    def limit(num)
+      @limit = num
+      return self
+    end
+
     def parameter(name)
       self.instance_variable_get("@#{name}")
     end
 
-    def get_options(input)
+    def get_options(input={})
       options = {}
 
       self.class.parameters.each do |parameter, param_option|

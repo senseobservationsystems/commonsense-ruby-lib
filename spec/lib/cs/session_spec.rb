@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'logger'
 
 describe "session" do
   before(:each) do
@@ -23,6 +24,21 @@ describe "session" do
         @client.session.should_not be_nil
         @client.session.response_code.should eq(403)
         @client.session.session_id.should be_nil
+      end
+    end
+  end
+
+  describe "logger" do
+    context "Debug level given" do
+      it "should write to logger (STDOUT)" do
+        @client.login($user.username, 'password')
+        session = @client.session
+        logger = double().as_null_object
+        session.logger = logger
+        logger.should_receive("info").with("").ordered
+        logger.should_receive("info").with("GET /users/current.json").ordered
+        logger.should_receive("debug").with("headers: {}").ordered
+        session.get('/users/current.json', '',{})
       end
     end
   end

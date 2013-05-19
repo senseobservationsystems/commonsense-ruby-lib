@@ -106,6 +106,12 @@ module CS
         it "should get all sensor data based on the criteria and yield" do
           expect { |b| relation.each(&b) }.to yield_successive_args(EndPoint::SensorData, EndPoint::SensorData, EndPoint::SensorData)
         end
+
+        context "limit specified" do
+          it "should yield sensor at most specified by limit" do
+            relation.limit(1).to_a.count.should eq(1)
+          end
+        end
       end
 
       describe "count" do

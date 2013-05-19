@@ -1,5 +1,8 @@
+require 'pry'
 module CS
   class Session
+    attr_accessor :logger
+
     def initialize(opts={})
       options = {
         base_uri: 'https://api.sense-os.nl',
@@ -49,24 +52,56 @@ module CS
       end
     end
 
+    def log_request(type, path, body, headers)
+      logger.info("")
+      logger.info("#{type} #{path}")
+      logger.debug("headers: #{headers.inspect}")
+      logger.debug("body: #{body.inspect}")
+    end
+
+    def log_response
+      logger.info("RESPONSE #{self.response_code}")
+      logger.debug("body: #{self.response_body}")
+    end
+
     def get(path, body = '', headers = {})
-      retry_on_509 { auth_proxy.get(path, body, headers) }
+      log_request("GET", path, body, headers) if logger
+      response = retry_on_509 { auth_proxy.get(path, body, headers) }
+      log_response if logger
+
+      response
     end
 
     def post(path, body = '', headers = {})
-      retry_on_509 { auth_proxy.post(path, body, headers = {}) }
+      log_request("POST", path, body, headers) if logger
+      response = retry_on_509 { auth_proxy.post(path, body, headers = {}) }
+      log_response if logger
+
+      response
     end
 
     def put(path, body = '', headers = {})
-      retry_on_509 { auth_proxy.put(path, body, headers) }
+      log_request("PUT", path, body, headers) if logger
+      response = retry_on_509 { auth_proxy.put(path, body, headers) }
+      log_response if logger
+
+      response
     end
 
     def delete(path, body='', headers = {})
-      retry_on_509 { auth_proxy.delete(path, body, headers) }
+      log_request("DELETE", path, body, headers) if logger
+      response = retry_on_509 { auth_proxy.delete(path, body, headers) }
+      log_response if logger
+
+      response
     end
 
     def head(path, headers = {})
-      retry_on_509 { auth_proxy.head(path, headers) }
+      log_request("HEAD", path, body, headers) if logger
+      response = retry_on_509 { auth_proxy.head(path, headers) }
+      log_response if logger
+
+      response
     end
 
     def response_code
