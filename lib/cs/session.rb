@@ -1,4 +1,3 @@
-require 'pry'
 module CS
   class Session
     attr_accessor :logger
