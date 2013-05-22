@@ -9,7 +9,7 @@ module CS
       end
 
       let!(:now) do
-        Time.now.to_f
+        Time.now
       end
 
       describe "Initiating new data point" do
@@ -27,7 +27,8 @@ module CS
           data = SensorData.new(sensor_id: 1, date: now, value: value)
 
           session = double("CS::Session")
-          session.should_receive(:post).with("/sensors/1/data.json", {data: [{date: now, value: value.to_json}]})
+          now = Time.now
+          session.should_receive(:post).with("/sensors/1/data.json", {data: [{date: now.to_f.round(3), value: value.to_json}]})
           session.stub(:response_headers => {"location" => "http://foo.bar/sensors/1/data/1"})
           session.stub(:response_code => 201)
           data.session = session
