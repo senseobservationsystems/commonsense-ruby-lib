@@ -83,13 +83,22 @@ module CS
       end
 
       describe "find_by_name" do
-        it "should return an array of matching sensor name" do
-          relation = SensorRelation.new
-          relation.session = double('Session')
-          relation.stub("count").and_return(3)
-          relation.should_receive("get_data!").with(page:0, per_page:1000).and_return({"sensors" => [{"name" => "sensor11"}, {"name" => "sensor12"}, {"name" => "sensor2"}], "total" => 3})
+        before(:each) do
+          @relation = SensorRelation.new
+          @relation.session = double('Session')
+          @relation.stub("count").and_return(3)
+          @relation.should_receive("get_data!").with(page:0, per_page:1000).and_return({"sensors" => [{"name" => "sensor11"}, {"name" => "sensor12"}, {"name" => "sensor2"}], "total" => 3})
+        end
 
-          sensors = relation.find_by_name(/sensor1/)
+        it "should return an array of matching sensor name by string" do
+          sensors = @relation.find_by_name("sensor11")
+          sensors.should be_kind_of(Array)
+          sensors.size.should eq(1)
+          sensors[0].name.should eq("sensor11")
+        end
+
+        it "should return an array of matching sensor by regex" do
+          sensors = @relation.find_by_name(/.*sor1/)
           sensors.should be_kind_of(Array)
           sensors.size.should eq(2)
           sensors[0].name.should eq("sensor11")

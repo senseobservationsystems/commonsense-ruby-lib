@@ -109,6 +109,7 @@ module CS
       def find_by_name(regex, parameters={})
         check_session!
         self.where(parameters)
+        regex = /\A#{regex}\z/ if regex.kind_of?(String)
         self.select { |sensor| sensor.name =~ regex }
       end
 
