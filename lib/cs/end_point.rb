@@ -22,7 +22,7 @@ module CS
 
     # get value of property name
     def parameter(name)
-      self.instance_variable_get(name)
+      self.instance_variable_get("@#{name}")
     end
 
     # Persist end point object to CS. It will create a new record on CS

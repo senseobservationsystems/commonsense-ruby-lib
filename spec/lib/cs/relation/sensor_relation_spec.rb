@@ -105,6 +105,72 @@ module CS
           sensors[1].name.should eq("sensor12")
         end
       end
+
+      describe "find_or_new" do
+        context "there is already sensor matching criteria" do
+          it "should return that sensor" do
+            relation = SensorRelation.new
+            relation.session = double('Session')
+            relation.stub("count").and_return(1)
+            relation.should_receive("get_data!").with(page:0, per_page:1000).and_return({"sensors" => [{
+              id: "143353",
+              name: "sensor1",
+              type: "1",
+              device_type: "Android",
+              pager_type: "pager1",
+              display_name: "Sensor1",
+              data_type: "json",
+              data_structure: "{\"foo\": \"integer\"}"
+            }], "total" => 1})
+
+            attributes = {name: 'sensor1', display_name: 'Sensor1',
+              device_type: 'Android', pager_type: 'pager1',
+              data_type: 'json', data_structure: {"foo" => 'integer'}}
+
+            sensor = relation.find_or_new(attributes)
+            sensor.should be_kind_of(EndPoint::Sensor)
+            sensor.id.should_not be_nil
+            attributes.each do |key, value|
+              sensor.parameter(key).should eq(value)
+            end
+          end
+        end
+
+        context "there is no sensor matching criteria" do
+          it "should return new sensor object" do
+            attributes = {name: 'sensor1', display_name: 'Sensor1',
+              device_type: 'Android', pager_type: 'pager1',
+              data_type: 'json', data_structure: {"foo" => 'integer'}}
+
+            sensor = relation.find_or_new(attributes)
+            sensor.should be_kind_of(EndPoint::Sensor)
+            sensor.id.should be_nil
+            attributes.each do |key, value|
+              sensor.parameter(key).should eq(value)
+            end
+          end
+        end
+      end
+
+      describe "find_or_create" do
+        context "there is no sensor matching criteria" do
+          it "should return create sensor object" do
+            attributes = {name: 'sensor1', display_name: 'Sensor1',
+              device_type: 'Android', pager_type: 'pager1',
+              data_type: 'json', data_structure: {"foo" => 'integer'}}
+
+            expected = EndPoint::Sensor.new(attributes)
+            expected.should_receive(:save!)
+            relation.stub('find_or_new').and_return(expected)
+
+            sensor = relation.find_or_create!(attributes)
+            sensor.should be_kind_of(EndPoint::Sensor)
+            attributes.each do |key, value|
+              sensor.parameter(key).should eq(value)
+            end
+          end
+        end
+      end
     end
   end
 end

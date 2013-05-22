@@ -24,11 +24,11 @@ module CS
 
       describe "Creating" do
         it "should create a new data point" do
-          data = SensorData.new(sensor_id: 1, date: now, value: value)
+          date_value = Time.now
+          data = SensorData.new(sensor_id: 1, date: date_value, value: value)
 
           session = double("CS::Session")
-          now = Time.now
-          session.should_receive(:post).with("/sensors/1/data.json", {data: [{date: now.to_f.round(3), value: value.to_json}]})
+          session.should_receive(:post).with("/sensors/1/data.json", {data: [{date: date_value.to_f.round(3), value: value.to_json}]})
           session.stub(:response_headers => {"location" => "http://foo.bar/sensors/1/data/1"})
           session.stub(:response_code => 201)
           data.session = session

@@ -113,6 +113,30 @@ module CS
         self.select { |sensor| sensor.name =~ regex }
       end
 
+      def find_or_new(attribute)
+        check_session!
+
+        self.each do |sensor|
+          found = true
+          attribute.each do |key, value|
+            if sensor.parameter(key) != value
+              found = false
+              break
+            end
+          end
+
+          return sensor if found
+        end
+
+        EndPoint::Sensor.new(attribute)
+      end
+
+      def find_or_create!(attribute)
+        sensor = find_or_new(attribute)
+        sensor.save! if sensor.id.nil?
+        sensor
+      end
+
       def each(&block)
         counter = 0
         self.page || 0;
