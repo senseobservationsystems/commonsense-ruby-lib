@@ -60,6 +60,34 @@ module CS
       resource["total"] if resource
     end
 
+    def find_or_new(attribute)
+      check_session!
+
+      self.each do |resource|
+        found = true
+        attribute.each do |key, value|
+          if resource.parameter(key) != value
+            found = false
+            break
+          end
+        end
+
+        return resource if found
+      end
+
+      resource_class.new(attribute)
+    end
+
+    def find_or_create!(attribute)
+      resource = find_or_new(attribute)
+      resource.save! if resource.id.nil?
+      resource
+    end
+
+    def find_or_create(attribute)
+      find_or_create!(attribute) rescue nil
+    end
+
     def first
       resource = get_single_resource
       parse_single_resource(resource)
@@ -145,6 +173,10 @@ module CS
       base.class_eval do
         attr_accessor :session
       end
+    end
+
+    def resource_class
+      raise Error::NotImplementedError, "resource_class is not implemented for class : #{self.class}"
     end
 
     def parse_single_resource(resource)
