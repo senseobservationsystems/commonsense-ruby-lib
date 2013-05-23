@@ -186,5 +186,18 @@ module CS
         foo.delete.should be_false
       end
     end
+
+    describe "duplicate" do
+      it "should duplicate the endpoint object without id" do
+        foo = FooEndPoint.new
+        foo.attribute1 = 'attribute1'
+        foo.attribute2 = 'attribute2'
+        foo.id = 1
+        bar = foo.duplicate
+        bar.id.should be_nil
+        bar.attribute1 = 'attribute1'
+        bar.attribute2 = 'attribute2'
+      end
+    end
   end
 end

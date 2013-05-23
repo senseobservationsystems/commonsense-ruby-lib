@@ -205,6 +205,12 @@ module CS
       url
     end
 
+    def duplicate
+      clone = self.dup
+      clone.id = nil
+      clone
+    end
+
     protected
     def scan_header_for_id(location_header)
       location_header.scan(/.*\/#{resources}\/(.*)/)[0] if location_header
