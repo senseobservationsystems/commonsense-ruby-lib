@@ -142,8 +142,10 @@ module CS
               device_type: 'Android', pager_type: 'pager1',
               data_type: 'json', data_structure: {"foo" => 'integer'}}
 
+            relation.session = stub('session')
             sensor = relation.find_or_new(attributes)
             sensor.should be_kind_of(EndPoint::Sensor)
+            sensor.session.should_not be_nil
             sensor.id.should be_nil
             attributes.each do |key, value|
               sensor.parameter(key).should eq(value)

@@ -75,7 +75,9 @@ module CS
         return resource if found
       end
 
-      resource_class.new(attribute)
+      resource = resource_class.new(attribute)
+      resource.session = self.session
+      resource
     end
 
     def find_or_create!(attribute)
