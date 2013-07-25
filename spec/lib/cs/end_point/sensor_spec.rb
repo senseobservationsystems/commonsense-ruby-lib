@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module CS
   module EndPoint
-    describe SensorData do
+    describe Sensor do
 
       let(:sensor_info) do
         {

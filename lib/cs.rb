@@ -12,6 +12,7 @@ require "cs/relation"
 require "cs/relation/sensor_relation"
 require "cs/relation/sensor_data_relation"
 require "cs/relation/user_relation"
+require "cs/relation/group_relation"
 
 module CS
 
@@ -117,11 +118,16 @@ module CS
       Relation::SensorRelation.new(@session)
     end
 
+    def groups
+      Relation::GroupRelation.new(@session)
+    end
+
     def current_groups
       group = EndPoint::Group.new
       group.session = @session
       group.current_groups
     end
+
 
     # return errors got from session
     def errors
