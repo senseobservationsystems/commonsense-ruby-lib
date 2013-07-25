@@ -6,6 +6,12 @@ module CS
       end
     end
 
+    class ClientError < Error
+      def initialize(message = "Invalid uses of the library : #{self.class}")
+        super(message)
+      end
+    end
+
     class ResourceIdError < Error
       def initialize(message = "No id found for Resrouce: #{self.class}")
         super(message)

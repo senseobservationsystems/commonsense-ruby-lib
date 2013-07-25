@@ -11,6 +11,7 @@ require "cs/end_point/sensor_data"
 require "cs/relation"
 require "cs/relation/sensor_relation"
 require "cs/relation/sensor_data_relation"
+require "cs/relation/user_relation"
 
 module CS
 
@@ -105,6 +106,10 @@ module CS
      user = EndPoint::User.new(hash)
      user.session = Session.new(base_uri: @base_uri, authentication: false)
      user
+    end
+
+    def users
+      Relation::UserRelation.new(@session)
     end
 
     # @see CS::Relation::SensorRelation

@@ -28,7 +28,7 @@ RSpec.configure do |config|
         $user.zipcode = '3024ea'
         $user.country = 'NETHERLANDS'
         $user.mobile = '123456789'
-        $user.save
+        $user.save!
       end
   end
 end

@@ -1,6 +1,6 @@
 module CS
   class Session
-    attr_accessor :logger
+    attr_accessor :logger, :base_uri
 
     def initialize(opts={})
       options = {

@@ -38,6 +38,10 @@ module CS
         current_user
       end
 
+      def save!
+        raise Error::ClientError, "No session found. use Client#new_user instead" unless @session
+        super
+      end
 
       # get groups that this users belongs to
       def groups

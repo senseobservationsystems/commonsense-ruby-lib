@@ -7,7 +7,7 @@ module CS
       def valid_user
         {
           id: 1, email: "foo@bar.com", username: "foo@bar.com", name: "foo",
-          surname: "bar", address: "foo", zipcode: "12345", country: "NL",
+          surname: "bar", address: "foo", zipcode: "12345", country: "NETHERLANDS",
           mobile: "12345", uuid: "12345", openid: "12345"
         }
       end
@@ -25,10 +25,17 @@ module CS
         end
       end
 
-
       describe "save" do
+        context "with id not specified and no session" do
+          it "should raise error" do
+            user = User.new(valid_user)
+            user.id = nil
 
-        describe "with id specified" do
+            expect { user.save! }.to raise_error(Error::ClientError, "No session found. use Client#new_user instead")
+          end
+        end
+
+        context "with id specified" do
         end
       end
     end

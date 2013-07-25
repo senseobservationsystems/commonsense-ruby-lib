@@ -54,10 +54,10 @@ module CS
       end
     end
 
-    # it will persist data to CS just like {#save!} but it will return nil instead of exception
+    # it will persist data to CS just like {#save!} but it will return false instead of exception
     # if it encouter error while persiting data
     def save
-      save! rescue nil
+      save! rescue false
     end
 
     # Create a new end point object to CS. It will raise an exception if there is an error
@@ -90,11 +90,10 @@ module CS
       true
     end
 
-    # Create a new endpoint object to CS, just like {#create!} but it will return nil
+    # Create a new endpoint object to CS, just like {#create!} but it will return false
     # if there is an error.
     def create
-      result = create! rescue nil
-      not result.nil?
+      create! rescue false
     end
 
     # Retrieve Data from CS of the current object based on the id of the object.
@@ -125,10 +124,9 @@ module CS
     end
 
     # it will retrieve / reload current object form CS, just like {#retrieve!} but it
-    # will return nil instead of raise an exception if there is an error.
+    # will return false instead of raise an exception if there is an error.
     def retrieve
-      result = retrieve! rescue nil
-      not result.nil?
+      retrieve! rescue false
     end
 
     # alias for {#retrieve}
@@ -161,8 +159,7 @@ module CS
     # Update current end point object to CS, just like {#update!} but it will return nil
     # if there is an error
     def update
-      result = update! rescue nil
-      not result.nil?
+      update! rescue false
     end
 
 
@@ -192,8 +189,7 @@ module CS
     # Delete the current end point object from CS, just like {#delete!} but it will return nil
     # if there is an error
     def delete
-      result = delete! rescue nil
-      not result.nil?
+      delete! rescue false
     end
 
     # return the commonsense URL for method

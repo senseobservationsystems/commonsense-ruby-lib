@@ -20,10 +20,10 @@ describe "session" do
     describe "with incorrect username or password" do
       it "should create new session", :vcr do
         session_id = @client.login($user.username, "x#{$user.password}")
-        session_id.should be_nil
+        session_id.should be_false
         @client.session.should_not be_nil
         @client.session.response_code.should eq(403)
-        @client.session.session_id.should be_nil
+        @client.session.session_id.should be_false
       end
     end
   end

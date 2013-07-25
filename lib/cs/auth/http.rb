@@ -87,6 +87,7 @@ module CS
         if @response_code == 200
           self.session_id = response_body['session_id']
         else
+          self.session_id = false
           errors = [response_body['error']]
         end
 
