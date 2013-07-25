@@ -102,8 +102,13 @@ module CS
     end
 
     def inspect
-      inspection = self.class.parameters.collect {|k,v| "#{k}: #{parameter(k).inspect}"}.compact.join(", ")
-      "#<#{self.class} #{inspection}>"
+      #inspection = self.class.parameters.collect {|k,v| "#{k}: #{parameter(k).inspect}"}.compact.join(", ")
+      #"#<#{self.class} #{inspection}>"
+      #anonymous
+      entries = to_a.take(11).map!(&:inspect)
+      entries[10] = '...' if entries.size == 11
+
+      "#<#{self.class.name} [#{entries.join(", \n")}]>"
     end
 
     def where(params={})
