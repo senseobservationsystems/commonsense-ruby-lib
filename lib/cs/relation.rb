@@ -270,12 +270,8 @@ module CS
     def process_param_time(name, value, param_option)
       retval = value
 
-      if !value.nil? && !value.kind_of?(Time)
-        if value.kind_of?(Numeric)
-          retval = Time.at(retval)
-        else
-          retval = value.to_time
-        end
+      if !value.nil?
+        retval =  CS::Time.new(value)
       end
 
       retval = process_default_value(name, retval, param_option)

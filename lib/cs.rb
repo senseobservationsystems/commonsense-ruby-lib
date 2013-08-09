@@ -1,5 +1,6 @@
 require "cs/version"
 require "cs/error"
+require "cs/time"
 require "cs/auth/http"
 require "cs/auth/oauth"
 require "cs/session"
