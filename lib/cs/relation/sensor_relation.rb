@@ -93,11 +93,15 @@ module CS
       # example:
       #
       #    sensor = client.sensors.find("1")
-      def find(id)
+      def find!(id)
         check_session!
         sensor = EndPoint::Sensor.new(id: id)
         sensor.session = self.session
-        sensor.retrieve ? sensor : nil
+        sensor.retrieve! ? sensor : nil
+      end
+
+      def find(id)
+        find! rescue false
       end
 
       # Find sensor by name in regular expression.

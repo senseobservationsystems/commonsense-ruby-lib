@@ -88,10 +88,18 @@ describe "Sensor Management" do
       a.data_type.should eq(b[:data_type])
     end
 
+    def stub_response_sensor_list
+      stub_request(:get, "http://api.dev.sense-os.local/sensors.json?page=0&per_page=1000").
+        with(:headers => {'Content-Type'=>'application/json', 'X-Session-Id'=>'1234'}).
+        to_return(:status => 200, :body => response_list_sensors.to_json, :headers => {
+          'Content-Type'=>'application/json'
+        })
+    end
+
     it "create a new sensor" do
       body = {sensor: sensor_info}
 
-      stub_request(:post, "http://api.dev.sense-os.local/sensors.json").
+      stub_request(:post, base_uri + "/sensors.json").
         with(:body => body,
              :headers => {'Content-Type'=>'application/json', 'X-Session-Id'=>'1234'}).
         to_return(:status => 201, :body => "", :headers => {
@@ -112,16 +120,10 @@ describe "Sensor Management" do
 
     it "get list of sensor from commonSense" do
 
-      stub_request(:get, "http://api.dev.sense-os.local/sensors.json?page=0&per_page=1000").
-        with(:headers => {'Content-Type'=>'application/json', 'X-Session-Id'=>'1234'}).
-        to_return(:status => 200, :body => response_list_sensors.to_json, :headers => {
-          'Content-Type'=>'application/json'
-        })
-
+      stub_response_sensor_list
       logged_in_client.sensors.all.should_not be_empty
 
       logged_in_client.sensors.count.should == 3
-
 
       i = 0
       logged_in_client.sensors.each do |sensor|
@@ -130,31 +132,44 @@ describe "Sensor Management" do
       end
     end
 
-    xit "get first sensor data" do
-      sensor = @client.sensors.build(sensor_info)
-      sensor.save!
-      sensor = @client.sensors.first
+    it "get first sensor data" do
+      stub_response_sensor_list
+
+      sensor = logged_in_client.sensors.first
 
       sensor.should_not be nil
-      compare_to_sensor_info(sensor)
+      compare_to_sensor_info(sensor, response_list_sensors[:sensors][0])
     end
 
-    xit "get sensor data by id" do
-      sensor = @client.sensors.build(sensor_info)
-      sensor.save!
+    it "get sensor data by id" do
+      first = response_list_sensors[:sensors][0]
 
-      first = @client.sensors.first
+      body = { sensor: response_list_sensors[:sensors][0] }
 
-      sensor = @client.sensors.find(first.id)
+      stub_request(:get, base_uri + "/sensors/143353.json?").
+        with(:headers => {'Content-Type'=>'application/json', 'X-Session-Id'=>'1234'}).
+        to_return(:status => 200, :body => body.to_json, :headers => {'Content-Type'=>'application/json'})
+
+      sensor = logged_in_client.sensors.find!(first[:id])
       sensor.should_not be_nil
+      compare_to_sensor_info(sensor, response_list_sensors[:sensors][0])
     end
 
 
-    xit "filter sensor data" do
-      sensor = @client.sensors.build(sensor_info)
-      sensor.save!
-      sensors = @client.sensors.where(page: 0, per_page: 1, owned: true , details: "full")
-      sensors.to_a.should_not be_empty
+    it "filter sensor data" do
+      stub_request(:get, base_uri + "/sensors.json?details=full&owned=1&page=0&per_page=1").
+        with(:headers => {'Content-Type'=>'application/json', 'X-Session-Id'=>'1234'}).
+        to_return(:status => 200, :body => response_list_sensors.to_json, :headers => {'Content-Type'=>'application/json'})
+
+      sensors = logged_in_client.sensors.where(page: 0, per_page: 1, owned: true , details: "full")
+      result = sensors.to_a
+      result.should_not be_empty
+
+      i = 0
+      result.each do |sensor|
+        compare_to_sensor_info(sensor, response_list_sensors[:sensors][i])
+        i += 1;
+      end
     end
 
     xit "should handle pagination" do

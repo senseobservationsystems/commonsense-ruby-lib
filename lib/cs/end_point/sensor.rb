@@ -9,6 +9,15 @@ module CS
 
       def initialize(hash={})
         from_hash(hash)
+        parse_data_structure
+      end
+
+      def retrieve!
+        super
+        parse_data_structure
+      end
+
+      def parse_data_structure
         if self.data_type == "json"
           if self.data_structure && self.data_structure.kind_of?(String)
             self.data_structure = JSON.parse(self.data_structure) rescue nil
