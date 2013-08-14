@@ -10,7 +10,7 @@ describe "User management" do
     end
 
     let!(:user) do
-      username = "user#{Time.now.to_f}@tester.com"
+      username = "user1@tester.com"
       password = "password"
 
       client = CS::Client.new(base_uri: base_uri)
@@ -27,28 +27,33 @@ describe "User management" do
       user
     end
 
+    let!(:logged_in_client) do
+      client = CS::Client.new(base_uri: base_uri)
+      client.set_session_id("1234")
+      client
+    end
+
     def get_attribute(user)
       {
-        user: {
-          email: user.email,
-          username: user.username,
-          name: user.name,
-          surname: user.surname,
-          address: user.address,
-          zipcode: user.zipcode,
-          country: user.country,
-          mobile: user.mobile,
-          password: user.password
-        }
+        email: user.email,
+        username: user.username,
+        name: user.name,
+        surname: user.surname,
+        address: user.address,
+        zipcode: user.zipcode,
+        country: user.country,
+        mobile: user.mobile,
+        password: user.password
       }
     end
 
     it "create new user" do
       current_user = user
-      stub_request(:post, base_uri + 'users.json').
-                 with(:body => get_attribute(current_user)).
+      body = {user: get_attribute(current_user)}
+      stub_request(:post, base_uri + '/users.json').
+                 with(:body => body).
                  to_return(:status => 201, :body => "", :headers => {
-                   location: base_uri + 'users/1'
+                   location: base_uri + '/users/1'
                  })
 
       user.save!.should be_true
@@ -59,7 +64,7 @@ describe "User management" do
     it "should login the user" do
       client = create_client
       current_user = user
-      stub_request(:post, "http://192.168.33.10/login.json").
+      stub_request(:post, base_uri + "/login.json").
                  with(:body => {username: current_user.username, password: current_user.password},
                       :headers => {'Content-Type'=>'application/json'}).
                  to_return(:status => 200, :body => {session_id: "1"}.to_json, :headers => {'Content-Type' => 'application/json'})
@@ -68,10 +73,31 @@ describe "User management" do
       session_id.should == "1"
     end
 
-    xit "get user data from commonSense" do
+    it "get user data from commonSense" do
+      current_user = user
       attributes = get_attribute(current_user)
 
-      client = create_client
+      body = {
+        user: {
+          id: "3357",
+            email: current_user.email,
+            username: current_user.username,
+            name: current_user.name,
+            surname: current_user.surname,
+            address: current_user.address,
+            zipcode: current_user.zipcode,
+            country: current_user.country,
+            mobile: current_user.mobile,
+            UUID: "203a8-aa54-11e1-85e6-da0007d04f45",
+            openid: nil
+          }
+      }
+
+      stub_request(:get, "http://api.dev.sense-os.local/users/current.json?").
+        with(:headers => {'Content-Type'=>'application/json', 'X-Session-Id'=>'1234'}).
+        to_return(:status => 200, :body => body.to_json, :headers => {'Content-Type'=>'application/json'})
+
+      client = logged_in_client
       current_user = client.current_user
 
       attributes.each do |key, value|
@@ -80,16 +106,10 @@ describe "User management" do
       end
     end
 
-    xit "update user" do
-      current_time = Time.now.to_f
-      client = create_client
-      username = "user-#{current_time}@tester.com"
-      current_user = client.new_user(username: username, email: username, password: 'password')
-      current_user.save!
-      current_user.id.should_not be_nil
-
-      expected = { username: "user-edit-#{current_time}@tester.com",
-        email: "user-edit-#{current_time}@tester.com",
+    it "update user" do
+      expected = {
+        email: "user-edit-1@tester.com",
+        username: "user-edit-1@tester.com",
         name: "Jan Edit",
         surname: "jagger edit",
         address: 'Looydstraat 5 edit',
@@ -98,20 +118,25 @@ describe "User management" do
         mobile: '987654321'
       }
 
-      client = create_client
-      client.session.should be_nil
-      session_id = client.login(current_user.username, 'password')
-      session_id.should_not be_nil
-      client.session.should_not be_nil
+      client = logged_in_client
+      current_user = user
+      current_user.id = "1"
 
-      current_user = client.current_user
+      body = {user: expected}
+      body[:user][:password] = current_user.password
+      body[:user][:id] = current_user.id
+
+      stub_request(:put, "http://api.dev.sense-os.local/users/1.json").
+        with(:body => body,
+             :headers => {'Content-Type'=>'application/json'}).
+        to_return(:status => 200, :body => "", :headers => {})
+
 
       expected.each do |key, value|
-        current_user.send("#{key}=".to_sym, value)
+        current_user.send("#{key}=".to_sym, value) unless key == :password
       end
 
       current_user.save!
-      current_user.reload
 
       expected.each do |key,value|
         current_user.send(key).should eq(value)
