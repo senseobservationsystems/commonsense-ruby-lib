@@ -44,20 +44,20 @@ module CS
     #
     #     sensor.name = "accelerometer edit"
     #     sensor.save! # this will update the sensor
-    def save!
+    def save!(options={})
       check_session!
 
       if @id
-        self.update!
+        self.update!(options)
       else
-        self.create!
+        self.create!(options)
       end
     end
 
     # it will persist data to CS just like {#save!} but it will return false instead of exception
     # if it encouter error while persiting data
-    def save
-      save! rescue false
+    def save(options={})
+      save!(options) rescue false
     end
 
     # Create a new end point object to CS. It will raise an exception if there is an error
@@ -74,8 +74,10 @@ module CS
     #
     #     sensor.create! # this will create new sensor on CS
     #     sensor.id # should give you the id of the sensor
-    def create!
+    def create!(options={})
       parameter = self.to_parameters
+      parameter.merge!(options)
+      binding.pry
       res = session.post(post_url, parameter)
 
       if session.response_code != 201
@@ -92,8 +94,8 @@ module CS
 
     # Create a new endpoint object to CS, just like {#create!} but it will return false
     # if there is an error.
-    def create
-      create! rescue false
+    def create(options={})
+      create!(options) rescue false
     end
 
     # Retrieve Data from CS of the current object based on the id of the object.
@@ -141,11 +143,12 @@ module CS
     #     sensor = client.sensors.find(1)
     #     sensor.name = "new name"
     #     sensor.update!
-    def update!
+    def update!(options={})
       check_session!
       raise Error::ResourceIdError unless @id
 
       parameter = self.to_parameters
+      parameter.merge!(options)
       res = session.put(put_url, parameter)
 
       if session.response_code != 200
@@ -158,8 +161,8 @@ module CS
 
     # Update current end point object to CS, just like {#update!} but it will return nil
     # if there is an error
-    def update
-      update! rescue false
+    def update(options={})
+      update!(options) rescue false
     end
 
 

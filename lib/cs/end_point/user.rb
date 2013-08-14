@@ -38,9 +38,9 @@ module CS
         current_user
       end
 
-      def save!
+      def save!(options={})
         raise Error::ClientError, "No session found. use Client#new_user instead" unless @session
-        super
+        super(options)
       end
 
       # get groups that this users belongs to
