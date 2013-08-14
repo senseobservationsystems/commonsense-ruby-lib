@@ -77,7 +77,6 @@ module CS
     def create!(options={})
       parameter = self.to_parameters
       parameter.merge!(options)
-      binding.pry
       res = session.post(post_url, parameter)
 
       if session.response_code != 201
