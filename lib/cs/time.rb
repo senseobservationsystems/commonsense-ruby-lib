@@ -21,6 +21,10 @@ module CS
       ::Time.at(epoch)
     end
 
+    def self.now
+      ::Time.now
+    end
+
     private
     def method_missing(method, *args, &block)
       @time.send(method, *args, &block)
