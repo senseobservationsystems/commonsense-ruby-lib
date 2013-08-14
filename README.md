@@ -1,6 +1,8 @@
 # Commonsense::Ruby::Lib
 Client library to communicate with CommonSense written in ruby
 
+[![Code Climate](https://codeclimate.com/github/senseobservationsystems/commonsense-ruby-lib.png)](https://codeclimate.com/github/senseobservationsystems/commonsense-ruby-lib)
+
 ## Installation
 
 Add this line to your application's Gemfile:
