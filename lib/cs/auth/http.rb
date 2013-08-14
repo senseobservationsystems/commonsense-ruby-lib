@@ -18,7 +18,7 @@ module CS
       def get(path, query={}, headers = {})
         reset
         headers = default_headers.merge(headers)
-        options = {query: query, headers: headers} 
+        options = {query: query, headers: headers}
         @response_body = self.class.get(path, options)
         parse_response
         @response_body
@@ -43,7 +43,7 @@ module CS
       def delete(path, query={}, headers = {})
         reset
         headers = default_headers.merge(headers)
-        options = {query: query, headers: headers} 
+        options = {query: query, headers: headers}
         @response_body = self.class.delete(path, options)
         parse_response
         @response_body
