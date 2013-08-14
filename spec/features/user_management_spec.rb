@@ -5,10 +5,6 @@ describe "User management" do
 
   describe "Manage user" do
 
-    let(:base_uri) do
-      ENV['spec_base_uri']
-    end
-
     let!(:user) do
       username = "user1@tester.com"
       password = "password"

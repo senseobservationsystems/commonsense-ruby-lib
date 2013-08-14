@@ -1,17 +1,10 @@
 require 'spec_helper'
 require 'ostruct'
+require 'webmock/rspec'
 
 describe "Sensor Management" do
 
   describe "Manage Sensor" do
-    before(:all) do
-      @client = create_client
-      @client.login($username, $password)
-    end
-
-    after(:all) do
-      #@client.sensors.each {|sensors| sensors.delete}
-    end
 
     let(:sensor_info) do
       {
@@ -20,42 +13,120 @@ describe "Sensor Management" do
         device_type: "BMA123",
         pager_type: "email",
         data_type: "json",
-        data_structure: {"x-axis" => "Float", "y-axis" => "Float", "z-axis" => "Float"}
+        data_structure: {"x-axis" => "Float", "y-axis" => "Float", "z-axis" => "Float"}.to_json
       }
     end
 
-    def compare_to_sensor_info(sensor)
-      sensor.name.should eq(sensor_info[:name])
-      sensor.display_name.should eq(sensor_info[:display_name])
-      sensor.display_name.should eq(sensor_info[:display_name])
-      sensor.pager_type.should eq(sensor_info[:pager_type])
-      sensor.data_type.should eq(sensor_info[:data_type])
-      sensor.data_structure.should eq(sensor_info[:data_structure])
+    let!(:logged_in_client) do
+      client = CS::Client.new(base_uri: base_uri)
+      client.set_session_id("1234")
+      client
     end
 
-    xit "create a new sensor" do
-      sensor = @client.sensors.build
+    let(:response_list_sensors) do
+      {
+        sensors: [
+          {
+            id: "143353",
+            name: "light",
+            type: "1",
+            device_type: "CM3602 Light sensor",
+            pager_type: "",
+            display_name: "light",
+            use_data_storage: true,
+            data_type: "json",
+            data_structure: "{\"lux\":\"Integer\"}",
+            device: {
+              id: "5492",
+              type: "HTC One V",
+              uuid: "351816053990044"
+            }
+          },
+          {
+            id: "143354",
+            name: "noise_sensor",
+            type: "1",
+            device_type: "noise_sensor",
+            pager_type: "",
+            display_name: "noise",
+            use_data_storage: true,
+            data_type: "float",
+            data_structure: "",
+            device: {
+              id: "5492",
+              type: "HTC One V",
+              uuid: "351816053990044"
+            }
+          },
+          {
+            id: "143355",
+            name: "Availability",
+            type: "2",
+            device_type: "2",
+            pager_type: "",
+            display_name: "",
+            use_data_storage: true,
+            data_type: "string",
+            data_structure: ""
+          }
+        ]
+      }
+    end
+
+    def compare_to_sensor_info(a, b)
+      a.name.should eq(b[:name])
+      a.display_name.should eq(b[:display_name])
+      a.display_name.should eq(b[:display_name])
+      a.pager_type.should eq(b[:pager_type])
+
+      parsed_structure = b[:data_structure]
+      if !b[:data_structure].empty?
+        parsed_structure = JSON.parse(parsed_structure)
+      end
+
+      a.data_structure.should eq(parsed_structure)
+      a.data_type.should eq(b[:data_type])
+    end
+
+    it "create a new sensor" do
+      body = {sensor: sensor_info}
+
+      stub_request(:post, "http://api.dev.sense-os.local/sensors.json").
+        with(:body => body,
+             :headers => {'Content-Type'=>'application/json', 'X-Session-Id'=>'1234'}).
+        to_return(:status => 201, :body => "", :headers => {
+               location: base_uri + '/sensors/1'
+             })
+
+      sensor = logged_in_client.sensors.build
       sensor.name = sensor_info[:name]
       sensor.display_name = sensor_info[:display_name]
-      sensor.device_type = sensor_info[:display_name]
+      sensor.device_type = sensor_info[:device_type]
       sensor.pager_type = sensor_info[:pager_type]
       sensor.data_type = sensor_info[:data_type]
       sensor.data_structure = sensor_info[:data_structure]
-      sensor.save!
+      sensor.save!.should be_true
+
+      sensor.id.should == "1"
     end
 
-    xit "get list of sensor from commonSense" do
-      sensor = @client.sensors.build(sensor_info)
-      sensor.save!
+    it "get list of sensor from commonSense" do
 
-      @client.sensors.all.should_not be_empty
+      stub_request(:get, "http://api.dev.sense-os.local/sensors.json?page=0&per_page=1000").
+        with(:headers => {'Content-Type'=>'application/json', 'X-Session-Id'=>'1234'}).
+        to_return(:status => 200, :body => response_list_sensors.to_json, :headers => {
+          'Content-Type'=>'application/json'
+        })
 
-      # there could be another Virtual sensor that is automatically created
-      @client.sensors.count.should be > 1
+      logged_in_client.sensors.all.should_not be_empty
 
-      @client.sensors.each do |sensor|
-        compare_to_sensor_info(sensor)
-        break
+      logged_in_client.sensors.count.should == 3
+
+
+      i = 0
+      logged_in_client.sensors.each do |sensor|
+        compare_to_sensor_info(sensor, response_list_sensors[:sensors][i])
+        i += 1;
       end
     end
 

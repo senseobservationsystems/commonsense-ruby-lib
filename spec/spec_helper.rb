@@ -18,3 +18,7 @@ def create_client
 end
 
 ENV['spec_base_uri'] ||= 'http://api.dev.sense-os.local'
+
+def base_uri
+  ENV['spec_base_uri']
+end
