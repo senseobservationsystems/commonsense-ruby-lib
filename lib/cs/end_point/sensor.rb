@@ -15,6 +15,7 @@ module CS
       def retrieve!
         super
         parse_data_structure
+        true
       end
 
       def parse_data_structure
