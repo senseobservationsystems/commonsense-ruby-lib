@@ -10,7 +10,7 @@ describe "Sensor Management" do
     end
 
     after(:all) do
-      @client.sensors.each {|sensors| sensors.delete}
+      #@client.sensors.each {|sensors| sensors.delete}
     end
 
     let(:sensor_info) do
@@ -33,7 +33,7 @@ describe "Sensor Management" do
       sensor.data_structure.should eq(sensor_info[:data_structure])
     end
 
-    it "create a new sensor" do
+    xit "create a new sensor" do
       sensor = @client.sensors.build
       sensor.name = sensor_info[:name]
       sensor.display_name = sensor_info[:display_name]
@@ -44,7 +44,7 @@ describe "Sensor Management" do
       sensor.save!
     end
 
-    it "get list of sensor from commonSense" do
+    xit "get list of sensor from commonSense" do
       sensor = @client.sensors.build(sensor_info)
       sensor.save!
 
@@ -59,7 +59,7 @@ describe "Sensor Management" do
       end
     end
 
-    it "get first sensor data" do
+    xit "get first sensor data" do
       sensor = @client.sensors.build(sensor_info)
       sensor.save!
       sensor = @client.sensors.first
@@ -68,7 +68,7 @@ describe "Sensor Management" do
       compare_to_sensor_info(sensor)
     end
 
-    it "get sensor data by id" do
+    xit "get sensor data by id" do
       sensor = @client.sensors.build(sensor_info)
       sensor.save!
 
@@ -79,14 +79,14 @@ describe "Sensor Management" do
     end
 
 
-    it "filter sensor data" do
+    xit "filter sensor data" do
       sensor = @client.sensors.build(sensor_info)
       sensor.save!
       sensors = @client.sensors.where(page: 0, per_page: 1, owned: true , details: "full")
       sensors.to_a.should_not be_empty
     end
 
-    it "should handle pagination" do
+    xit "should handle pagination" do
       2.times do
         sensor = @client.sensors.build(sensor_info)
         sensor.save!

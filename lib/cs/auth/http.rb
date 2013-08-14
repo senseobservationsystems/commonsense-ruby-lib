@@ -62,7 +62,7 @@ module CS
 
       def default_headers
         header = self.class.default_options[:headers] || {}
-        header.merge({"Content-Type" => "application/json"})
+        header.merge!({"Content-Type" => "application/json"})
         if @session_id
           header.merge!('X-SESSION_ID' => self.session_id)
         end

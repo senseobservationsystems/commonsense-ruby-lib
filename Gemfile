@@ -8,3 +8,4 @@ gem "pry-doc"
 gem "redcarpet"
 gem "time-lord"
 gem 'json', '~> 1.7.7'
+gem "webmock", "~> 1.13.0"

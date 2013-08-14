@@ -69,7 +69,7 @@ module CS
     #    client = CS::Client.new
     #    client.login('username', 'password')
     def login(user, password)
-      login!(user, password) rescue nil
+      login!(user, password) rescue false
     end
 
     # Create a new session to CommonSense using OAuth credentials
