@@ -12,7 +12,7 @@ module CS
         Time.now
       end
 
-      describe "Initiating new data point" do
+      context "Initiating new data point" do
         it "should assign the data point property on initialize" do
           data = SensorData.new(sensor_id: 1, date: now, value: value)
 
@@ -22,7 +22,49 @@ module CS
         end
       end
 
-      describe "Creating" do
+      describe "to_parameters" do
+        context "given CS::Time object" do
+          it "should convert date to epoch" do
+            data = SensorData.new(id: 1)
+
+            date = Time.now
+            epoch = date.to_f
+
+            data.date = date
+            data.to_parameters[:data][0][:date].should be_within(0.001).of(epoch)
+          end
+        end
+
+        context "given TimeLord object" do
+          it "should convert date to epoch" do
+            require 'time-lord'
+            data = SensorData.new(id: 1)
+
+            date = 1.hours.ago
+            epoch = Time.new(date).to_f
+
+            data.date = date
+            data.to_parameters[:data][0][:date].should be_within(0.001).of(epoch)
+          end
+        end
+
+        context "given method respond to_time" do
+          it "should convert date to epoch" do
+            data = SensorData.new(id: 1)
+
+            date = Time.now
+            epoch = date.to_f
+
+            double = double()
+            double.should_receive(:to_time).and_return(date)
+
+            data.date = double
+            data.to_parameters[:data][0][:date].should be_within(0.001).of(epoch)
+          end
+        end
+      end
+
+      context "Creating" do
         it "should create a new data point" do
           date_value = Time.now
           data = SensorData.new(sensor_id: 1, date: date_value, value: value)
@@ -37,21 +79,21 @@ module CS
         end
       end
 
-      describe "Get specific data point" do
+      context "Get specific data point" do
         it "should request data point from commonSense" do
           data = SensorData.new
           expect { data.retrieve!.should }.to raise_error(Error::NotImplementedError)
         end
       end
 
-      describe "Update specific data point" do
+      context "Update specific data point" do
         it "should request data point from commonSense" do
           data = SensorData.new
           expect { data.retrieve!.should }.to raise_error(Error::NotImplementedError)
         end
       end
 
-      describe "Delete specific data point" do
+      context "Delete specific data point" do
         it "should perform DELETE request to commonSense" do
           data = SensorData.new(sensor_id: 1, id: "abcdef")
 
@@ -63,7 +105,6 @@ module CS
           data.delete!.should be_true
         end
       end
-
     end
   end
 end

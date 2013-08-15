@@ -33,11 +33,7 @@ module CS
           param[:value] = value.to_json unless value.kind_of?(String) || value.kind_of?(Numeric)
         end
 
-        date = param[:date]
-        if date && !date.kind_of?(Numeric)
-          date = date.to_f.round(3) rescue nil
-          param[:date] = date if date
-        end
+        param[:date] = CS::Time.new(date).to_f if param[:date]
         {data: [param]}
       end
 

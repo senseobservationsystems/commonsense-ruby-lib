@@ -3,9 +3,9 @@ module CS
   class Time
     attr_reader :time
 
-    def initialize(time=nil) 
-      if time.nil? 
-        @time = ::Time.new unless time
+    def initialize(time=nil)
+      if time.nil?
+        @time = ::Time.new
       elsif time.instance_of?(::Time)
         @time = time
       elsif time.kind_of?(::Numeric)
@@ -23,6 +23,10 @@ module CS
 
     def self.now
       ::Time.now
+    end
+
+    def to_f
+      @time.to_f.round(3)
     end
 
     private
