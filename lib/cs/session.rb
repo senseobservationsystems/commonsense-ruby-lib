@@ -55,11 +55,11 @@ module CS
       logger.info("")
       logger.info("#{type} #{path}")
       logger.debug("headers: #{headers.inspect}")
-      logger.debug("body: #{body.inspect}")
+      logger.info("parameters: #{body.inspect}")
     end
 
     def log_response
-      logger.info("RESPONSE #{self.response_code}")
+      logger.info("response: #{self.response_code}")
       logger.debug("body: #{self.response_body}")
     end
 
