@@ -69,7 +69,8 @@ describe "Sensor Management" do
             data_type: "string",
             data_structure: ""
           }
-        ]
+        ],
+        total: 3
       }
     end
 
@@ -172,20 +173,36 @@ describe "Sensor Management" do
       end
     end
 
-    xit "should handle pagination" do
-      2.times do
-        sensor = @client.sensors.build(sensor_info)
-        sensor.save!
+    it "should handle pagination" do
+      client = logged_in_client
+
+
+
+      # stub page 0-2
+      for i in 0..2
+        response = {
+          sensors: [ response_list_sensors[:sensors][i] ],
+          total: 3
+        }
+        stub_request(:get, base_uri + "/sensors.json?page=#{i}&per_page=1").
+           with(:headers => {'Content-Type'=>'application/json', 'X-Session-Id'=>'1234'}).
+           to_return(:status => 200, :body => response.to_json, :headers => {'Content-Type'=>'application/json'})
       end
 
-      count = @client.sensors.count
+      # last page, empty response
+      response = { sensors: [], total: 3 }
+      stub_request(:get, base_uri + "/sensors.json?page=3&per_page=1").
+         with(:headers => {'Content-Type'=>'application/json', 'X-Session-Id'=>'1234'}).
+         to_return(:status => 200, :body => response.to_json, :headers => {'Content-Type'=>'application/json'})
+
 
       i = 0;
-      @client.sensors.where(per_page: 1).each do
+      client.sensors.where(per_page: 1).each do |sensor|
+        compare_to_sensor_info(sensor, response_list_sensors[:sensors][i])
         i += 1
       end
 
-      i.should eq(count)
+      i.should == 3
     end
   end
 end
