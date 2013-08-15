@@ -28,7 +28,7 @@ module CS
       end
 
       def build(attributes={})
-        data = EndPoint::SensorData.new
+        data = EndPoint::SensorData.new(attributes)
         data.sensor_id = self.sensor_id
         data.session = self.session
         data

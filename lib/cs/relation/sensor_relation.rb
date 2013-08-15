@@ -82,8 +82,8 @@ module CS
       # example:
       #
       #    sensor = client.sensors.build
-      def build(attribtues={})
-        sensor = EndPoint::Sensor.new(attribtues)
+      def build(attributes={})
+        sensor = EndPoint::Sensor.new(attributes)
         sensor.session = self.session
         sensor
       end
