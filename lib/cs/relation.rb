@@ -25,6 +25,10 @@ module CS
       self.instance_variable_get("@#{name}")
     end
 
+    def parameters
+      self.class.parameters
+    end
+
     def get_options(input={})
       options = {}
 
