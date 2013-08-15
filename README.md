@@ -2,6 +2,7 @@
 Client library to communicate with CommonSense written in ruby
 
 [![Code Climate](https://codeclimate.com/github/senseobservationsystems/commonsense-ruby-lib.png)](https://codeclimate.com/github/senseobservationsystems/commonsense-ruby-lib)
+[![Build Status](https://travis-ci.org/senseobservationsystems/commonsense-ruby-lib.png?branch=master)](https://travis-ci.org/senseobservationsystems/commonsense-ruby-lib)
 
 ## Installation
 
