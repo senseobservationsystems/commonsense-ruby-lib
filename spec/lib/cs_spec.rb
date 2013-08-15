@@ -1,52 +1,48 @@
 require 'spec_helper'
 
-describe "cs" do
-  describe "client with authentication" do
-    before(:each) do
-      @client = client = create_client
-      @session_id = @client.login($user.username, 'password')
-      @session_id.should_not be_nil
-    end
+module CS
+  describe Client do
+    describe "client with authentication" do
+      let(:client) do
+        create_client
+      end
 
-    describe "current_user" do
-      it "should return current user information" do
-        current_user = @client.current_user
-        current_user.username.should eq($user.username)
-        current_user.to_h.should be_kind_of Hash
+      let!(:logged_in_client) do
+        client = CS::Client.new(base_uri: base_uri)
+        client.set_session_id("1234")
+        client
+      end
+
+      describe "current_user" do
+        it "should return current user information" do
+          user = EndPoint::User.new
+          EndPoint::User.any_instance.stub(current_user: user)
+          current_user = client.current_user
+          current_user.should == user
+          current_user.to_h.should be_kind_of Hash
+        end
+      end
+
+      describe "groups" do
+        it "should return groups that current user belongs to" do
+          groups = [ EndPoint::Group.new ]
+          EndPoint::Group.any_instance.stub(current_groups: groups)
+          groups = logged_in_client.current_groups
+          groups.should_not be_empty
+        end
+      end
+
+      describe "new_user" do
+        it "should create a new user" do
+
+        end
+      end
+
+      describe "sensors" do
+        it "should return Sensors relation" do
+          client.sensors.should be_a_kind_of(CS::Relation::SensorRelation)
+        end
       end
     end
-
-    describe "groups" do
-      it "should return groups that current user belongs to" do
-        groups = @client.current_groups
-        groups.should be_empty
-      end
-    end
-
-    describe "new_user" do
-      it "should create a new user" do
-
-      end
-    end
-
-    describe "sensors" do
-      it "should return Sensors relation" do
-        @client.sensors.should be_a_kind_of(CS::Relation::SensorRelation)
-      end
-    end
-  end
-
-  describe "with session_id" do
-  end
-
-  describe "with OAuth" do
-    pending
-    before(:each) do
-      @client = client = CS::Client.new
-      @client.oauth(CONFIG['CS_CONSUMER_KEY'], CONFIG['CS_CONSUMER_SECRET'],
-                    CONFIG['CS_ACCESS_TOKEN'], CONFIG['CS_ACCESS_TOKEN_SECRET'])
-    end
-
-    #it_behaves_like "Client"
   end
 end
