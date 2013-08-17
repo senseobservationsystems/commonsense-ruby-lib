@@ -29,6 +29,14 @@ module CS
       @time.to_f.round(3)
     end
 
+    def to_s
+      @time.to_s
+    end
+
+    def inspect
+      @time.inspect
+    end
+
     private
     def method_missing(method, *args, &block)
       @time.send(method, *args, &block)

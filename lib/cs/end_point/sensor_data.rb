@@ -37,6 +37,10 @@ module CS
         {data: [param]}
       end
 
+      def date
+        Time.new(@date)
+      end
+
       # there is no currently end point for geting data by id
       def retrieve!
         raise Error::NotImplementedError, "There is no current end point to get sensor data by id"

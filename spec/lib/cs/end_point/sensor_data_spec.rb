@@ -17,7 +17,7 @@ module CS
           data = SensorData.new(sensor_id: 1, date: now, value: value)
 
           data.sensor_id.should eq(1)
-          data.date.should eq(now)
+          data.date.to_i.should eq(now.to_i)
           data.value.should eq(value)
         end
       end
