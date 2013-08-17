@@ -21,48 +21,46 @@ module CS
         @oauth
       end
 
-      def get(path, query={}, headers = {})
+      def execute(&block)
         reset
-        headers = default_headers.merge(headers)
-        response = oauth.get(path, headers)
+        response = yield
         parse_response(response)
         @response_body
+      end
+
+      def get(path, query={}, headers = {})
+        execute do
+          headers = default_headers.merge(headers)
+          oauth.get(path, headers)
+        end
       end
 
       def post(path, body = '', headers = {})
-        reset
-        headers = default_headers.merge(headers)
-        response = oauth.post(path, body.to_json, headers)
-        parse_response(response)
-
-        @response_body
+        execute do
+          headers = default_headers.merge(headers)
+          oauth.post(path, body.to_json, headers)
+        end
       end
 
       def put(path, body = '', headers = {})
-        reset
-        headers = default_headers.merge(headers)
-        response = oauth.put(path, body.to_json, headers)
-        parse_response(response)
-
-        @response_body
+        execute do
+          headers = default_headers.merge(headers)
+          oauth.put(path, body.to_json, headers)
+        end
       end
 
       def delete(path, query={}, headers = {})
-        reset
-        headers = default_headers.merge(headers)
-        response = oauth.delete(path, headers)
-        parse_response(response)
-
-        @response_body
+        execute do
+          headers = default_headers.merge(headers)
+          oauth.delete(path, headers)
+        end
       end
 
       def head(path, headers = {})
-        reset
-        headers = default_headers.merge(headers)
-        response = oauth.head(path, headers)
-        parse_response(response)
-
-        @response_body
+        execute do
+          headers = default_headers.merge(headers)
+          oauth.head(path, headers)
+        end
       end
 
       def base_uri=(uri = nil)

@@ -15,45 +15,47 @@ module CS
         reset
       end
 
-      def get(path, query={}, headers = {})
+      def execute(&block)
         reset
-        headers = default_headers.merge(headers)
-        options = {query: query, headers: headers}
-        @response_body = self.class.get(path, options)
+        @response_body = yield
         parse_response
         @response_body
+      end
+
+      def get(path, query={}, headers = {})
+        execute do
+          headers = default_headers.merge(headers)
+          options = {query: query, headers: headers}
+          self.class.get(path, options)
+        end
       end
 
       def post(path, body = '', headers = {})
-        reset
-        headers = default_headers.merge(headers)
-        @response_body = self.class.post(path, prepare(body, headers))
-        parse_response
-        @response_body
+        execute do
+          headers = default_headers.merge(headers)
+          self.class.post(path, prepare(body, headers))
+        end
       end
 
       def put(path, body = '', headers = {})
-        reset
-        headers = default_headers.merge(headers)
-        @response_body = self.class.put(path, prepare(body, headers))
-        parse_response
-        @response_body
+        execute do
+          headers = default_headers.merge(headers)
+          self.class.put(path, prepare(body, headers))
+        end
       end
 
       def delete(path, query={}, headers = {})
-        reset
-        headers = default_headers.merge(headers)
-        options = {query: query, headers: headers}
-        @response_body = self.class.delete(path, options)
-        parse_response
-        @response_body
+        execute do
+          headers = default_headers.merge(headers)
+          options = {query: query, headers: headers}
+          self.class.delete(path, options)
+        end
       end
 
       def head(path, headers = {})
-        reset
-        @response_body = self.class.head(path, prepare(nil, headers))
-        parse_response
-        @response_body
+        execute do
+          self.class.head(path, prepare(nil, headers))
+        end
       end
 
       def base_uri=(uri = nil)

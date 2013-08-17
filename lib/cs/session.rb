@@ -63,28 +63,32 @@ module CS
       logger.debug("body: #{self.response_body}")
     end
 
-    def get(path, body = '', headers = {})
-      log_request("GET", path, body, headers) if logger
-      response = retry_on_509 { auth_proxy.get(path, body, headers) }
+    def execute(&block)
+      response = yield
       log_response if logger
 
       response
+    end
+
+    def get(path, body = '', headers = {})
+      execute do
+        log_request("GET", path, body, headers) if logger
+        retry_on_509 { auth_proxy.get(path, body, headers) }
+      end
     end
 
     def post(path, body = '', headers = {})
-      log_request("POST", path, body, headers) if logger
-      response = retry_on_509 { auth_proxy.post(path, body, headers = {}) }
-      log_response if logger
-
-      response
+      execute do
+        log_request("POST", path, body, headers) if logger
+        retry_on_509 { auth_proxy.post(path, body, headers = {}) }
+      end
     end
 
     def put(path, body = '', headers = {})
-      log_request("PUT", path, body, headers) if logger
-      response = retry_on_509 { auth_proxy.put(path, body, headers) }
-      log_response if logger
-
-      response
+      execute do
+        log_request("PUT", path, body, headers) if logger
+        retry_on_509 { auth_proxy.put(path, body, headers) }
+      end
     end
 
     def delete(path, body='', headers = {})
