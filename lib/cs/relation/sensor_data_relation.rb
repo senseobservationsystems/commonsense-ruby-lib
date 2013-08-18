@@ -19,8 +19,6 @@ module CS
       def initialize(sensor_id, session=nil)
         self.sensor_id = sensor_id
         self.session = session
-        page = 0
-        per_page = 1000
       end
 
       def get_url
