@@ -71,10 +71,6 @@ module CS
       parameter :details, String, valid_values: ["no", "full"]
       parameter :group_id, String
 
-      def initialize(session=nil)
-        @session = session
-      end
-
       # Find {EndPoint::Sensor Sensor} by id
       #
       # example:

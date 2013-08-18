@@ -10,10 +10,6 @@ module CS
       parameter :sort, String, valid_values: ["ASC", "DESC"]
       parameter :sort_field, String, valid_values: ["id", "username", "email", "public", "description", "name"]
 
-      def initialize(session=nil)
-        @session = session
-      end
-
       def each(&block)
         counter = 0
         self.page || 0;

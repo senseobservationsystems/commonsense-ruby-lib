@@ -7,10 +7,6 @@ module CS
       parameter :per_page, Integer, default: 1000, required: true, maximum: 1000
       parameter :email, Boolean
 
-      def initialize(session=nil)
-        @session = session
-      end
-
       def each(&block)
         counter = 0
         self.page || 0;

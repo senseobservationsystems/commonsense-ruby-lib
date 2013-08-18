@@ -10,6 +10,10 @@ module CS
       raise Error::NotImplementedError, "the class #{self.class} does not respond to 'get_url' "
     end
 
+    def initialize(session=nil)
+      @session = session
+    end
+
     # Create a new Endpoint object.
     #
     # example:
