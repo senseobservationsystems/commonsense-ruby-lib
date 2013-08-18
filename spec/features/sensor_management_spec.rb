@@ -19,7 +19,7 @@ describe "Sensor Management" do
 
     let!(:logged_in_client) do
       client = CS::Client.new(base_uri: base_uri)
-      client.set_session_id("1234")
+      client.session_id = '1234'
       client
     end
 

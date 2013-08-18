@@ -87,8 +87,8 @@ module CS
     # Create new session by manually specifiying `session_id` parameter
     #
     #     client = CS::Client.new
-    #     client.session_id('12345')
-    def set_session_id(session_id)
+    #     client.session_id = '12345'
+    def session_id=(session_id)
       @session = Session.new(base_uri: @base_uri)
       @session.logger = logger
       @session.session_id = session_id
