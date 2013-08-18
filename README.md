@@ -25,6 +25,11 @@ Or install it yourself as:
 client = CS::Client.new
 client.login('username','password')
 
+# setting session_id manually
+
+client = CS::Client.new
+client.session_id = '1234'
+
 # get current user
 current_user = client.current_user
 ```
@@ -41,6 +46,9 @@ sensors.session = session
 # Get all sensor
 sensors = client.sensors
 sensors.to_a
+
+# show parameters available when querying
+client.sensors.parameters
 
 # Get sensor by specifying parameters
 client.sensors.where(page: 0, per_page: 1000)
