@@ -100,28 +100,6 @@ module CS
         self.select { |sensor| sensor.name =~ regex }
       end
 
-      def each(&block)
-        counter = 0
-        self.page || 0;
-        begin
-          sensors = get_data!(get_options({}))
-
-          sensors = sensors["sensors"]
-          if !sensors.empty?
-            sensors.each do |sensor|
-              sensor = EndPoint::Sensor.new(sensor)
-              sensor.session = session
-              yield sensor
-              counter += 1
-              return if @limit && @limit == counter
-            end
-
-            self.page += 1
-          end
-
-        end while sensors.size == self.per_page
-      end
-
       private
       def resource_class
         EndPoint::Sensor

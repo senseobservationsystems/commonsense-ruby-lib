@@ -43,10 +43,21 @@ module CS
 
       describe "each" do
         it "should get all sensor and yield each" do
-          relation = SensorRelation.new
+          session = double('Session')
+          relation = SensorRelation.new(session)
           relation.stub("get_data!").and_return(sensors)
 
           expect { |b| relation.each(&b) }.to yield_successive_args(EndPoint::Sensor, EndPoint::Sensor, EndPoint::Sensor)
+        end
+
+        context "empty result" do
+          it "should not yield control" do
+            session = double('Session')
+            relation = SensorRelation.new(session)
+            relation.stub("get_data!").and_return({"sensors" => [], "total" => 0})
+
+            expect { |b| relation.each(&b) }.not_to yield_control
+          end
         end
 
         context "limit specified" do

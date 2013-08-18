@@ -136,6 +136,46 @@ module CS
       self
     end
 
+    def each_batch(params={}, &block)
+      check_session!
+      options = get_options(params)
+
+      self.page ||= 0;
+
+      more = true
+      begin
+        options[:page] = self.page
+        data = get_data(options)
+
+        data = data[resource_class.resources_name]
+        if data.nil? || data.empty?
+          more = false
+        else
+          yield data
+
+          if data.size == self.per_page
+            self.page += 1
+          else
+            more = false
+          end
+        end
+      end while more
+    end
+
+    def each(&block)
+      counter = 0
+      self.each_batch do |data|
+        data.each do |data_point|
+          resource = resource_class.new(data_point)
+          resource.session = session
+          yield resource
+          counter += 1
+
+          return if @limit && @limit == counter
+        end
+      end
+    end
+
     module ClassMethod
       def parameter(name, type, *args)
         attr_accessor name
