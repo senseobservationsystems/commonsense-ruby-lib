@@ -73,8 +73,6 @@ module CS
 
       def initialize(session=nil)
         @session = session
-        page = 0
-        per_page = 1000
       end
 
       # Create a new {EndPoint::Sensor Sensor} object.
@@ -97,7 +95,7 @@ module CS
         check_session!
         sensor = EndPoint::Sensor.new(id: id)
         sensor.session = self.session
-        sensor.retrieve! ? sensor : nil
+        sensor.retrieve! ? sensor : false
       end
 
       def find(id)

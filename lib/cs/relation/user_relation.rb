@@ -9,8 +9,6 @@ module CS
 
       def initialize(session=nil)
         @session = session
-        page = 0
-        per_page = 1000
       end
 
       def each(&block)
