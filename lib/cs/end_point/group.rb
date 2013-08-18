@@ -9,8 +9,8 @@ module CS
         :required_show_first_name, :required_show_surname, :required_show_phone_number,
         :required_show_username
 
-      resources :groups
-      resource :group
+      resources "groups"
+      resource "group"
 
 
       def initialize(hash={})

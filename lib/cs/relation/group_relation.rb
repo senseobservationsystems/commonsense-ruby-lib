@@ -58,16 +58,6 @@ module CS
         "/groups.json"
       end
 
-      def parse_single_resource(groups)
-        groups = groups["groups"]
-        if !groups.empty?
-          group = EndPoint::Group.new(groups[0])
-          group.session = self.session
-
-          return group
-        end
-      end
-
       def get_single_resource(params={})
         options = {
           page: 0, per_page: 1, public: self.public,

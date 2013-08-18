@@ -57,7 +57,7 @@ module CS
           group = Group.new(group_info)
 
           session = double("CS::Session")
-          expected = {group: group_info }
+          expected = {"group" => group_info }
           session.should_receive(:post).with("/groups.json", expected)
           session.stub(:response_headers => {"location" => "http://foo.bar/groups/1"})
           session.stub(:response_code => 201)
@@ -90,9 +90,9 @@ module CS
           group.name = "group 1 edit"
 
           session = double("CS::Session")
-          expected = {group: group_info }
-          expected[:group][:name] = "group 1 edit"
-          expected[:group][:id] = 1
+          expected = {"group" => group_info }
+          expected["group"][:name] = "group 1 edit"
+          expected["group"][:id] = 1
           session.should_receive(:put).with("/groups/#{group_id}.json", expected)
           session.stub(:response_code => 200)
           group.session = session
