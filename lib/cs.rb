@@ -45,7 +45,7 @@ module CS
   #     client.base_uri = 'https://api.dev.sense-os.nl'
   #
   class Client
-    attr_accessor :session, :base_uri
+    attr_accessor :session, :base_uri, :logger
 
     def initialize(opts={})
       options = {
@@ -61,6 +61,7 @@ module CS
     #    client.login!('username', 'password')
     def login!(user, password)
       @session = Session.new(base_uri: @base_uri)
+      @session.logger = logger
       @session.login(user, password)
     end
 
@@ -79,6 +80,7 @@ module CS
     #    client.login('username', 'password')
     def oauth(consumer_key, consumer_secret, access_token, access_token_secret)
       @session = Session.new(base_uri: @base_uri)
+      @session.logger = logger
       @session.oauth(consumer_key, consumer_secret, access_token, access_token_secret)
     end
 
@@ -88,6 +90,7 @@ module CS
     #     client.session_id('12345')
     def set_session_id(session_id)
       @session = Session.new(base_uri: @base_uri)
+      @session.logger = logger
       @session.session_id = session_id
     end
 

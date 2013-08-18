@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'webmock/rspec'
 
 module CS
   describe Client do
@@ -37,6 +38,37 @@ module CS
           client.sensors.should be_a_kind_of(CS::Relation::SensorRelation)
         end
       end
+
+      describe "logger" do
+        context "when login using user & password" do
+          it "should assign the new session" do
+            logger = double()
+            Session.any_instance.stub(login: '1234')
+            client.logger = logger
+            client.login('foo', 'bar')
+            client.session.logger.should == logger
+          end
+        end
+
+        context "when login using oauth" do
+          it "should assign logger" do
+            logger = double()
+            client.logger = logger
+            client.oauth('', '', '', '')
+            client.session.logger.should == logger
+          end
+        end
+
+        context "when specifying session_id" do
+          it "should assign logger" do
+            logger = double()
+            client.logger = logger
+            client.set_session_id('1234')
+            client.session.logger.should == logger
+          end
+        end
+      end
+
     end
   end
 end
