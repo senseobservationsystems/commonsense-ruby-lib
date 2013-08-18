@@ -107,18 +107,8 @@ module CS
       end
 
       private
-      def parse_single_resource(data)
-        data = data["data"]
-        data_point = data[0]
-
-        sensor_data = nil
-        if !data.empty?
-          sensor_data = EndPoint::SensorData.new(data_point)
-          sensor_data.sensor_id = self.sensor_id
-          sensor_data.session = session
-        end
-
-        sensor_data
+      def resource_class
+        EndPoint::SensorData
       end
     end
   end
