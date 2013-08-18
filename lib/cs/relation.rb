@@ -10,6 +10,17 @@ module CS
       raise Error::NotImplementedError, "the class #{self.class} does not respond to 'get_url' "
     end
 
+    # Create a new Endpoint object.
+    #
+    # example:
+    #
+    #    sensor = client.sensors.build
+    def build(attributes={})
+      resource = resource_class.new(attributes)
+      resource.session = self.session
+      resource
+    end
+
     def get_data!(params={})
       check_session!
       options = get_options(params)

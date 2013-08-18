@@ -14,17 +14,6 @@ module CS
         @session = session
       end
 
-      # Create a new {EndPoint::Group Group } object.
-      #
-      # example:
-      #
-      #    user = client.groups.build
-      def build(attribtues={})
-        user = EndPoint::Group.new(attribtues)
-        user.session = self.session
-        user
-      end
-
       def each(&block)
         counter = 0
         self.page || 0;

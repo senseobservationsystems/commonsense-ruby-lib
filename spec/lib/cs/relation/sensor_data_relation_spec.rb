@@ -54,7 +54,13 @@ module CS
       describe "build" do
         it "should return a sensorData object" do
           sensor_id = 1
-          SensorDataRelation.new(sensor_id).build.should be_a_kind_of(EndPoint::SensorData)
+          date = 1
+          value = 1
+          sensor_data = SensorDataRelation.new(sensor_id).build(date: date, value: value)
+          sensor_data.should be_a_kind_of(EndPoint::SensorData)
+          sensor_data.sensor_id.should == sensor_id
+          sensor_data.date.to_f.should == date
+          sensor_data.value.should == value
         end
       end
 

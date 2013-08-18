@@ -26,10 +26,9 @@ module CS
       end
 
       def build(attributes={})
-        data = EndPoint::SensorData.new(attributes)
-        data.sensor_id = self.sensor_id
-        data.session = self.session
-        data
+        sensor_data = super(attributes)
+        sensor_data.sensor_id = self.sensor_id
+        sensor_data
       end
 
       def each_batch(params={}, &block)

@@ -75,17 +75,6 @@ module CS
         @session = session
       end
 
-      # Create a new {EndPoint::Sensor Sensor} object.
-      #
-      # example:
-      #
-      #    sensor = client.sensors.build
-      def build(attributes={})
-        sensor = EndPoint::Sensor.new(attributes)
-        sensor.session = self.session
-        sensor
-      end
-
       # Find {EndPoint::Sensor Sensor} by id
       #
       # example:

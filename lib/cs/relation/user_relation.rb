@@ -33,17 +33,6 @@ module CS
         end while users.size == self.per_page
       end
 
-      # Create a new {EndPoint::User User } object.
-      #
-      # example:
-      #
-      #    user = client.users.build
-      def build(attribtues={})
-        user = EndPoint::User.new(attribtues)
-        user.session = self.session
-        user
-      end
-
       private
       def resource_class
         EndPoint::User
