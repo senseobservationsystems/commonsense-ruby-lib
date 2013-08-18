@@ -67,6 +67,17 @@ module CS
             client.session.logger.should == logger
           end
         end
+
+        context "setting logger" do
+          it "it should set logger to existing session" do
+            logger = double()
+            client.session_id = '1234'
+            client.logger = logger
+            client.session.logger.should == logger
+            client.logger = nil
+            client.session.logger.should be_nil
+          end
+        end
       end
 
     end

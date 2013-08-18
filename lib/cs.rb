@@ -45,13 +45,19 @@ module CS
   #     client.base_uri = 'https://api.dev.sense-os.nl'
   #
   class Client
-    attr_accessor :session, :base_uri, :logger
+    attr_accessor :session, :base_uri
+    attr_reader :logger
 
     def initialize(opts={})
       options = {
         base_uri: 'https://api.sense-os.nl',
       }.merge(opts)
       @base_uri = options[:base_uri]
+    end
+
+    def logger=(logger)
+      @logger = logger
+      @session.logger = logger if @session
     end
 
     # Create a new session to CommonSense using username and plain text password
