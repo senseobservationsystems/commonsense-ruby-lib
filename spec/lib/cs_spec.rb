@@ -23,18 +23,12 @@ module CS
         end
       end
 
-      describe "groups" do
+      describe "current_groups" do
         it "should return groups that current user belongs to" do
           groups = [ EndPoint::Group.new ]
           EndPoint::Group.any_instance.stub(current_groups: groups)
           groups = logged_in_client.current_groups
           groups.should_not be_empty
-        end
-      end
-
-      describe "new_user" do
-        it "should create a new user" do
-
         end
       end
 
