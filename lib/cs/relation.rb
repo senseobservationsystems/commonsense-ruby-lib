@@ -179,8 +179,14 @@ module CS
       raise Error::NotImplementedError, "resource_class is not implemented for class : #{self.class}"
     end
 
-    def parse_single_resource(resource)
-      raise Error::NotImplementedError, "parse_single_resource is not implemented for class : #{self.class}"
+    def parse_single_resource(data)
+      resources = data[resource_class.resources_name]
+      if !resources.empty?
+        resource = resource_class.new(resources[0])
+        resource.session = self.session
+
+        return resource
+      end
     end
 
     def get_single_resource(params={})

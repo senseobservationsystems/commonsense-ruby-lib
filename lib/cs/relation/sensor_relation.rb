@@ -148,16 +148,6 @@ module CS
         "/sensors.json"
       end
 
-      def parse_single_resource(sensors)
-        sensors = sensors["sensors"]
-        if !sensors.empty?
-          sensor = EndPoint::Sensor.new(sensors[0])
-          sensor.session = self.session
-
-          return sensor
-        end
-      end
-
       def get_single_resource(params={})
         options = {
           page: 0, per_page: 1, shared: self.shared,

@@ -272,8 +272,16 @@ module CS
         class_variable_set(:@@delete_url, "/#{resources}/:id.json")
       end
 
+      def resources_name
+        class_variable_get(:@@resources)
+      end
+
       def resource(resource)
         class_variable_set(:@@resource, resource)
+      end
+
+      def resource_name
+        class_variable_get(:@@resource)
       end
     end
   end

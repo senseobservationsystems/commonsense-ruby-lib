@@ -4,8 +4,8 @@ module CS
       include EndPoint
 
       attribute :name, :display_name, :device_type, :pager_type, :data_type, :data_structure
-      resources :sensors
-      resource :sensor
+      resources "sensors"
+      resource "sensor"
 
       def initialize(hash={})
         from_hash(hash)

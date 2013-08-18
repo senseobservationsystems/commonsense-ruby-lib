@@ -28,6 +28,8 @@ module CS
 
     def process_param(name, value, param_option)
       retval = value
+
+      # this should be refactored to it's own classes
       retval = process_param_integer(name, value, param_option) if param_option[:type] == Integer
       retval = process_param_boolean(name, value, param_option) if param_option[:type] == Boolean
       retval = process_param_string(name, value, param_option) if param_option[:type] == String
