@@ -57,15 +57,6 @@ module CS
       def get_url
         "/groups.json"
       end
-
-      def get_single_resource(params={})
-        options = {
-          page: 0, per_page: 1, public: self.public,
-          total: self.total, sort: self.sort, sort_field: self.sort_field
-        }
-        options.merge!(params)
-        get_data(options)
-      end
     end
   end
 end

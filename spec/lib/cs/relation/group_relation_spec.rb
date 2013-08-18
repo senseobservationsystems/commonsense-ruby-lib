@@ -99,9 +99,9 @@ module CS
         it "should return the last record" do
           relation = GroupRelation.new
           relation.stub("count").and_return(3)
-          relation.should_receive("get_data").with(page:2, per_page:1, public:nil, total:nil, sort:nil, sort_field:nil).and_return({"groups" => [{"name" => "Group 1"}], "total" => 3})
+          relation.should_receive("get_data").with(page:2, per_page:1, public:1, total:1, sort:'ASC', sort_field:'email').and_return({"groups" => [{"name" => "Group 1"}], "total" => 3})
 
-          first = relation.last
+          first = relation.where(public: true, total: true, sort:'ASC', sort_field:'email').last
           first.should be_kind_of(EndPoint::Group)
           first.name.should eq("Group 1")
         end
