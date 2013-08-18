@@ -74,11 +74,23 @@ module CS
         it "should return the last record" do
           relation = SensorRelation.new
           relation.stub("count").and_return(3)
-          relation.should_receive("get_data").with(page:2, per_page:1, shared:nil, owned:nil, physical:nil, details:nil).and_return({"sensors" => [{"name" => "sensor3"}], "total" => 3})
+          relation.should_receive("get_data").with(page:2, per_page:1).and_return({"sensors" => [{"name" => "sensor3"}], "total" => 3})
 
           first = relation.last
           first.should be_kind_of(EndPoint::Sensor)
           first.name.should eq("sensor3")
+        end
+
+        context "with parameters given" do
+          it "should return the last record with options" do
+            relation = SensorRelation.new
+            relation.stub("count").and_return(3)
+            relation.should_receive("get_data").with(page:2, per_page:1, shared:1, owned:1, physical:1, details:'full').and_return({"sensors" => [{"name" => "sensor3"}], "total" => 3})
+
+            first = relation.where(shared: true, owned: true, physical:true, details: 'full').last
+            first.should be_kind_of(EndPoint::Sensor)
+            first.name.should eq("sensor3")
+          end
         end
       end
 

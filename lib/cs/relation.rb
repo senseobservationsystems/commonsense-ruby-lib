@@ -190,7 +190,9 @@ module CS
     end
 
     def get_single_resource(params={})
-      raise Error::NotImplementedError, "get_single_resource is not implemented for class : #{self.class}"
+      options = get_options.merge!({ page: 0, per_page: 1 })
+      options.merge!(params)
+      get_data(options)
     end
   end
 end

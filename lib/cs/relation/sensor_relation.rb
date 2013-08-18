@@ -147,15 +147,6 @@ module CS
       def get_url
         "/sensors.json"
       end
-
-      def get_single_resource(params={})
-        options = {
-          page: 0, per_page: 1, shared: self.shared,
-          owned: self.owned, physical: self.physical, details: self.details
-        }
-        options.merge!(params)
-        get_data(options)
-      end
     end
   end
 end
