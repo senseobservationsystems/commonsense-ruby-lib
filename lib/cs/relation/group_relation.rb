@@ -10,27 +10,6 @@ module CS
       parameter :sort, String, valid_values: ["ASC", "DESC"]
       parameter :sort_field, String, valid_values: ["id", "username", "email", "public", "description", "name"]
 
-      def each(&block)
-        counter = 0
-        self.page || 0;
-        begin
-          groups = get_data!(get_options({}))
-
-          groups = groups["groups"]
-          if !groups.empty?
-            groups.each do |group|
-              group = EndPoint::Group.new(group)
-              group.session = session
-              yield group
-              counter += 1
-              return if @limit && @limit == counter
-            end
-
-            self.page += 1
-          end
-
-        end while groups.size == self.per_page
-      end
 
       private
       def resource_class

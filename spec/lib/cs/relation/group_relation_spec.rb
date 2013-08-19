@@ -68,7 +68,8 @@ module CS
 
       describe "each" do
         it "should get all users group  and yield each" do
-          relation = GroupRelation.new
+          session = double('Session')
+          relation = GroupRelation.new(session)
           relation.stub("get_data!").and_return(groups)
 
           expect { |b| relation.each(&b) }.to yield_successive_args(EndPoint::Group, EndPoint::Group, EndPoint::Group)

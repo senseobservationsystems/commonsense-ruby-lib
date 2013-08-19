@@ -12,7 +12,6 @@ module CS
       resources "groups"
       resource "group"
 
-
       def initialize(hash={})
         from_hash(hash)
       end
