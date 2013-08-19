@@ -142,24 +142,16 @@ module CS
 
       self.page ||= 0;
 
-      more = true
       begin
         options[:page] = self.page
         data = get_data(options)
 
         data = data[resource_class.resources_name]
-        if data.nil? || data.empty?
-          more = false
-        else
+        if !data.nil? && !data.empty?
           yield data
-
-          if data.size == self.per_page
-            self.page += 1
-          else
-            more = false
-          end
+          self.page += 1
         end
-      end while more
+      end while data.size == self.per_page
     end
 
     def each(&block)

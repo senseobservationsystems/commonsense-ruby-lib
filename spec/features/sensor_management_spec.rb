@@ -176,8 +176,6 @@ describe "Sensor Management" do
     it "should handle pagination" do
       client = logged_in_client
 
-
-
       # stub page 0-2
       for i in 0..2
         response = {
