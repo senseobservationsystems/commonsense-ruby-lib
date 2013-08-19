@@ -31,47 +31,6 @@ module CS
         sensor_data
       end
 
-      def each_batch(params={}, &block)
-        check_session!
-        options = get_options(params)
-
-        self.page ||= 0;
-
-        more = true
-        begin
-          options[:page] = self.page
-          data = get_data(options)
-
-          data = data["data"]
-          if data.nil? || data.empty?
-            more = false
-          else
-            yield data
-
-            if data.size == self.per_page
-              self.page += 1
-            else
-              more = false
-            end
-          end
-        end while more
-      end
-
-      def each(&block)
-        counter = 0
-        self.each_batch do |data|
-          data.each do |data_point|
-            sensor_data = EndPoint::SensorData.new(data_point)
-            sensor_data.sensor_id = self.sensor_id
-            sensor_data.session = session
-            yield sensor_data
-            counter += 1
-
-            return if @limit && @limit == counter
-          end
-        end
-      end
-
       def count
         retval = 0
         each_batch do |data|

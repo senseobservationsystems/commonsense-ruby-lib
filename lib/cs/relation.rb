@@ -151,7 +151,7 @@ module CS
           yield data
           self.page += 1
         end
-      end while data.size == self.per_page
+      end while data && data.size == self.per_page
     end
 
     def each(&block)

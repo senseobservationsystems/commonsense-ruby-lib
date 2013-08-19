@@ -24,6 +24,7 @@ module CS
       attr_accessor :month, :week, :year
       attribute :date, :value, :sensor_id
       resources "data"
+      resource "data"
 
       def to_parameters
         param = self.to_h(false)

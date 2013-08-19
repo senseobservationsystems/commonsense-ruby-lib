@@ -99,7 +99,7 @@ module CS
           relation.should_receive(:get_data!).once.ordered.with({page: 1, per_page: 3, sensor_id: sensor_id})
             .and_return (data)
           relation.should_receive(:get_data!).once.ordered.with({page: 2, per_page: 3, sensor_id: sensor_id})
-            .and_return ({ data: [] })
+            .and_return ({ "data" => [] })
 
           relation.page = 0
           relation.per_page = 3
@@ -111,6 +111,10 @@ module CS
       describe "each" do
         it "should get all sensor data based on the criteria and yield" do
           expect { |b| relation.each(&b) }.to yield_successive_args(EndPoint::SensorData, EndPoint::SensorData, EndPoint::SensorData)
+        end
+
+        it "should return an sensor data with sensor_id" do
+          relation.each {|data| data.sensor_id.should == "1" }
         end
 
         context "limit specified" do
