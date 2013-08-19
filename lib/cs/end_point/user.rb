@@ -5,8 +5,8 @@ module CS
     class User
       include EndPoint
 
-      resources :users
-      resource :user
+      resources "users"
+      resource "user"
 
       attribute :email, :username, :name, :surname, :address, :zipcode,
         :country, :mobile, :uuid, :openid, :password
