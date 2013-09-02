@@ -84,7 +84,7 @@ module CS
       end
 
       def find(id)
-        find! rescue false
+        find!(id) rescue false
       end
 
       # Find sensor by name in regular expression.
