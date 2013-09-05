@@ -38,7 +38,7 @@ module CS
         {data: [param]}
       end
 
-      def date
+      def date_human
         Time.new(@date)
       end
 
