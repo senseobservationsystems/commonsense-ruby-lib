@@ -30,6 +30,7 @@ module CS
 
       def get(path, query={}, headers = {})
         execute do
+          path += '?' + URI.encode_www_form(query) unless query.empty?
           headers = default_headers.merge(headers)
           oauth.get(path, headers)
         end
@@ -51,6 +52,7 @@ module CS
 
       def delete(path, query={}, headers = {})
         execute do
+          path += '?' + URI.encode_www_form(query) unless query.empty?
           headers = default_headers.merge(headers)
           oauth.delete(path, headers)
         end
