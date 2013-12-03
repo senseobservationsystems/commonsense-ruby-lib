@@ -9,7 +9,7 @@ module CS
       resource "user"
 
       attribute :email, :username, :name, :surname, :address, :zipcode,
-        :country, :mobile, :uuid, :openid, :password
+        :country, :mobile, :UUID, :openid, :password
 
       def initialize(hash={})
         if hash[:password]
