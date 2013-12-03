@@ -8,7 +8,7 @@ module CS
         {
           id: 1, email: "foo@bar.com", username: "foo@bar.com", name: "foo",
           surname: "bar", address: "foo", zipcode: "12345", country: "NETHERLANDS",
-          mobile: "12345", uuid: "12345", openid: "12345"
+          mobile: "12345", UUID: "12345", openid: "12345"
         }
       end
 
