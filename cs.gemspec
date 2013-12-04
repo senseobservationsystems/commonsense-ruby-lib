@@ -8,6 +8,8 @@ Gem::Specification.new do |gem|
   gem.summary       = %q{Client library to communicate with CommonSense written in ruby}
   gem.homepage      = "https://github.com/senseobservationsystems/commonsense-ruby-lib"
 
+  gem.required_ruby_version = '>= 1.9.3'
+
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
