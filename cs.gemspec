@@ -15,6 +15,6 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = CS::VERSION
   gem.add_development_dependency("launchy", "~> 2.3")
-  gem.add_dependency('httparty', '~> 0.11')
+  gem.add_dependency('httparty', '~> 0.12')
   gem.add_dependency('oauth', '~> 0.4')
 end

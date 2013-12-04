@@ -3,7 +3,15 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in cs.gemspec
 gemspec
 gem "time-lord"
-gem 'json', '~> 1.7.7'
+gem 'json'
+
+#
+# Rubinius does not load ruby stdlib by default
+#
+
+platforms :rbx do
+  gem 'rubysl'
+end
 
 group :test do
   gem "rake", "~> 10.1.0"
