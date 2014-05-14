@@ -80,7 +80,7 @@ module CS
         header = self.class.default_options[:headers] || {}
         header.merge!({"Content-Type" => "application/json"})
         if @session_id
-          header.merge!('X-SESSION_ID' => self.session_id)
+          header = header.merge('X-SESSION_ID' => self.session_id)
         end
         header
       end

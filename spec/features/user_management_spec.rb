@@ -7,7 +7,6 @@ describe "User management" do
 
     let!(:user) do
       username = "user1@tester.com"
-      password = "password"
 
       client = CS::Client.new(base_uri: base_uri)
       user = client.new_user
@@ -25,7 +24,7 @@ describe "User management" do
 
     let!(:logged_in_client) do
       client = CS::Client.new(base_uri: base_uri)
-      client.session_id = '1234'
+      client.session_id = '123488'
       client
     end
 
@@ -90,7 +89,7 @@ describe "User management" do
       }
 
       stub_request(:get, "http://api.dev.sense-os.local/users/current.json?").
-        with(:headers => {'Content-Type'=>'application/json', 'X-Session-Id'=>'1234'}).
+        with(:headers => {'Content-Type'=>'application/json', 'X-Session-Id'=>'123488'}).
         to_return(:status => 200, :body => body.to_json, :headers => {'Content-Type'=>'application/json'})
 
       client = logged_in_client

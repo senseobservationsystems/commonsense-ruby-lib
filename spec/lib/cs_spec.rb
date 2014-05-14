@@ -10,7 +10,7 @@ module CS
 
       let!(:logged_in_client) do
         client = CS::Client.new(base_uri: base_uri)
-        client.session_id = '1234'
+        client.session_id = '123499'
         client
       end
 
