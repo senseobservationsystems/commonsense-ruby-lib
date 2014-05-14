@@ -7,10 +7,11 @@ module CS
       include HTTParty
 
       attr_accessor :response_body, :response_code, :response_headers, :errors
-      attr_reader :session_id
+      attr_reader :session_id, :api_key
 
-      def initialize(base_uri = nil)
+      def initialize(base_uri = nil, api_key = nil)
         self.base_uri = base_uri
+        @api_key = api_key
         @session_id = nil
         reset
       end
@@ -22,10 +23,23 @@ module CS
         @response_body
       end
 
+      def process_api_key(path)
+        return path if @api_key.nil?
+
+        if URI(path).query.nil?
+          path += "?API_KEY=#{@api_key}"
+        else
+          path += "&API_KEY=#{@api_key}"
+        end
+
+        path
+      end
+
       def get(path, query={}, headers = {})
         execute do
           headers = default_headers.merge(headers)
           options = {query: query, headers: headers}
+          path = process_api_key(path)
           self.class.get(path, options)
         end
       end
@@ -79,7 +93,6 @@ module CS
         @session_id = session_id
       end
 
-
       # login to commonsense
       # @return [String] session_id
       def login(username, password)
@@ -90,7 +103,7 @@ module CS
           self.session_id = response_body['session_id']
         else
           self.session_id = false
-          errors = [response_body['error']]
+          @errors = [response_body['error']]
         end
 
         session_id
@@ -104,6 +117,7 @@ module CS
       end
 
       def parse_response
+        return unless @response_body
         @response_code = @response_body.response.code.to_i
         @response_headers = @response_body.headers
         if @response_code >= 400

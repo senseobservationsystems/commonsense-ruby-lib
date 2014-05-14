@@ -6,7 +6,6 @@ describe "session" do
 
   let!(:user) do
     username = "user1@tester.com"
-    password = "password"
 
     client = CS::Client.new(base_uri: base_uri)
     user = client.new_user
@@ -69,9 +68,24 @@ describe "session" do
          client = create_client
          CS::Auth::OAuth.should_receive(:new).with('CS_CONSUMER_KEY', 'CS_CONSUMER_SECRET',
                                 'CS_ACCESS_TOKEN', 'CS_ACCESS_TOKEN_SECRET', base_uri)
-         session = client.oauth('CS_CONSUMER_KEY', 'CS_CONSUMER_SECRET',
+         client.oauth('CS_CONSUMER_KEY', 'CS_CONSUMER_SECRET',
                                 'CS_ACCESS_TOKEN', 'CS_ACCESS_TOKEN_SECRET')
        end
+    end
+  end
+
+  describe "API_KEY" do
+    it "should append API key in the url" do
+      client = create_client
+      client.api_key = '123456'
+      CS::Auth::HTTP.should_receive(:get).
+        with("/sensors.json?API_KEY=123456",
+             {:query=>{:page=>0, :per_page=>1000},
+              :headers=>{"Content-Type"=>"application/json"}}
+            )
+
+      result = client.sensors
+      result.to_a
     end
   end
 end

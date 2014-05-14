@@ -32,15 +32,6 @@ module CS
         end
       end
 
-      describe "get_data" do
-        it "should not throw an exception" do
-          relation = SensorRelation.new
-          relation.stub(:get_data!).and_return { raise Error }
-
-          expect { relation.get_data }.to_not raise_error
-        end
-      end
-
       describe "each" do
         it "should get all sensor and yield each" do
           session = double('Session')

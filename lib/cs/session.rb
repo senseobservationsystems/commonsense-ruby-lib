@@ -33,6 +33,11 @@ module CS
       @auth_proxy.session_id = session_id
     end
 
+    def api_key=(api_key)
+      @auth_proxy = CS::Auth::HTTP.new(@base_uri, api_key)
+      api_key
+    end
+
     def auth_proxy
       raise 'The session is not logged in' unless @auth_proxy
       @auth_proxy
@@ -122,12 +127,18 @@ module CS
     end
 
     def dump_to_text(path)
+      begin
+        body = response_body.to_s
+      rescue Exception => e
+        body = e.message
+      end
+
       File.open(path, 'w') do |f|
         f.write("Response Code: #{response_code}\n")
         f.write("Response Headers: #{response_headers}\n")
         f.write("Errors: #{errors}\n")
         f.write("\n")
-        f.write(response_body)
+        f.write(body)
       end
     end
 

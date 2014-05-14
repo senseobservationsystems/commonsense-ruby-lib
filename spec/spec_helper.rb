@@ -1,7 +1,7 @@
 require 'bundler/setup'
 require 'rspec'
 require 'cs'
-#require 'pry'
+require 'pry'
 
 Dir[File.join(File.dirname(__FILE__),("support/**/*.rb"))].each {|f| require f}
 

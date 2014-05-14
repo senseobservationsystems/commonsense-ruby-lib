@@ -100,6 +100,10 @@ module CS
         self.select { |sensor| sensor.name =~ regex }
       end
 
+      def triggers()
+        Relation::SensorTriggersRelation.new(@session)
+      end
+
       private
       def resource_class
         EndPoint::Sensor
@@ -107,6 +111,16 @@ module CS
 
       def get_url
         "/sensors.json"
+      end
+    end
+
+    class SensorTriggersRelation
+      include Relation
+
+      parameter :page, Integer, default: 0, required: true
+
+      def get_url
+        "/sensors/triggers.json"
       end
     end
   end

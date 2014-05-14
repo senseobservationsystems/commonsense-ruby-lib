@@ -78,17 +78,6 @@ module CS
         end
       end
 
-      describe "get_data" do
-        it "call get_data! and not throw exception" do
-          sensor_id = 1
-          relation = SensorDataRelation.new(sensor_id)
-          relation.stub(:get_data!).and_return { raise Error }
-
-          expect { relation.get_data }.to_not raise_error
-          relation.get_data.should be_nil
-        end
-      end
-
       describe "each_batch" do
         it "should yield data to with multiple pages" do
           sensor_id = 1

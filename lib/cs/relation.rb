@@ -45,7 +45,7 @@ module CS
     end
 
     def get_data(params={})
-      get_data!(params) rescue nil
+      get_data!(params)
     end
 
     def all
@@ -94,7 +94,6 @@ module CS
     end
 
     def last
-      total = count
       resource = get_single_resource(page: count - 1)
       parse_single_resource(resource)
     end
@@ -146,7 +145,7 @@ module CS
         options[:page] = self.page
         data = get_data(options)
 
-        data = data[resource_class.resources_name]
+        data = data[resource_class.resources_name] unless data.nil?
         if !data.nil? && !data.empty?
           yield data
           self.page += 1

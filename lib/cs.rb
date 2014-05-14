@@ -9,12 +9,16 @@ require "cs/end_point/user"
 require "cs/end_point/group"
 require "cs/end_point/sensor"
 require "cs/end_point/sensor_data"
+require "cs/end_point/trigger"
+require "cs/end_point/notification"
 require "cs/parameter_processor"
 require "cs/relation"
 require "cs/relation/sensor_relation"
 require "cs/relation/sensor_data_relation"
 require "cs/relation/user_relation"
 require "cs/relation/group_relation"
+require "cs/relation/trigger_relation"
+require "cs/relation/notification_relation"
 
 module CS
 
@@ -100,6 +104,16 @@ module CS
       @session.session_id = session_id
     end
 
+    # Create new session by specifying api_key
+    #
+    #     client = CS::Client.new
+    #     client.session_id = '12345'
+    def api_key=(api_key)
+      @session = Session.new(base_uri: @base_uri)
+      @session.logger = logger
+      @session.api_key = api_key
+    end
+
     # Retrun logged in user
     def current_user
       user = EndPoint::User.new
@@ -131,6 +145,14 @@ module CS
 
     def groups
       Relation::GroupRelation.new(@session)
+    end
+
+    def triggers
+      Relation::TriggerRelation.new(@session)
+    end
+
+    def notifications
+      Relation::NotificationRelation.new(@session)
     end
 
     def current_groups
