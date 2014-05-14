@@ -28,14 +28,18 @@ module CS
       auth_proxy.session_id
     end
 
+    def api_key
+      auth_proxy.api_key
+    end
+
     def session_id=(session_id)
       @auth_proxy = CS::Auth::HTTP.new(@base_uri)
       @auth_proxy.session_id = session_id
     end
 
     def api_key=(api_key)
+      @api_key = api_key
       @auth_proxy = CS::Auth::HTTP.new(@base_uri, api_key)
-      api_key
     end
 
     def auth_proxy
@@ -151,7 +155,12 @@ module CS
     end
 
     def to_s
-      "\"#{self.session_id}\""
+      if session_id
+        return "SESSION_ID \"#{session_id}\""
+      elsif api_key
+        return "API_KEY \"#{api_key}\""
+      end
+      return ""
     end
 
     def inspect
