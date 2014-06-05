@@ -104,6 +104,14 @@ module CS
         Relation::SensorTriggersRelation.new(@session)
       end
 
+      def clone_from(other_sensor)
+        sensor = Sensor.new(other_sensor.to_parameters[:sensor])
+        sensor.id = nil
+        sensor.session = self.session
+
+        sensor
+      end
+
       private
       def resource_class
         EndPoint::Sensor

@@ -19,6 +19,7 @@ require "cs/relation/user_relation"
 require "cs/relation/group_relation"
 require "cs/relation/trigger_relation"
 require "cs/relation/notification_relation"
+require "cs/collection/sensor_data_collection"
 
 module CS
 
