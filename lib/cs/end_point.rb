@@ -1,4 +1,6 @@
 require 'cs/serializer'
+require 'set'
+
 module CS
   module EndPoint
     include CS::Serializer
