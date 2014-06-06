@@ -64,18 +64,25 @@ module CS
       logger.info("")
       logger.info("#{type} #{path}")
       logger.debug("headers: #{headers.inspect}")
-      logger.info("parameters: #{body.inspect}")
+      if ["POST", "PUT"].include?(type)
+        logger.debug("request: #{body.inspect}")
+      else
+        logger.info("request: #{body.inspect}")
+      end
     end
 
-    def log_response
-      logger.info("response: #{self.response_code}")
-      logger.debug("body: #{self.response_body}")
+    def log_response(elapsed)
+      logger.info("result: #{self.response_code} in #{elapsed}ms")
+      logger.debug("response: #{self.response_body}")
     end
 
     def execute(type, path, body, headers, &block)
+      start_time = Time.now
       log_request(type, path, body, headers) if logger
       response = retry_on_509 { yield }
-      log_response if logger
+
+      elapsed = (Time.now - start_time) * 1000.0
+      log_response(elapsed) if logger
 
       response
     end
