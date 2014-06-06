@@ -187,6 +187,24 @@ module CS
           end
         end
       end
+
+      describe "clone_from" do
+        it "should copy properties from other sensor and assign the session_id" do
+            attributes = {name: 'sensor1', display_name: 'Sensor1',
+              device_type: 'Android', pager_type: 'pager1',
+              data_type: 'json', data_structure: {"foo" => 'integer'}}
+
+            source = EndPoint::Sensor.new(attributes)
+            cloned = relation.clone_from(source)
+
+            cloned.name.should eq(attributes[:name])
+            cloned.display_name.should eq(attributes[:display_name])
+            cloned.device_type.should eq(attributes[:device_type])
+            cloned.pager_type.should eq(attributes[:pager_type])
+            cloned.data_type.should eq(attributes[:data_type])
+            cloned.data_structure.should eq(attributes[:data_structure])
+        end
+      end
     end
   end
 end

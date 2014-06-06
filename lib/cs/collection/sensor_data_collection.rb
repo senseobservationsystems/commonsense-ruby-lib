@@ -37,7 +37,7 @@ module CS
             }
           end
 
-          sensors[sensor_id][:data].push(point.to_cs_point)
+          sensors[sensor_id][:data].push(point.to_cs_value)
         end
 
         retval = []

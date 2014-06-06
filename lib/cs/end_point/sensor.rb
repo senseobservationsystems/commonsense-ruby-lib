@@ -27,7 +27,7 @@ module CS
       end
 
 
-      def to_cs_sensor
+      def to_cs_value
         param = self.to_h(false)
         if param[:data_type] == "json"
           if param[:data_structure] && !param[:data_structure].kind_of?(String)
@@ -41,7 +41,7 @@ module CS
       # overide Endpoint#to_parameters
       def to_parameters
 
-        {sensor: to_cs_sensor}
+        {sensor: to_cs_value}
       end
 
       def data
