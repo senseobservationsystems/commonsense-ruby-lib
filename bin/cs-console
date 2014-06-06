@@ -1,0 +1,154 @@
+#!/usr/bin/env ruby
+
+# (C) Ahmy Yulrizka (ahmy@sense-os.nl)
+
+$0 = 'pry'
+
+begin
+  require 'pry'
+rescue LoadError
+  require 'rubygems'
+  require 'pry'
+end
+
+require 'cs'
+require 'logger'
+require 'optparse'
+require 'digest/md5'
+
+DEBUG = Logger::DEBUG
+ERROR = Logger::ERROR
+FATAL = Logger::FATAL
+INFO = Logger::INFO
+UNKNOWN = Logger::UNKNOWN
+WARN = Logger::WARN
+
+CS::load_CLI
+
+##
+# OPTION Parsing
+##
+OPTIONS = {
+  config_file: "#{ENV['HOME']}/.cs.yml",
+  log_level: INFO
+}
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: cs console [options]"
+
+  opts.on("-c", "--config", "Config file default to #{OPTIONS[:config_file]}") do |v|
+    OPTIONS[:config_file] = v
+  end
+
+  opts.on("-v", "--verbosity <log_level>", "Log verbosity. <log_level> is one of: debug, error, fatal, info, unknown, warns. Default to info") do |v|
+    mapping = {
+      "debug" => DEBUG,
+      "error" => ERROR,
+      "fatal" => FATAL,
+      "info" => INFO,
+      "unknown" => UNKNOWN,
+      "warns" => WARN
+    }
+
+    level = mapping[v.downcase]
+    OPTIONS[:log_level] = level
+  end
+
+  opts.separator ""
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts
+    exit
+  end
+end.parse!
+
+##
+# Helper Method
+##
+
+STDOUT_LOGGER = Logger.new(STDOUT)
+STDOUT_LOGGER.level = OPTIONS[:log_level]
+
+def print_error(message)
+	STDERR.puts "Error: #{message}"
+end
+
+def config(key=nil)
+  CS::CLI::Config::get(key)
+end
+
+def new_client(user=nil)
+  client = CS::Client.new
+
+  if user == false
+    return client
+  end
+
+  user_creds = nil
+  if user == false
+    return client
+  elsif user == nil # load default user
+    default_user = config["default_user"]
+    user_creds = config["users"][default_user] rescue nil
+  else # load user by reference
+    user_creds = config["users"][user]
+  end
+
+
+  username = user_creds["username"]
+  password = user_creds["password_md5"]
+
+  if password.nil? || password.empty?
+    password = user_creds["password"]
+    password = Digest::MD5.hexdigest(password)
+  end
+
+
+  if client.login!(username, password, false)
+    STDOUT.puts "Successfully logged in with user '#{username}'"
+  else
+    print_error("Failed login with user #{username} -> #{client.session.errors}")
+  end
+
+  client.session.logger = STDOUT_LOGGER
+  client
+end
+
+def set_log_level(level)
+  OPTIONS[:log_level] = level
+  STDOUT_LOGGER.level = level
+end
+
+def const_to_level_log(value)
+  mapping = {
+    DEBUG => "debug",
+    ERROR => "error",
+    FATAL => "fatal",
+    INFO => "info",
+    UNKNOWN => "unknown",
+    WARN => "warns"
+  }
+
+  mapping[value]
+end
+
+def log_level?
+  const_to_level_log(OPTIONS[:log_level])
+end
+
+##
+# MAIN
+##
+
+begin
+  CS::CLI::Config::load_config(OPTIONS[:config_file])
+rescue => e
+  if File.exists?(OPTIONS[:config_file])
+    throw e
+  end
+end
+
+puts "CS console #{CS::VERSION}"
+puts
+
+# Process command line options and run Pry
+Pry::CLI.parse_options

@@ -1,3 +1,3 @@
 module CS
-  VERSION = "0.1.0beta3"
+  VERSION = "0.1.0"
 end

@@ -70,10 +70,10 @@ module CS
     #
     #    client = CS::Client.new
     #    client.login!('username', 'password')
-    def login!(user, password)
+    def login!(user, password, digest=true)
       @session = Session.new(base_uri: @base_uri)
       @session.logger = logger
-      @session.login(user, password)
+      @session.login(user, password, digest)
     end
 
     # Create a new session to CommonSense using username and plain text password
@@ -81,8 +81,8 @@ module CS
     #
     #    client = CS::Client.new
     #    client.login('username', 'password')
-    def login(user, password)
-      login!(user, password) rescue false
+    def login(user, password, digest=true)
+      login!(user, password, digest) rescue false
     end
 
     # Create a new session to CommonSense using OAuth credentials
@@ -167,6 +167,10 @@ module CS
     def errors
       return @session.errors if @session
     end
+  end
+
+  def self.load_CLI
+    require "cs/cli/cli"
   end
 end
 

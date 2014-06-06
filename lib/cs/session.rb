@@ -13,9 +13,9 @@ module CS
 
     # login to commonsense
     # @return [String] session_id
-    def login(username, password)
+    def login(username, password, digest=true)
       @auth_proxy = CS::Auth::HTTP.new(@base_uri)
-      @auth_proxy.login(username, password)
+      @auth_proxy.login(username, password, digest)
     end
 
     def oauth(consumer_key, consumer_secret, access_token, access_token_secret)

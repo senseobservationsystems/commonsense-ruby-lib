@@ -1,0 +1,58 @@
+#!/usr/bin/env ruby
+
+# (C) Ahmy Yulrizka (ahmy@sense-os.nl)
+
+require 'optparse'
+
+options = {password: '', double: false}
+
+def print_help
+<<EOL
+
+Available commands are:
+
+    console       Run REPL console based on PRY
+    password      Generate hased password from plaintext
+
+EOL
+end
+
+def print_error_and_exit(message, code=1)
+	puts "Error: #{message}"
+	exit code
+end
+
+if ARGV.empty?
+	puts "Usage: cs <command>"
+	puts print_help
+	exit 0
+end
+
+current_path = File.dirname(__FILE__)
+
+if ARGV[0].nil? or ARGV[0].empty?
+	print_error_and_exit("Invalid command")
+end
+
+command = ARGV[0]
+executable = "cs-#{command}"
+executable_path = File.join(current_path, executable)
+
+if !File.exists?(executable_path)
+	OptionParser.new do |opts|
+		opts.banner = "Usage: cs <command>"
+
+		opts.separator ""
+		opts.on_tail("-h", "--help", "Show this message") do
+
+			puts opts
+			puts print_help
+			exit
+		end
+	end.parse!
+
+	print_error_and_exit("Invalid command '#{command}'")
+end
+
+arguments = ARGV.slice(1..-1)
+exec(executable_path, *arguments)

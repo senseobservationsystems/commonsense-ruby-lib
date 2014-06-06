@@ -95,8 +95,10 @@ module CS
 
       # login to commonsense
       # @return [String] session_id
-      def login(username, password)
-        password = Digest::MD5.hexdigest password
+      def login(username, password, digest=true)
+        if digest
+          password = Digest::MD5.hexdigest password
+        end
         post('/login.json', {:username => username, :password => password})
 
         if @response_code == 200
