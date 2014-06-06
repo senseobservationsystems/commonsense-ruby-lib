@@ -26,7 +26,7 @@ module CS
       resources "data"
       resource "data"
 
-      def to_cs_point
+      def to_cs_value
         param = self.to_h(false)
         param.delete(:sensor_id)
         value = param[:value]
@@ -40,7 +40,7 @@ module CS
       end
 
       def to_parameters
-        {data: [to_cs_point]}
+        {data: [to_cs_value]}
       end
 
       def date_human
