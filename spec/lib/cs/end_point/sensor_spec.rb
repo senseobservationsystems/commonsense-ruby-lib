@@ -93,6 +93,34 @@ module CS
           sensor.delete!.should be_true
         end
       end
+
+      describe "copy_data" do
+        it "should copy data from other sensor" do
+          # create sensor_a
+          session_a = CS::Session.new
+          session_a.session_id = 1
+          sensor_a = Sensor.new(id: 1)
+          sensor_a.session = session_a
+
+          # create sensor_b
+          session_b = CS::Session.new
+          session_b.session_id = 2
+          sensor_b = Sensor.new(id: 2)
+          sensor_b.session = session_b
+
+          # session_a should recice get with parameter corrent start_date and end_date
+          data = {"data" => [{"id"=>"1_1401381426.400", "sensor_id"=>1, "value"=> "1", "date"=>1402032192.4}]}
+          session_a.should_receive(:get)
+            .with("/sensors/1/data.json", {:page=>0, :per_page=>1000, :start_date=>1402032192.0, :end_date=>1402032200.0, sensor_id: 1})
+            .and_return(data)
+
+          # session_b should receive post with data
+          session_b.should_receive(:post)
+            .with("/sensors/data.json", {:sensors=>[{:sensor_id=>2, :data=>[{:date=>1402032192.4, :value=>"1"}]}]})
+          sensor_b.copy_data(sensor_a, start_date: 1402032192, end_date: 1402032200)
+
+        end
+      end
     end
   end
 end

@@ -104,8 +104,13 @@ module CS
         Relation::SensorTriggersRelation.new(@session)
       end
 
+      # Create new sensor with properties from other sensor
+      #
+      # example :
+      #
+      #  client.sensors.clone_from(client.sensors.find(123))
       def clone_from(other_sensor)
-        sensor = Sensor.new(other_sensor.to_parameters[:sensor])
+        sensor = EndPoint::Sensor.new(other_sensor.to_cs_value)
         sensor.id = nil
         sensor.session = self.session
 
