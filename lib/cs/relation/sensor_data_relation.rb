@@ -50,6 +50,14 @@ module CS
         parse_single_resource(data)
       end
 
+      def start_date(date)
+        from(date)
+      end
+
+      def end_date(date)
+        to(date)
+      end
+
       def from(start_date)
         param_option = self.class.parameters[:start_date]
         self.start_date = process_param_time(:start_date, start_date, param_option)
@@ -60,6 +68,10 @@ module CS
         param_option = self.class.parameters[:end_date]
         self.end_date = process_param_time(:end_date, end_date, param_option)
         self
+      end
+
+      def collection
+        Collection::SensorDataCollection.new(session)
       end
 
       private

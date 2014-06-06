@@ -40,12 +40,34 @@ module CS
 
       # overide Endpoint#to_parameters
       def to_parameters
-
         {sensor: to_cs_value}
       end
 
       def data
         Relation::SensorDataRelation.new(self.id, self.session)
+      end
+
+      # Copy data from other sensor
+      #
+      # example :
+      #
+      #   source = client.sensors.find(1234)
+      #   destination = clint.sensors.find(2345)
+      #
+      #   destination.copy_data(source, start_date: 12345, end_date: 12350)
+      #
+      def copy_data(sensor, parameters={})
+        source = sensor.data
+        parameters.each do |k,v|
+          source.send(k.to_sym, v)
+        end
+
+        collection = self.data.collection
+        source.each do |point|
+          collection.push self.data.build(date: point.date, value: point.value)
+        end
+
+        collection.save!
       end
     end
   end

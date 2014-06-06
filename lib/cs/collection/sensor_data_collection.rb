@@ -6,7 +6,8 @@ module CS
       attr_accessor :session
       attr_accessor :batch_size
 
-      def initialize
+      def initialize(session=nil)
+        self.session = session
         @batch_size = 1000
         super([])
       end
