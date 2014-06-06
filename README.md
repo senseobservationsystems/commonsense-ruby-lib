@@ -129,6 +129,80 @@ session.dump_to_text("/tmp/output.txt")
 session.open_in_browser
 ```
 
+## Command Line Executable
+
+This gem also contain executables to run from command line. The main executable is `cs`
+
+```bash
+$ cs -h
+Usage: cs <command>
+
+    -h, --help                       Show this message
+
+Available commands are:
+
+    console       Run REPL console based on PRY
+    password      Generate hased password from plaintext
+
+```
+
+The console executable will run an REPL (Read Evaluate Print Loop) session based on pry.
+
+install `pry` first in order to use it. `pry-doc` and `pry-nav` is optional
+
+```bash
+$ gem install pry
+$ gem install pry-doc
+$ gem install pry-nav
+```
+
+you can have a configuration file on `~/.cs.yml` which contain the following
+
+```yaml
+users:
+  user1:
+    username: "user1@example.com"
+    password: ""
+    password_md5: 1234567890abcdef1234567890abcdef
+  user2:
+    username: "user2@example.com"
+    password: "V3rryS3curePaswd"
+    password_md5: ""
+
+default_user: user1
+```
+
+you can either fill in the password or md5-hashed password. It will use `password_md5` if you fill in both
+
+
+now you can use it on cs console
+
+```bash
+$ cs console
+CS console 0.1.1
+
+# create a client with default user
+
+[1] pry(main)> client = new_client()
+Successfully logged in with user 'user1@example.com'
+=> #<CS::Client:0x00000004cd7540
+ @base_uri="https://api.sense-os.nl",
+ @session=SESSION_ID "1234567890abcdefg1.23456789">
+
+# create a client with another user
+
+[2] pry(main)> user2_client = new_client("user2")
+Successfully logged in with user 'user2@example.com'
+=> #<CS::Client:0x00000004cd7560
+ @base_uri="https://api.sense-os.nl",
+ @session=SESSION_ID "1234567890abcdefg1.23456789">
+
+# create an empty client object and will not do the login
+
+[3] pry(main)> empty_client = new_client(false)
+> #<CS::Client:0x00000004cf2cf0 @base_uri="https://api.sense-os.nl">
+```
+
 ## Testing
 
     $ cp spec/support/spec_config.yml.sample spec/support/spec_config.yml
