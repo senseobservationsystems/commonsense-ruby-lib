@@ -1,22 +1,23 @@
 # Commonsense::Ruby::Lib
 Client library to communicate with CommonSense written in ruby
 
+[![Gem Version](https://badge.fury.io/rb/cs.svg)](http://badge.fury.io/rb/cs)
 [![Code Climate](https://codeclimate.com/github/senseobservationsystems/commonsense-ruby-lib.png)](https://codeclimate.com/github/senseobservationsystems/commonsense-ruby-lib)
 [![Build Status](https://travis-ci.org/senseobservationsystems/commonsense-ruby-lib.png?branch=master)](https://travis-ci.org/senseobservationsystems/commonsense-ruby-lib)
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Install with rubygems :
+
+    $ gem install cs
+    
+If you use Bundler to manage gem dependency, add this line to your Gemfile:
 
     gem 'cs'
 
 And then execute:
 
     $ bundle
-
-Or install it yourself as:
-
-    $ gem install cs
 
 ## Usage
 
