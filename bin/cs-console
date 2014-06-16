@@ -30,7 +30,8 @@ CS::load_CLI
 ##
 OPTIONS = {
   config_file: "#{ENV['HOME']}/.cs.yml",
-  log_level: INFO
+  log_level: INFO,
+  base_uri: 'https://api.sense-os.nl'
 }
 
 OptionParser.new do |opts|
@@ -52,6 +53,11 @@ OptionParser.new do |opts|
 
     level = mapping[v.downcase]
     OPTIONS[:log_level] = level
+  end
+
+  opts.on("-b", "--base-uri COMMONSENSE_URI", "Commonsense URI") do |v|
+    OPTIONS[:base_uri] = v
+    puts "API : #{OPTIONS[:base_uri]}"
   end
 
   opts.separator ""
@@ -77,7 +83,7 @@ def config(key=nil)
 end
 
 def new_client(user=nil)
-  client = CS::Client.new
+  client = CS::Client.new(base_uri: OPTIONS[:base_uri])
 
   if user == false
     return client

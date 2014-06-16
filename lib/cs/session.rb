@@ -134,6 +134,7 @@ module CS
     end
 
     def base_uri=(uri = nil)
+      @base_uri = uri
       auth_proxy.base_uri = uri
     end
 

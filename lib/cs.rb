@@ -50,7 +50,7 @@ module CS
   #     client.base_uri = 'https://api.dev.sense-os.nl'
   #
   class Client
-    attr_accessor :session, :base_uri
+    attr_accessor :session
     attr_reader :logger
 
     def initialize(opts={})
@@ -58,6 +58,11 @@ module CS
         base_uri: 'https://api.sense-os.nl',
       }.merge(opts)
       @base_uri = options[:base_uri]
+    end
+
+    def base_uri=(uri)
+      @base_uri = uri
+      session.base_uri = uri
     end
 
     def logger=(logger)
