@@ -4,7 +4,7 @@ module CS
   module Auth
     class OAuth
 
-      attr_accessor :response_body, :response_code, :response_headers, :errors, :consumer_key,
+      attr_accessor :request_body, :request_headers, :response_body, :response_code, :response_headers, :errors, :consumer_key,
         :consumer_secret, :access_token, :access_token_secret, :logger
 
       def initialize(consumer_key, consumer_secret, access_token, access_token_secret, uri=nil)
@@ -31,36 +31,38 @@ module CS
       def get(path, query={}, headers = {})
         execute do
           path += '?' + URI.encode_www_form(query) unless query.empty?
-          headers = default_headers.merge(headers)
+          @request_headers = default_headers.merge(headers)
           oauth.get(path, headers)
         end
       end
 
       def post(path, body = '', headers = {})
         execute do
-          headers = default_headers.merge(headers)
-          oauth.post(path, body.to_json, headers)
+          @request_headers = default_headers.merge(headers)
+          @request_body = body.to_json
+          oauth.post(path, @request_body, headers)
         end
       end
 
       def put(path, body = '', headers = {})
         execute do
-          headers = default_headers.merge(headers)
-          oauth.put(path, body.to_json, headers)
+          @request_headers = default_headers.merge(headers)
+          @request_body = body.to_json
+          oauth.put(path, @request_body, headers)
         end
       end
 
       def delete(path, query={}, headers = {})
         execute do
           path += '?' + URI.encode_www_form(query) unless query.empty?
-          headers = default_headers.merge(headers)
+          @request_headers = default_headers.merge(headers)
           oauth.delete(path, headers)
         end
       end
 
       def head(path, headers = {})
         execute do
-          headers = default_headers.merge(headers)
+          @request_headers = default_headers.merge(headers)
           oauth.head(path, headers)
         end
       end

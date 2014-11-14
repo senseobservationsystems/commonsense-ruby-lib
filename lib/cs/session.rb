@@ -63,14 +63,14 @@ module CS
       end
     end
 
-    def log_request(type, path, body, headers)
+    def log_request(type, path)
       logger.info("")
       logger.info("#{type} #{path}")
-      logger.debug("headers: #{headers.inspect}")
+      logger.debug("headers: #{@auth_proxy.request_headers.inspect}")
       if ["POST", "PUT"].include?(type)
-        logger.debug("request: #{body.inspect}")
+        logger.debug("request: #{@auth_proxy.request_body.inspect}")
       else
-        logger.info("request: #{body.inspect}")
+        logger.info("request: #{@auth_proxy.request_body.inspect}")
       end
     end
 
@@ -81,8 +81,11 @@ module CS
 
     def execute(type, path, body, headers, &block)
       start_time = Time.now
-      log_request(type, path, body, headers) if logger
-      response = retry_on_509 { yield }
+      response = retry_on_509 do
+        value = yield
+        log_request(type, path) if logger
+        value
+      end
 
       elapsed = (Time.now - start_time) * 1000.0
       log_response(elapsed) if logger

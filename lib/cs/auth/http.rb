@@ -6,7 +6,7 @@ module CS
     class HTTP
       include HTTParty
 
-      attr_accessor :response_body, :response_code, :response_headers, :errors, :logger, :base_uri
+      attr_accessor :request_body, :request_headers, :response_body, :response_code, :response_headers, :errors, :logger, :base_uri
       attr_reader :session_id, :api_key
 
       def initialize(base_uri = nil, api_key = nil)
@@ -41,8 +41,8 @@ module CS
 
       def get(path, query={}, headers = {})
         execute do
-          headers = default_headers.merge(headers)
-          options = {query: query, headers: headers}
+          @request_headers = default_headers.merge(headers)
+          options = {query: query, headers: @request_headers}
           path = process_api_key(process_path(path))
           self.class.get(path, options)
         end
@@ -50,22 +50,19 @@ module CS
 
       def post(path, body = '', headers = {})
         execute do
-          headers = default_headers.merge(headers)
           self.class.post(process_path(path), prepare(body, headers))
         end
       end
 
       def put(path, body = '', headers = {})
         execute do
-          headers = default_headers.merge(headers)
           self.class.put(process_path(path), prepare(body, headers))
         end
       end
 
       def delete(path, query={}, headers = {})
         execute do
-          headers = default_headers.merge(headers)
-          options = {query: query, headers: headers}
+          options = {query: query, headers: @request_headers}
           self.class.delete(process_path(path), options)
         end
       end
@@ -120,6 +117,8 @@ module CS
         @errors = nil
         @response_code = nil
         @response_body = nil
+        @request_body = nil
+        @request_headers = nil
       end
 
       def parse_response
@@ -132,8 +131,10 @@ module CS
       end
 
       def prepare(body=nil, headers={})
-        headers = default_headers.merge(headers)
-        {:body => body.to_json, :headers => headers}
+        @request_headers = default_headers.merge(headers)
+        @request_body = body.to_json
+
+        {:body => @request_body, :headers => @request_headers}
       end
     end
   end

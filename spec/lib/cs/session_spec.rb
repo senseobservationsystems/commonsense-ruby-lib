@@ -56,7 +56,7 @@ describe "session" do
         session.logger = logger
         logger.should_receive("info").with("").ordered
         logger.should_receive("info").with("GET /users/current.json").ordered
-        logger.should_receive("debug").with("headers: {}").ordered
+        logger.should_receive("debug").with("headers: {\"Content-Type\"=>\"application/json\"}").ordered
         session.get('/users/current.json', '',{})
       end
     end
