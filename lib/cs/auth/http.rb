@@ -62,6 +62,7 @@ module CS
 
       def delete(path, query={}, headers = {})
         execute do
+          @request_headers = default_headers.merge(headers)
           options = {query: query, headers: @request_headers}
           self.class.delete(process_path(path), options)
         end
