@@ -65,7 +65,7 @@ module CS
 
     def log_request(type, path)
       logger.info("")
-      logger.info("#{type} #{path}")
+      logger.info("#{type} #{base_uri}#{path}")
       logger.debug("headers: #{@auth_proxy.request_headers.inspect}")
       if ["POST", "PUT"].include?(type)
         logger.debug("request: #{@auth_proxy.request_body.inspect}")
