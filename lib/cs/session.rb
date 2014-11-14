@@ -15,6 +15,7 @@ module CS
     # @return [String] session_id
     def login(username, password, digest=true)
       @auth_proxy = CS::Auth::HTTP.new(@base_uri)
+      @auth_proxy.logger = self.logger
       @auth_proxy.login(username, password, digest)
     end
 
@@ -22,6 +23,8 @@ module CS
       @auth_proxy = CS::Auth::OAuth.new(consumer_key, consumer_secret,
                                                  access_token, access_token_secret,
                                                  @base_uri)
+      @auth_proxy.logger = self.logger if @auth_proxy
+      @auth_proxy
     end
 
     def session_id
@@ -135,7 +138,7 @@ module CS
 
     def base_uri=(uri = nil)
       @base_uri = uri
-      auth_proxy.base_uri = uri
+      auth_proxy.base_uri = uri if @auth_proxy
     end
 
     def dump_to_text(path)

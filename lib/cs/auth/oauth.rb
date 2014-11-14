@@ -5,7 +5,7 @@ module CS
     class OAuth
 
       attr_accessor :response_body, :response_code, :response_headers, :errors, :consumer_key,
-        :consumer_secret, :access_token, :access_token_secret
+        :consumer_secret, :access_token, :access_token_secret, :logger
 
       def initialize(consumer_key, consumer_secret, access_token, access_token_secret, uri=nil)
         @consumer_key = consumer_key
