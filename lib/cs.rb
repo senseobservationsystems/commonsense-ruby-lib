@@ -62,6 +62,10 @@ module CS
 
     def base_uri=(uri)
       @base_uri = uri
+      unless session
+        @session = Session.new()
+      end
+
       session.base_uri = uri
     end
 

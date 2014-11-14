@@ -15,6 +15,7 @@ module CS
     # @return [String] session_id
     def login(username, password, digest=true)
       @auth_proxy = CS::Auth::HTTP.new(@base_uri)
+      @auth_proxy.logger = self.logger
       @auth_proxy.login(username, password, digest)
     end
 
@@ -22,6 +23,8 @@ module CS
       @auth_proxy = CS::Auth::OAuth.new(consumer_key, consumer_secret,
                                                  access_token, access_token_secret,
                                                  @base_uri)
+      @auth_proxy.logger = self.logger if @auth_proxy
+      @auth_proxy
     end
 
     def session_id
@@ -60,14 +63,14 @@ module CS
       end
     end
 
-    def log_request(type, path, body, headers)
+    def log_request(type, path)
       logger.info("")
       logger.info("#{type} #{path}")
-      logger.debug("headers: #{headers.inspect}")
+      logger.debug("headers: #{@auth_proxy.request_headers.inspect}")
       if ["POST", "PUT"].include?(type)
-        logger.debug("request: #{body.inspect}")
+        logger.debug("request: #{@auth_proxy.request_body.inspect}")
       else
-        logger.info("request: #{body.inspect}")
+        logger.info("request: #{@auth_proxy.request_body.inspect}")
       end
     end
 
@@ -78,8 +81,11 @@ module CS
 
     def execute(type, path, body, headers, &block)
       start_time = Time.now
-      log_request(type, path, body, headers) if logger
-      response = retry_on_509 { yield }
+      response = retry_on_509 do
+        value = yield
+        log_request(type, path) if logger
+        value
+      end
 
       elapsed = (Time.now - start_time) * 1000.0
       log_response(elapsed) if logger
@@ -135,7 +141,7 @@ module CS
 
     def base_uri=(uri = nil)
       @base_uri = uri
-      auth_proxy.base_uri = uri
+      auth_proxy.base_uri = uri if @auth_proxy
     end
 
     def dump_to_text(path)

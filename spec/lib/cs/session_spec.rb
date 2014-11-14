@@ -56,7 +56,7 @@ describe "session" do
         session.logger = logger
         logger.should_receive("info").with("").ordered
         logger.should_receive("info").with("GET /users/current.json").ordered
-        logger.should_receive("debug").with("headers: {}").ordered
+        logger.should_receive("debug").with("headers: {\"Content-Type\"=>\"application/json\"}").ordered
         session.get('/users/current.json', '',{})
       end
     end
@@ -79,7 +79,7 @@ describe "session" do
       client = create_client
       client.api_key = '123456'
       CS::Auth::HTTP.should_receive(:get).
-        with("/sensors.json?API_KEY=123456",
+        with("http://api.dev.sense-os.local/sensors.json?API_KEY=123456",
              {:query=>{:page=>0, :per_page=>1000},
               :headers=>{"Content-Type"=>"application/json"}}
             )
