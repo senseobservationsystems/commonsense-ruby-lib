@@ -2,9 +2,12 @@ require 'bundler/setup'
 require 'rspec'
 require 'cs'
 require 'pry'
+require 'webmock/rspec'
 
 # code climate
+WebMock.disable_net_connect!(:allow => "codeclimate.com")
 require "codeclimate-test-reporter"
+ENV['CODECLIMATE_REPO_TOKEN'] = "a4b19928b743eda49f7acaba02190126122bfa09bb2615395aa1820a7cce9fc0"
 CodeClimate::TestReporter.start
 
 Dir[File.join(File.dirname(__FILE__),("support/**/*.rb"))].each {|f| require f}
