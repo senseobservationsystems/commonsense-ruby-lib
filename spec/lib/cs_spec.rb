@@ -80,6 +80,51 @@ module CS
         end
       end
 
+      describe "get" do
+        it 'shoudl delegate method to session' do
+        end
+      end
+
+      describe "post" do
+        it 'shoudl delegate method to session' do
+        end
+      end
+
+      describe "put" do
+        it 'shoudl delegate method to session' do
+        end
+      end
+
+      describe "delete" do
+        it 'shoudl delegate method to session' do
+        end
+      end
+
+      describe "head" do
+        it 'shoudl delegate method to session' do
+        end
+      end
+
+      describe "response_code" do
+        it 'shoudl delegate method to session' do
+        end
+      end
+
+      describe "response_body" do
+        it 'shoudl delegate method to session' do
+        end
+      end
+
+      describe "response_headers" do
+        it 'shoudl delegate method to session' do
+        end
+      end
+
+      describe "errors" do
+        it 'shoudl delegate method to session' do
+        end
+      end
+
     end
   end
 end
