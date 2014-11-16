@@ -4,6 +4,7 @@ Client library to communicate with CommonSense written in ruby
 [![Gem Version](https://badge.fury.io/rb/cs.svg)](http://badge.fury.io/rb/cs)
 [![Code Climate](https://codeclimate.com/github/senseobservationsystems/commonsense-ruby-lib.png)](https://codeclimate.com/github/senseobservationsystems/commonsense-ruby-lib)
 [![Build Status](https://travis-ci.org/senseobservationsystems/commonsense-ruby-lib.png?branch=master)](https://travis-ci.org/senseobservationsystems/commonsense-ruby-lib)
+[![Test Coverage](https://codeclimate.com/github/senseobservationsystems/commonsense-ruby-lib/badges/coverage.svg)](https://codeclimate.com/github/senseobservationsystems/commonsense-ruby-lib)
 
 RDoc [Documentation](http://rdoc.info/github/senseobservationsystems/commonsense-ruby-lib/frames)
 
