@@ -10,7 +10,7 @@ gem 'json'
 #
 
 platforms :rbx do
-  gem 'rubysl'
+#  gem 'rubysl'
 end
 
 group :test do
