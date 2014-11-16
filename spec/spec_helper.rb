@@ -3,6 +3,10 @@ require 'rspec'
 require 'cs'
 require 'pry'
 
+# code climate
+require "codeclimate-test-reporter"
+CodeClimate::TestReporter.start
+
 Dir[File.join(File.dirname(__FILE__),("support/**/*.rb"))].each {|f| require f}
 
 RSpec.configure do |config|

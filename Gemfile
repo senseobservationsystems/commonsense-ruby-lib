@@ -17,6 +17,7 @@ group :test do
   gem "rake", "~> 10.1.0"
   gem "webmock", "~> 1.13.0"
   gem "rspec", "~> 2.14.1"
+  gem "codeclimate-test-reporter", require: nil
 end
 
 group :development do
