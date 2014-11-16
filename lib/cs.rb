@@ -74,7 +74,7 @@ module CS
     end
 
     def logger
-      @session.logger if @session
+      @logger
     end
 
     # Create a new session to CommonSense using username and plain text password
