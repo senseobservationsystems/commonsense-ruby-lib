@@ -51,7 +51,6 @@ module CS
   #
   class Client
     attr_accessor :session
-    attr_reader :logger
 
     def initialize(opts={})
       options = {
@@ -72,6 +71,10 @@ module CS
     def logger=(logger)
       @logger = logger
       @session.logger = logger if @session
+    end
+
+    def logger
+      @logger
     end
 
     # Create a new session to CommonSense using username and plain text password
