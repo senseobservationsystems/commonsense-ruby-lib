@@ -84,7 +84,7 @@ module CS
     #    client.login!('username', 'password')
     def login!(user, password, digest=true)
       @session = Session.new(base_uri: @base_uri)
-      @session.logger = logger
+      @session.logger = @logger
       @session.login(user, password, digest)
     end
 
