@@ -71,6 +71,8 @@ module CS
     end
 
     def log_request(type, path)
+      return if logger.nil?
+
       logger.info("")
       logger.info("#{type} #{base_uri}#{path}")
       logger.debug("headers: #{@auth_proxy.request_headers.inspect}")

@@ -103,7 +103,7 @@ module CS
     #    client.login('username', 'password')
     def oauth(consumer_key, consumer_secret, access_token, access_token_secret)
       @session = Session.new(base_uri: @base_uri)
-      @session.logger = logger
+      @session.logger = @logger
       @session.oauth(consumer_key, consumer_secret, access_token, access_token_secret)
     end
 
@@ -113,7 +113,7 @@ module CS
     #     client.session_id = '12345'
     def session_id=(session_id)
       @session = Session.new(base_uri: @base_uri)
-      @session.logger = logger
+      @session.logger = @logger
       @session.session_id = session_id
     end
 
