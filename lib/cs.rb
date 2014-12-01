@@ -50,7 +50,13 @@ module CS
   #     client.base_uri = 'https://api.dev.sense-os.nl'
   #
   class Client
+    extend Forwardable
+
     attr_accessor :session
+
+    def_delegators :delegator, :get, :post, :put, :delete, :head,
+      :response_code, :response_body, :response_headers, :errors,
+      :dump_to_txt, :open_in_browser
 
     def initialize(opts={})
       options = {
@@ -179,10 +185,18 @@ module CS
     def errors
       return @session.errors if @session
     end
+
+    private
+    def delegator
+      raise Error::SessionEmptyError unless session
+      @session
+    end
   end
 
   def self.load_CLI
     require "cs/cli/cli"
   end
+
+
 end
 
