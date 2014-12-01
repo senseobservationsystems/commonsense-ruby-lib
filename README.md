@@ -109,9 +109,20 @@ data.save!
 sensor.data.build(date: Time.now, value: {"lux" => 1}).save!
 ```
 
+### Making manual API call
+
+With the client we could interact with CS API using the client object
+
+example
+
+```ruby
+client.get('/users/current.json')
+client.post('/sensors.json', {"params": "bar"})
+```
+
 ### Debuging
 
-To get information about the API response (body, code, headers) inspect the session
+To get information about the API response (body, code, headers) use this  method
 
 example
 
@@ -119,12 +130,9 @@ example
 # do some API call
 current_user = client.current_user
 
-# get the session
-session = client.session
-
-response_code = session.response_code
-response_body = session.resopnse_body
-header = session.response_headers
+response_code = client.response_code
+response_body = client.resopnse_body
+header = client.response_headers
 
 # dump the output to text file
 session.dump_to_text("/tmp/output.txt")
