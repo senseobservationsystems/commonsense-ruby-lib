@@ -16,7 +16,14 @@ module CS
     def login(username, password, digest=true)
       @auth_proxy = CS::Auth::HTTP.new(@base_uri)
       @auth_proxy.logger = self.logger
-      @auth_proxy.login(username, password, digest)
+
+      start_time = Time.now
+      result = @auth_proxy.login(username, password, digest)
+      elapsed = (Time.now - start_time) * 1000.0
+      log_request("Logging in", "")
+      log_response(elapsed)
+
+      result
     end
 
     def oauth(consumer_key, consumer_secret, access_token, access_token_secret)
@@ -64,17 +71,20 @@ module CS
     end
 
     def log_request(type, path)
+      return if logger.nil?
+
       logger.info("")
-      logger.info("#{type} #{path}")
+      logger.info("#{type} #{base_uri}#{path}")
       logger.debug("headers: #{@auth_proxy.request_headers.inspect}")
       if ["POST", "PUT"].include?(type)
         logger.debug("request: #{@auth_proxy.request_body.inspect}")
       else
-        logger.info("request: #{@auth_proxy.request_body.inspect}")
+        logger.debug("request: #{@auth_proxy.request_body.inspect}")
       end
     end
 
     def log_response(elapsed)
+      return if logger.nil?
       logger.info("result: #{self.response_code} in #{elapsed}ms")
       logger.debug("response: #{self.response_body}")
     end
@@ -88,7 +98,7 @@ module CS
       end
 
       elapsed = (Time.now - start_time) * 1000.0
-      log_response(elapsed) if logger
+      log_response(elapsed)
 
       response
     end

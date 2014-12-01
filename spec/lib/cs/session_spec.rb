@@ -55,8 +55,10 @@ describe "session" do
         logger = double().as_null_object
         session.logger = logger
         logger.should_receive("info").with("").ordered
-        logger.should_receive("info").with("GET /users/current.json").ordered
+        logger.should_receive("info").with("GET http://api.dev.sense-os.local/users/current.json").ordered
         logger.should_receive("debug").with("headers: {\"Content-Type\"=>\"application/json\"}").ordered
+        logger.should_receive("debug").with("request: \"{\\\"username\\\":\\\"user1@tester.com\\\",\\\"password\\\":\\\"5f4dcc3b5aa765d61d8327deb882cf99\\\"}\""
+        ).ordered
         session.get('/users/current.json', '',{})
       end
     end

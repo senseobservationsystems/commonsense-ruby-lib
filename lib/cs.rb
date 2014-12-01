@@ -50,8 +50,13 @@ module CS
   #     client.base_uri = 'https://api.dev.sense-os.nl'
   #
   class Client
+    extend Forwardable
+
     attr_accessor :session
-    attr_reader :logger
+
+    def_delegators :delegator, :get, :post, :put, :delete, :head,
+      :response_code, :response_body, :response_headers, :errors,
+      :dump_to_txt, :open_in_browser
 
     def initialize(opts={})
       options = {
@@ -74,6 +79,10 @@ module CS
       @session.logger = logger if @session
     end
 
+    def logger
+      @logger
+    end
+
     # Create a new session to CommonSense using username and plain text password
     # with `login!` it will throw exception if there is an error
     #
@@ -81,7 +90,7 @@ module CS
     #    client.login!('username', 'password')
     def login!(user, password, digest=true)
       @session = Session.new(base_uri: @base_uri)
-      @session.logger = logger
+      @session.logger = @logger
       @session.login(user, password, digest)
     end
 
@@ -100,7 +109,7 @@ module CS
     #    client.login('username', 'password')
     def oauth(consumer_key, consumer_secret, access_token, access_token_secret)
       @session = Session.new(base_uri: @base_uri)
-      @session.logger = logger
+      @session.logger = @logger
       @session.oauth(consumer_key, consumer_secret, access_token, access_token_secret)
     end
 
@@ -110,7 +119,7 @@ module CS
     #     client.session_id = '12345'
     def session_id=(session_id)
       @session = Session.new(base_uri: @base_uri)
-      @session.logger = logger
+      @session.logger = @logger
       @session.session_id = session_id
     end
 
@@ -176,10 +185,18 @@ module CS
     def errors
       return @session.errors if @session
     end
+
+    private
+    def delegator
+      raise Error::SessionEmptyError unless session
+      @session
+    end
   end
 
   def self.load_CLI
     require "cs/cli/cli"
   end
+
+
 end
 

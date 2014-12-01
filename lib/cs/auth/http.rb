@@ -101,6 +101,7 @@ module CS
         if digest
           password = Digest::MD5.hexdigest password
         end
+
         post('/login.json', {:username => username, :password => password})
 
         if @response_code == 200

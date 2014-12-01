@@ -1,9 +1,12 @@
 language: ruby
 rvm:
-  - 2.1.2
+  - 2.1.5
   - 2.0.0
   - 1.9.3
   - jruby-19mode
-  - rbx-2.2.1
-  - jruby-head
+  - rbx-2.2.10
+  - jruby
 script: bundle exec rspec spec
+addons:
+    code_climate:
+          repo_token: a4b19928b743eda49f7acaba02190126122bfa09bb2615395aa1820a7cce9fc0
