@@ -57,10 +57,7 @@ module CS
       #   destination.copy_data(source, start_date: 12345, end_date: 12350)
       #
       def copy_data(sensor, parameters={})
-        source = sensor.data
-        parameters.each do |k,v|
-          source.send(k.to_sym, v)
-        end
+        source = sensor.data.where(parameters)
 
         collection = self.data.collection
         source.each do |point|
